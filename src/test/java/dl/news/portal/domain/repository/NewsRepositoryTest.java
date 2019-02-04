@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,4 +67,15 @@ public class NewsRepositoryTest {
         List<News> news = newsRepository.findByAuthor(user);
         assertNotEquals(0, news.size());
     }
+
+    @Test
+    public void findByUpdatedDateBetween() {
+        Date end = new Date();
+        Date start = new Date(end.getTime()-31536000000L);
+
+        List<News> news = newsRepository.findByUpdatedDateBetween(start,end);
+        List<News> allNews = newsRepository.findAll();
+        assertNotEquals(allNews.size(), news.size());
+    }
+
 }

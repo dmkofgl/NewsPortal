@@ -24,8 +24,13 @@ public class News implements Serializable {
     private User author;
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    @ColumnDefault("sysdate")
-    private Date created;
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    private Date createdDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    private Date updatedDate;
 
     public Long getId() {
         return id;
@@ -60,6 +65,6 @@ public class News implements Serializable {
     }
 
     public Date getCreatedDate() {
-        return created;
+        return createdDate;
     }
 }
