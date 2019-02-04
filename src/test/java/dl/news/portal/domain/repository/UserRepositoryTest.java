@@ -8,17 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
+@Transactional
 public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
@@ -56,21 +59,22 @@ public class UserRepositoryTest {
 
     @Test
     public void add() {
-        int sizeBefore, sizeAfter;
         User user = new User();
-        user.setId(222L);
         user.setPassword("pws123");
         user.setUsername("user");
         user.setEmail("mailcom@ccs.cc");
-        List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(users::add);
-        sizeBefore = users.size();
 
         userRepository.save(user);
 
-        users = new ArrayList<>();
-        userRepository.findAll().forEach(users::add);
-        sizeAfter = users.size();
-        assertEquals(1, sizeAfter - sizeBefore);
+        assertNotNull(user.getId());
+    }
+
+    @Test(expected = ConstraintViolationException.class)
+    public void addUserWithPasswordException() {
+        User user = new User();
+        user.setPassword("pws12");
+        user.setUsername("user");
+        user.setEmail("mailcom@ccs.cc");
+        userRepository.save(user);
     }
 }
