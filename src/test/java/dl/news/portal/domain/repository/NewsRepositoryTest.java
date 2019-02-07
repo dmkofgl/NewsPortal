@@ -1,8 +1,8 @@
 package dl.news.portal.domain.repository;
 
+import dl.news.portal.Application;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
-import dl.news.portal.web.config.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,9 +71,9 @@ public class NewsRepositoryTest {
     @Test
     public void findByUpdatedDateBetween() {
         Date end = new Date();
-        Date start = new Date(end.getTime()-31536000000L);
+        Date start = new Date(end.getTime() - 31536000000L);
 
-        List<News> news = newsRepository.findByUpdatedDateBetween(start,end);
+        List<News> news = newsRepository.findByUpdatedDateBetween(start, end);
         List<News> allNews = newsRepository.findAll();
         assertNotEquals(allNews.size(), news.size());
     }

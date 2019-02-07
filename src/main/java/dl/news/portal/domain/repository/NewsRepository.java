@@ -14,5 +14,7 @@ public interface NewsRepository extends JpaRepository<News, Long> {
 
     List<News> findByAuthor(User user);
 
+    List<News> findByAuthorId(Long authorId);
+
     List<News> findByUpdatedDateBetween(Date start, Date end);
 }

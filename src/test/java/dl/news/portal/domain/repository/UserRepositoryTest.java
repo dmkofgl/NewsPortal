@@ -1,7 +1,7 @@
 package dl.news.portal.domain.repository;
 
+import dl.news.portal.Application;
 import dl.news.portal.domain.entity.User;
-import dl.news.portal.web.config.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
