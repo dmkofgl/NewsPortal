@@ -1,7 +1,6 @@
 package dl.news.portal.domain.repository;
 
 import dl.news.portal.domain.entity.User;
-import dl.news.portal.web.config.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class)
+@SpringBootTest
 @ActiveProfiles("test")
 @Transactional
 public class UserRepositoryTest {
