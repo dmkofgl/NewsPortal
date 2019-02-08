@@ -1,11 +1,10 @@
 package dl.news.portal.domain.service.impl;
 
+import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.repository.NewsRepository;
 import dl.news.portal.domain.service.NewsService;
-import dl.news.portal.utils.EntityFieldHelper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,9 +45,9 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public void updateNews(Long id, News news) {
+    public void updateNews(Long id, NewsDto news) {
         News oldNews = newsRepository.getOne(id);
-        BeanUtils.copyProperties(news, oldNews, EntityFieldHelper.getNullPropertyNames(news));
+        news.mapToEntity(oldNews);
         newsRepository.save(oldNews);
 
     }

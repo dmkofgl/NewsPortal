@@ -1,5 +1,6 @@
 package dl.news.portal.domain.repository;
 
+import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.service.NewsService;
@@ -63,8 +64,7 @@ public class NewsServiceTest {
     @Test
     public void updateNews() {
         final String newContent = "new content";
-        News updatedNews = new News();
-        updatedNews.setContent(newContent);
+        NewsDto updatedNews = new NewsDto(null,newContent,null);
         newsService.updateNews(1L, updatedNews);
         News news = newsService.findNewsById(1L).get();
         assertEquals(newContent, news.getContent());

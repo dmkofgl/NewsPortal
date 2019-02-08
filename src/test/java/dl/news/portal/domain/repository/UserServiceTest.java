@@ -1,5 +1,6 @@
 package dl.news.portal.domain.repository;
 
+import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.service.SearchingMode;
 import dl.news.portal.domain.service.UserService;
@@ -81,13 +82,11 @@ public class UserServiceTest {
 
     @Test
     public void updateUser() {
-        String userBeforeUpdate = userService.findUserById(1L).get().getUsername();
-        User updatedUser = new User();
-        updatedUser.setUsername("updatedUser");
-        updatedUser.setEmail("updatedEmail@ccs.cc");
+        User userBeforeUpdate = userService.findUserById(1L).get();
+        UserDto updatedUser = new UserDto("updatedUser", "updatedEmail");
         userService.updateUser(1L, updatedUser);
         User userAfterUpdate = userService.findUserById(1L).get();
-        assertNotEquals(userBeforeUpdate, userAfterUpdate.getEmail());
+        assertEquals("updatedUser", userAfterUpdate.getUsername());
     }
 
     @Test(expected = ConstraintViolationException.class)
