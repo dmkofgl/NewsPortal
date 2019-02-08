@@ -1,6 +1,6 @@
 package dl.news.portal.domain.service.impl;
 
-import dl.news.portal.domain.dto.UserDto;
+import dl.news.portal.domain.dto.DtoTransfer;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.repository.UserRepository;
 import dl.news.portal.domain.service.SearchingMode;
@@ -45,10 +45,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(Long id, UserDto updatedUser) {
+    public void updateUser(Long id, DtoTransfer<User> updatedUser) {
         User user = userRepository.getOne(id);
-        updatedUser.mapToUser(user);
-        userRepository.save(user);
+        updatedUser.transfer(user);
+        userRepository.saveAndFlush(user);
     }
 
     @Override

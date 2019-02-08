@@ -71,8 +71,8 @@ public class UserServiceTest {
     @Test
     public void add() {
         User user = new User();
-        user.setPassword("pws123");
-        user.setUsername("user");
+        user.setPassword("password");
+        user.setUsername("nAMe2");
         user.setEmail("mailcom@ccs.cc");
 
         userService.createUser(user);
@@ -83,10 +83,11 @@ public class UserServiceTest {
     @Test
     public void updateUser() {
         User userBeforeUpdate = userService.findUserById(1L).get();
-        UserDto updatedUser = new UserDto("updatedUser", "updatedEmail");
+        String newUsername = "testTester", newEmail = "sven@qwert.ce";
+        UserDto updatedUser = new UserDto(newUsername, newEmail);
         userService.updateUser(1L, updatedUser);
         User userAfterUpdate = userService.findUserById(1L).get();
-        assertEquals("updatedUser", userAfterUpdate.getUsername());
+        assertEquals(newUsername, userAfterUpdate.getUsername());
     }
 
     @Test(expected = ConstraintViolationException.class)

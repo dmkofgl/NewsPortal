@@ -5,7 +5,7 @@ import dl.news.portal.domain.entity.User;
 
 import java.util.Optional;
 
-public class NewsDto {
+public class NewsDto implements DtoTransfer<News> {
     private Optional<String> title;
     private Optional<String> content;
     private Optional<User> author;
@@ -20,10 +20,10 @@ public class NewsDto {
         this(null, null, null);
     }
 
-    public void mapToEntity(News news) {
-        title.ifPresent(news::setTitle);
-        content.ifPresent(news::setContent);
-        author.ifPresent(news::setAuthor);
-
+    @Override
+    public void transfer(News receiver) {
+        title.ifPresent(receiver::setTitle);
+        content.ifPresent(receiver::setContent);
+        author.ifPresent(receiver::setAuthor);
     }
 }

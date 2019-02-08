@@ -1,6 +1,6 @@
 package dl.news.portal.domain.service.impl;
 
-import dl.news.portal.domain.dto.NewsDto;
+import dl.news.portal.domain.dto.DtoTransfer;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.repository.NewsRepository;
@@ -45,9 +45,9 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public void updateNews(Long id, NewsDto news) {
+    public void updateNews(Long id, DtoTransfer<News> news) {
         News oldNews = newsRepository.getOne(id);
-        news.mapToEntity(oldNews);
+        news.transfer(oldNews);
         newsRepository.save(oldNews);
 
     }
