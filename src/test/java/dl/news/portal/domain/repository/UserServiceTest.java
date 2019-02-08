@@ -1,6 +1,8 @@
 package dl.news.portal.domain.repository;
 
 import dl.news.portal.domain.entity.User;
+import dl.news.portal.domain.service.SearchingMode;
+import dl.news.portal.domain.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,50 +12,59 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-public class UserRepositoryTest {
+public class UserServiceTest {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Test
     public void findByEmail() {
-        Optional<User> user = userRepository.findByEmail("email@gmail.com");
+        Optional<User> user = userService.findByEmail("email@gmail.com");
         assertTrue(user.isPresent());
     }
 
     @Test
     public void findById() {
-        Optional<User> user = userRepository.findById(1L);
+        Optional<User> user = userService.findUserById(1L);
         assertTrue(user.isPresent());
     }
 
     @Test
     public void findAll() {
-        List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(users::add);
+        List<User> users = userService.getAllUsers();
         assertTrue(users.size() != 0);
     }
 
     @Test
     public void findByUsername() {
-        Optional<User> user = userRepository.findByUsername("nameTest");
+        Optional<User> user = userService.findByUsername("nameTest");
         assertTrue(user.isPresent());
     }
 
     @Test
-    public void findByUsernameIgnoreCaseContaining() {
-        List<User> users = userRepository.findByUsernameIgnoreCaseContaining("NaMe");
+    public void findByUsernameIgnoreCase() {
+        List<User> users = userService.findByUsername("NaMe", SearchingMode.IGNORE_CASE);
         assertTrue(users.size() != 0);
+    }
+
+    @Test
+    public void findByUsernameIdenticalCase() {
+        List<User> users = userService.findByUsername("name", SearchingMode.IDENTICAL);
+        assertTrue(users.size() != 0);
+    }
+
+    @Test
+    public void findByUsernameIdenticalCaseNegative() {
+        List<User> users = userService.findByUsername("NAMe", SearchingMode.IDENTICAL);
+        assertEquals(0, users.size());
     }
 
     @Test
@@ -63,9 +74,20 @@ public class UserRepositoryTest {
         user.setUsername("user");
         user.setEmail("mailcom@ccs.cc");
 
-        userRepository.save(user);
+        userService.createUser(user);
 
         assertNotNull(user.getId());
+    }
+
+    @Test
+    public void updateUser() {
+        String userBeforeUpdate = userService.findUserById(1L).get().getUsername();
+        User updatedUser = new User();
+        updatedUser.setUsername("updatedUser");
+        updatedUser.setEmail("updatedEmail@ccs.cc");
+        userService.updateUser(1L, updatedUser);
+        User userAfterUpdate = userService.findUserById(1L).get();
+        assertNotEquals(userBeforeUpdate, userAfterUpdate.getEmail());
     }
 
     @Test(expected = ConstraintViolationException.class)
@@ -74,6 +96,6 @@ public class UserRepositoryTest {
         user.setPassword("pws12");
         user.setUsername("user");
         user.setEmail("mailcom@ccs.cc");
-        userRepository.save(user);
+        userService.createUser(user);
     }
 }
