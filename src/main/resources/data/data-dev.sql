@@ -10,3 +10,4 @@ INSERT INTO `news`(`content`,`title`,`author_id`)VALUES('Shock news8','bla-bla7'
 
 
 INSERT INTO `user`(`id`,`email`,`password`,`username`)VALUES(1,"email@gmail.com","password","name");
+INSERT INTO `user`(`email`,`password`,`username`)VALUES("email2@gmail.com","password","name2");

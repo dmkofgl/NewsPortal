@@ -1,8 +1,9 @@
 package dl.news.portal.domain.repository;
 
-import dl.news.portal.Application;
+import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
+import dl.news.portal.domain.service.NewsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +20,24 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class)
+@SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-public class NewsRepositoryTest {
+public class NewsServiceTest {
     @Autowired
-    private NewsRepository newsRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private NewsService newsService;
 
     @Test
     public void findById() {
-        Optional<News> newsOptional = newsRepository.findById(1L);
+        Optional<News> newsOptional = newsService.findNewsById(1L);
         assertTrue(newsOptional.isPresent());
     }
 
 
     @Test
     public void findByTitle() {
-        List<News> news = newsRepository.findByTitleIgnoreCaseContaining("Test");
-        List<News> newsByUpper = newsRepository.findByTitleIgnoreCaseContaining("TeST");
+        List<News> news = newsService.findByTitle("Test");
+        List<News> newsByUpper = newsService.findByTitle("TeST");
         assertEquals(news.size(), newsByUpper.size());
     }
 
@@ -47,24 +46,35 @@ public class NewsRepositoryTest {
         News news = new News();
         news.setTitle("test title");
         news.setContent("content");
-        newsRepository.save(news);
+        newsService.createNews(news);
     }
 
     @Test
     public void addNews() {
-        User user = userRepository.findById(1L).get();
+        User user = new User();
+        user.setId(1L);
         News news = new News();
         news.setTitle("test title");
         news.setContent("content");
         news.setAuthor(user);
-        newsRepository.save(news);
+        newsService.createNews(news);
         assertNotNull(news.getId());
     }
 
     @Test
+    public void updateNews() {
+        final String newContent = "new content";
+        NewsDto updatedNews = new NewsDto(null,newContent,null);
+        newsService.updateNews(1L, updatedNews);
+        News news = newsService.findNewsById(1L).get();
+        assertEquals(newContent, news.getContent());
+    }
+
+    @Test
     public void findByAuthor() {
-        User user = userRepository.findById(1L).get();
-        List<News> news = newsRepository.findByAuthor(user);
+        User user = new User();
+        user.setId(1L);
+        List<News> news = newsService.findByAuthor(user);
         assertNotEquals(0, news.size());
     }
 
@@ -73,8 +83,8 @@ public class NewsRepositoryTest {
         Date end = new Date();
         Date start = new Date(end.getTime() - 31536000000L);
 
-        List<News> news = newsRepository.findByUpdatedDateBetween(start, end);
-        List<News> allNews = newsRepository.findAll();
+        List<News> news = newsService.findByUpdatedDate(start, end);
+        List<News> allNews = newsService.getAllNews();
         assertNotEquals(allNews.size(), news.size());
     }
 
