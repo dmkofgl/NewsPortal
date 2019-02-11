@@ -1,14 +1,12 @@
-package dl.news.portal.domain.repository;
+package dl.news.portal.domain.service;
 
 import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
-import dl.news.portal.domain.service.NewsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +19,6 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
 @Transactional
 public class NewsServiceTest {
     @Autowired
