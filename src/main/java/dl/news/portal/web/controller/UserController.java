@@ -1,11 +1,16 @@
 package dl.news.portal.web.controller;
 
+import dl.news.portal.domain.dto.CreatingUserDto;
+import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.entity.User;
-import dl.news.portal.domain.repository.UserRepository;
+import dl.news.portal.domain.resource.PageResource;
+import dl.news.portal.domain.resource.UserResource;
+import dl.news.portal.domain.service.UserService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,58 +20,54 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping("/{id}")
-    public Resource<User> getUserById(@PathVariable Long id) {
-
-        return userRepository.findById(id)
-                .map(employee -> new Resource<>(employee))
-                .orElse(new Resource<>(new User()));
-
+    public UserResource getUserById(@PathVariable Long id) {
+        return userService.findUserById(id)
+                .map(UserResource::new)
+                .orElseThrow(RuntimeException::new);
     }
 
     @GetMapping
-    public Resource<Page<User>> getAllUsers(Pageable pageable) {
-        Page<User> userPage = userRepository.findAll(pageable);
-        Resource<Page<User>> resource = new Resource<>(userPage);
-        ControllerLinkBuilder linkTo = ControllerLinkBuilder.linkTo(ControllerLinkBuilder.methodOn(UserController.class).getAllUsers(pageable));
-        resource.add(linkTo.withRel("self"));
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
+                    value = "Results page you want to retrieve (0..N)"),
+            @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
+                    value = "Number of records per page."),
+            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
+                    value = "Sorting criteria in the format: property(,asc|desc). " +
+                            "Default sort order is ascending. " +
+                            "Multiple sort criteria are supported.")
+    })
+    public PageResource<User> getAllUsers(Pageable pageable) {
+        Page<User> userPage = userService.getUsersPage(pageable);
+        PageResource<User> resource = new PageResource<>(userPage);
         return resource;
 
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> addUser(User user) {
-        HttpStatus httpStatus = HttpStatus.OK;
-        try {
-            userRepository.save(user);
-        } catch (Exception e) {
-            httpStatus = HttpStatus.BAD_REQUEST;
-        }
-        return new ResponseEntity<>(httpStatus);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "email", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "password", dataType = "String", paramType = "query")
+    })
+    public ResponseEntity<HttpStatus> addUser(CreatingUserDto user) {
+        userService.createUser(user.transform());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<HttpStatus> updateUser(@PathVariable Long id, User updateUser) {
-        HttpStatus httpStatus = HttpStatus.OK;
-        try {
-            userRepository.save(updateUser);
-        } catch (Exception e) {
-            httpStatus = HttpStatus.BAD_REQUEST;
-        }
-        return new ResponseEntity<>(httpStatus);
+    public ResponseEntity<HttpStatus> updateUser(@PathVariable Long id, UserDto updateUser) {
+        userService.updateUser(id, updateUser);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable Long id) {
-        HttpStatus httpStatus = HttpStatus.OK;
-        try {
-            userRepository.deleteById(id);
-        } catch (Exception e) {
-            httpStatus = HttpStatus.BAD_REQUEST;
-        }
-        return new ResponseEntity<>(httpStatus);
+        userService.deleteUser(id);
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 }

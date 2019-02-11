@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-public class User implements Serializable {
+public class User  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

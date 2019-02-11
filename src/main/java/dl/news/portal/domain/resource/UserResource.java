@@ -19,6 +19,5 @@ public class UserResource extends ResourceSupport {
         this.user = user;
         final Long id = user.getId();
         add(linkTo(methodOn(UserController.class).getUserById(id)).withSelfRel());
-
     }
 }

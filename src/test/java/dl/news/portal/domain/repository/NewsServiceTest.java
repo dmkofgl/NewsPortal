@@ -21,7 +21,6 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
 @Transactional
 public class NewsServiceTest {
     @Autowired

@@ -6,11 +6,16 @@ import org.springframework.hateoas.PagedResources;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 public class PageResource<T> extends PagedResources<T> {
-
+    private Page<T> page;
 
     public PageResource(Page<T> page) {
         super(page.getContent(), new PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements(), page.getTotalPages()));
+        this.page = page;
         addSelfLink();
+    }
+
+    public PageResource() {
+        super();
     }
 
     private void addSelfLink() {

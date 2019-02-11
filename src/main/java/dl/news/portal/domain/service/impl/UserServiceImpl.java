@@ -1,5 +1,6 @@
 package dl.news.portal.domain.service.impl;
 
+import dl.news.portal.domain.dto.CreatingUserDto;
 import dl.news.portal.domain.dto.DtoTransfer;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.repository.UserRepository;
@@ -38,6 +39,7 @@ public class UserServiceImpl implements UserService {
     public void createUser(User user) {
         userRepository.save(user);
     }
+
 
     @Override
     public void deleteUser(Long id) {

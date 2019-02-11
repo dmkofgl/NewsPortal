@@ -1,5 +1,6 @@
 package dl.news.portal.web.controller;
 
+import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-
+@RestController
+@RequestMapping("/news")
 public class NewsController {
     @Autowired
     private NewsService newsService;
@@ -22,7 +24,7 @@ public class NewsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<News> getNewsById(@PathVariable Long id) {
-        Optional<News> optionalNews = newsService.getNewsById(id);
+        Optional<News> optionalNews = newsService.findNewsById(id);
         return optionalNews.map(news -> new ResponseEntity<>(news, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -31,18 +33,18 @@ public class NewsController {
     public ResponseEntity<HttpStatus> addNews(News news) {
         HttpStatus httpStatus = HttpStatus.OK;
         try {
-            newsService.save(news);
+            newsService.createNews(news);
         } catch (Exception e) {
             httpStatus = HttpStatus.BAD_REQUEST;
         }
         return new ResponseEntity<>(httpStatus);
     }
 
-    @PutMapping
-    public ResponseEntity<HttpStatus> updateNews(News news) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<HttpStatus> updateUser(@PathVariable Long id, NewsDto newsDto) {
         HttpStatus httpStatus = HttpStatus.OK;
         try {
-            newsService.save(news);
+            newsService.updateNews(id, newsDto);
         } catch (Exception e) {
             httpStatus = HttpStatus.BAD_REQUEST;
         }
