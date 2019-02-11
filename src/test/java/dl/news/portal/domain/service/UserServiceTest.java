@@ -1,14 +1,11 @@
-package dl.news.portal.domain.repository;
+package dl.news.portal.domain.service;
 
 import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.entity.User;
-import dl.news.portal.domain.service.SearchingMode;
-import dl.news.portal.domain.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +17,6 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
 @Transactional
 public class UserServiceTest {
     @Autowired
@@ -41,7 +37,7 @@ public class UserServiceTest {
     @Test
     public void findAll() {
         List<User> users = userService.getAllUsers();
-        assertTrue(users.size() != 0);
+        assertEquals(users.size(), 2);
     }
 
     @Test
@@ -63,16 +59,10 @@ public class UserServiceTest {
     }
 
     @Test
-    public void findByUsernameIdenticalCaseNegative() {
-        List<User> users = userService.findByUsername("NAMe", SearchingMode.IDENTICAL);
-        assertEquals(0, users.size());
-    }
-
-    @Test
     public void add() {
         User user = new User();
         user.setPassword("password");
-        user.setUsername("nAMe2");
+        user.setUsername("nAMe2Test");
         user.setEmail("mailcom@ccs.cc");
 
         userService.createUser(user);
@@ -82,11 +72,10 @@ public class UserServiceTest {
 
     @Test
     public void updateUser() {
-        User userBeforeUpdate = userService.findUserById(1L).get();
         String newUsername = "testTester", newEmail = "sven@qwert.ce";
         UserDto updatedUser = new UserDto(newUsername, newEmail);
-        userService.updateUser(1L, updatedUser);
-        User userAfterUpdate = userService.findUserById(1L).get();
+        userService.updateUser(2L, updatedUser);
+        User userAfterUpdate = userService.findUserById(2L).get();
         assertEquals(newUsername, userAfterUpdate.getUsername());
     }
 
