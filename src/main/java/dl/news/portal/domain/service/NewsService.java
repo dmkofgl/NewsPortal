@@ -30,5 +30,7 @@ public interface NewsService {
 
     List<News> findByAuthor(User user);
 
+    Page<News> findPageByAuthor(User user, Pageable pageable);
+
     List<News> findByUpdatedDate(Date start, Date end);
 }
