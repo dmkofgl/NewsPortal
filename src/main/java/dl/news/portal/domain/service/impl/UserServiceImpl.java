@@ -1,6 +1,5 @@
 package dl.news.portal.domain.service.impl;
 
-import dl.news.portal.domain.dto.CreatingUserDto;
 import dl.news.portal.domain.dto.DtoTransfer;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.repository.UserRepository;

@@ -4,7 +4,7 @@ import dl.news.portal.domain.entity.User;
 
 import java.util.Optional;
 
-public class CreatingUserDto implements DtoTransofrm<User>, DtoTransfer<User> {
+public class UserCreatingDto implements DtoTransoform<User>, DtoTransfer<User> {
     private Optional<String> username;
     private Optional<String> email;
     private Optional<String> password;
@@ -24,15 +24,15 @@ public class CreatingUserDto implements DtoTransofrm<User>, DtoTransfer<User> {
 
     }
 
-    public void setUsername(Optional<String> username) {
-        this.username = username;
+    public void setUsername(String username) {
+        this.username = Optional.ofNullable(username);
     }
 
-    public void setEmail(Optional<String> email) {
-        this.email = email;
+    public void setEmail(String email) {
+        this.email = Optional.ofNullable(email);
     }
 
-    public void setPassword(Optional<String> password) {
-        this.password = password;
+    public void setPassword(String password) {
+        this.password = Optional.ofNullable(password);
     }
 }

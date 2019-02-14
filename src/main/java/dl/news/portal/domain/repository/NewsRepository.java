@@ -2,6 +2,8 @@ package dl.news.portal.domain.repository;
 
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +16,7 @@ public interface NewsRepository extends JpaRepository<News, Long> {
 
     List<News> findByAuthor(User user);
 
-    List<News> findByAuthorId(Long authorId);
+    Page<News> findPageByAuthor(User user, Pageable pageable);
 
     List<News> findByUpdatedDateBetween(Date start, Date end);
 }

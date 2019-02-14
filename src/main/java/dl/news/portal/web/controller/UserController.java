@@ -1,20 +1,20 @@
 package dl.news.portal.web.controller;
 
-import dl.news.portal.domain.dto.CreatingUserDto;
+import dl.news.portal.domain.dto.UserCreatingDto;
 import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.resource.PageResource;
 import dl.news.portal.domain.resource.UserResource;
 import dl.news.portal.domain.service.UserService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
+import dl.news.portal.exception.EntityNotExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
@@ -26,40 +26,23 @@ public class UserController {
     public UserResource getUserById(@PathVariable Long id) {
         return userService.findUserById(id)
                 .map(UserResource::new)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new EntityNotExistsException(User.class.getSimpleName(), "Unable to find with id " + id));
     }
 
     @GetMapping
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
-                    value = "Results page you want to retrieve (0..N)"),
-            @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
-                    value = "Number of records per page."),
-            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
-                    value = "Sorting criteria in the format: property(,asc|desc). " +
-                            "Default sort order is ascending. " +
-                            "Multiple sort criteria are supported.")
-    })
-    public PageResource<User> getAllUsers(Pageable pageable) {
-        Page<User> userPage = userService.getUsersPage(pageable);
-        PageResource<User> resource = new PageResource<>(userPage);
-        return resource;
-
+    public PageResource<UserResource> getAllUsers(Pageable pageable) {
+        Page<UserResource> userPage = userService.getUsersPage(pageable).map(UserResource::new);
+        return new PageResource<>(userPage);
     }
 
     @PostMapping
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "email", dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "password", dataType = "String", paramType = "query")
-    })
-    public ResponseEntity<HttpStatus> addUser(CreatingUserDto user) {
+    public ResponseEntity<HttpStatus> addUser(@Valid @RequestBody UserCreatingDto user) {
         userService.createUser(user.transform());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<HttpStatus> updateUser(@PathVariable Long id, UserDto updateUser) {
+    public ResponseEntity<HttpStatus> updateUser(@PathVariable Long id, @Valid @RequestBody UserDto updateUser) {
         userService.updateUser(id, updateUser);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -67,7 +50,6 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

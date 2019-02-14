@@ -13,7 +13,7 @@ public class Application {
     }
 
     @Bean
-    public Module hibernate4Module() {
+    public Module hibernate5Module() {
         return new Hibernate5Module();
     }
 }

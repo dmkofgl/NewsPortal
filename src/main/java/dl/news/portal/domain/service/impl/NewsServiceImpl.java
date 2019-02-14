@@ -45,11 +45,10 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public void updateNews(Long id, DtoTransfer<News> news) {
-        News oldNews = newsRepository.getOne(id);
-        news.transfer(oldNews);
-        newsRepository.save(oldNews);
-
+    public void updateNews(Long id, DtoTransfer<News> dtoTransfer) {
+        News news = newsRepository.getOne(id);
+        dtoTransfer.transfer(news);
+        newsRepository.save(news);
     }
 
     @Override
@@ -65,6 +64,11 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<News> findByAuthor(User user) {
         return newsRepository.findByAuthor(user);
+    }
+
+    @Override
+    public Page<News> findPageByAuthor(User user, Pageable pageable) {
+        return newsRepository.findPageByAuthor(user, pageable);
     }
 
     @Override
