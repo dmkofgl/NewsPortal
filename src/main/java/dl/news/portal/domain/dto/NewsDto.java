@@ -5,7 +5,7 @@ import dl.news.portal.domain.entity.News;
 import javax.validation.constraints.NotBlank;
 import java.util.Optional;
 
-public class NewsDto implements DtoTransoform<News>, DtoTransfer<News> {
+public class NewsDto implements DtoTransform<News>, DtoTransfer<News> {
     private Optional<@NotBlank String> title;
     private Optional<@NotBlank String> content;
 
@@ -31,10 +31,6 @@ public class NewsDto implements DtoTransoform<News>, DtoTransfer<News> {
     }
 
     public NewsDto() {
-    }
-
-    public NewsDto(News news) {
-        this(news.getTitle(), news.getContent());
     }
 
     @Override

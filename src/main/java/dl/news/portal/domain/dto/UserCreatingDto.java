@@ -4,7 +4,7 @@ import dl.news.portal.domain.entity.User;
 
 import java.util.Optional;
 
-public class UserCreatingDto implements DtoTransoform<User>, DtoTransfer<User> {
+public class UserCreatingDto implements DtoTransform<User>, DtoTransfer<User> {
     private Optional<String> username;
     private Optional<String> email;
     private Optional<String> password;

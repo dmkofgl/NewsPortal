@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 
-public class UserSearchingDto implements DtoTransfer<User>, DtoTransoform<User>, SearchingSpecification<User> {
+public class UserSearchingDto implements DtoTransfer<User>, DtoTransform<User>, SearchingSpecification<User> {
 
     private Optional<String> username;
 

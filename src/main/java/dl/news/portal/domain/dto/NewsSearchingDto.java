@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
 
-public class NewsSearchingDto implements DtoTransoform<News>, DtoTransfer<News>, SearchingSpecification<News> {
+public class NewsSearchingDto implements DtoTransform<News>, DtoTransfer<News>, SearchingSpecification<News> {
     private Optional<String> title;
     private Optional<Date> createDate;
     private Optional<Date> endCreateDate;
