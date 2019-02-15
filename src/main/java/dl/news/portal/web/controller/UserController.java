@@ -38,7 +38,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<HttpStatus> addUser(@Valid @RequestBody UserCreatingDto user) {
         userService.createUser(user.transform());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
