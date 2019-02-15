@@ -1,6 +1,7 @@
 package dl.news.portal.domain.service;
 
 import dl.news.portal.domain.dto.NewsDto;
+import dl.news.portal.domain.dto.NewsSearchingDto;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
 import org.junit.Test;
@@ -13,6 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -88,10 +91,25 @@ public class NewsServiceTest {
     }
 
     @Test
-    public void findPageByAuthor() {
+    public void findBySpecifications() throws ParseException {
+        final long COUNT_ALL = newsService.count();
+        SimpleDateFormat dateFormat = new SimpleDateFormat();
+        dateFormat.applyPattern("yyyy-MM-dd");
+        Date end = dateFormat.parse("2015-03-01");
+        NewsSearchingDto endDateDto = new NewsSearchingDto(null, null, end);
+        NewsSearchingDto titleDto = new NewsSearchingDto("test", null, null);
+        NewsSearchingDto titleAndEndDateDto = new NewsSearchingDto("test", null, end);
         PageRequest pageRequest = new PageRequest(0, 5);
-        User user = new User();
-        user.setId(1L);
-        Page<News> news = newsService.findPageByAuthor(user, pageRequest);
+
+        Page<News> userPageByTitle = newsService.getFilteredPage(titleDto, pageRequest);
+        Page<News> userPageByEndDate = newsService.getFilteredPage(endDateDto, pageRequest);
+        Page<News> userPageByTitleAndEndDate = newsService.getFilteredPage(titleAndEndDateDto, pageRequest);
+
+        assertNotEquals(COUNT_ALL, userPageByTitle.getTotalElements());
+        assertNotEquals(0L, userPageByTitle.getTotalElements());
+        assertNotEquals(COUNT_ALL, userPageByEndDate.getTotalElements());
+        assertNotEquals(0L, userPageByEndDate.getTotalElements());
+        assertNotEquals(COUNT_ALL, userPageByTitleAndEndDate.getTotalElements());
+        assertNotEquals(0L, userPageByTitleAndEndDate.getTotalElements());
     }
 }

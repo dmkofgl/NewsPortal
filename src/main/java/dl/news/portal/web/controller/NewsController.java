@@ -1,11 +1,14 @@
 package dl.news.portal.web.controller;
 
 import dl.news.portal.domain.dto.NewsDto;
+import dl.news.portal.domain.dto.NewsSearchingDto;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.resource.NewsResource;
 import dl.news.portal.domain.resource.PageResource;
 import dl.news.portal.domain.service.NewsService;
 import dl.news.portal.exception.EntityNotExistsException;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,10 +25,13 @@ public class NewsController {
     private NewsService newsService;
 
     @GetMapping
-    public PageResource<NewsResource> getPageNews(Pageable pageable) {
-        Page<NewsResource> resourcePage = newsService.getNewsPage(pageable).map(NewsResource::new);
-        PageResource<NewsResource> resource = new PageResource(resourcePage);
-        return resource;
+    @ApiImplicitParams({@ApiImplicitParam(name = "title", paramType = "query"),
+            @ApiImplicitParam(name = "createDate", paramType = "query"),
+            @ApiImplicitParam(name = "endCreateDate", paramType = "query")
+    })
+    public PageResource<NewsResource> getPageNews(NewsSearchingDto dto, Pageable pageable) {
+        Page<NewsResource> resourcePage = newsService.getFilteredPage(dto, pageable).map(NewsResource::new);
+        return new PageResource<>(resourcePage);
     }
 
     @GetMapping("/{id}")

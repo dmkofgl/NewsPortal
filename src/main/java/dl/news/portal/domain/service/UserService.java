@@ -1,6 +1,7 @@
 package dl.news.portal.domain.service;
 
 import dl.news.portal.domain.dto.DtoTransfer;
+import dl.news.portal.domain.dto.SearchingSpecification;
 import dl.news.portal.domain.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,5 +27,9 @@ public interface UserService {
     Optional<User> findByUsername(String username);
 
     List<User> findByUsername(String username, SearchingMode matcher);
+
+    Page<User> getFilteredPage(SearchingSpecification<User> dto, Pageable pageable);
+
+    Long count();
 }
 

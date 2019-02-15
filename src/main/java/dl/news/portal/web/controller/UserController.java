@@ -2,11 +2,14 @@ package dl.news.portal.web.controller;
 
 import dl.news.portal.domain.dto.UserCreatingDto;
 import dl.news.portal.domain.dto.UserDto;
+import dl.news.portal.domain.dto.UserSearchingDto;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.resource.PageResource;
 import dl.news.portal.domain.resource.UserResource;
 import dl.news.portal.domain.service.UserService;
 import dl.news.portal.exception.EntityNotExistsException;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,8 +33,12 @@ public class UserController {
     }
 
     @GetMapping
-    public PageResource<UserResource> getAllUsers(Pageable pageable) {
-        Page<UserResource> userPage = userService.getUsersPage(pageable).map(UserResource::new);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username", paramType = "query"),
+            @ApiImplicitParam(name = "email", paramType = "query")
+    })
+    public PageResource<UserResource> getFilteredUsers(UserSearchingDto dto, Pageable pageable) {
+        Page<UserResource> userPage = userService.getFilteredPage(dto, pageable).map(UserResource::new);
         return new PageResource<>(userPage);
     }
 

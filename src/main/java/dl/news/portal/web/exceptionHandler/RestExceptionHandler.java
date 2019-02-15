@@ -1,4 +1,4 @@
-package dl.news.portal.web.controller;
+package dl.news.portal.web.exceptionHandler;
 
 import dl.news.portal.exception.EntityNotExistsException;
 import org.springframework.hateoas.Link;
@@ -22,7 +22,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -40,9 +39,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(resources, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({EntityNotFoundException.class, NoSuchElementException.class})
-    public ResponseEntity handleEntityNotFoundException(EntityNotFoundException ex) {
-        Resource resource = new Resource(ex.getMessage());
+    @ExceptionHandler({EntityNotFoundException.class})
+    public ResponseEntity<Resource<String>> handleEntityNotFoundException(EntityNotFoundException ex) {
+        Resource<String> resource = new Resource<>(ex.getMessage());
         return new ResponseEntity<>(resource, HttpStatus.NOT_FOUND);
     }
 

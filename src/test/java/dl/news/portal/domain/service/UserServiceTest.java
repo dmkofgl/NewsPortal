@@ -1,11 +1,14 @@
 package dl.news.portal.domain.service;
 
 import dl.news.portal.domain.dto.UserDto;
+import dl.news.portal.domain.dto.UserSearchingDto;
 import dl.news.portal.domain.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +40,7 @@ public class UserServiceTest {
     @Test
     public void findAll() {
         List<User> users = userService.getAllUsers();
-        assertEquals(users.size(), 2);
+        assertEquals(users.size(), userService.count().intValue());
     }
 
     @Test
@@ -87,4 +90,25 @@ public class UserServiceTest {
         user.setEmail("mailcom@ccs.cc");
         userService.createUser(user);
     }
+
+    @Test
+    public void findBySpecification() {
+        final long COUNT_ALL = userService.count();
+        UserSearchingDto usernameDto = new UserSearchingDto("est", null);
+        UserSearchingDto emailDto = new UserSearchingDto(null, "com");
+        UserSearchingDto usernameAndEmailDto = new UserSearchingDto("est", "com");
+        PageRequest pageRequest = new PageRequest(0, 5);
+
+        Page<User> userPageByEmail = userService.getFilteredPage(emailDto, pageRequest);
+        Page<User> userPageByUsername = userService.getFilteredPage(usernameDto, pageRequest);
+        Page<User> userPageByUsernameAndEmail = userService.getFilteredPage(usernameAndEmailDto, pageRequest);
+
+        assertNotEquals(COUNT_ALL, userPageByEmail.getTotalElements());
+        assertNotEquals(0L, userPageByEmail.getTotalElements());
+        assertNotEquals(COUNT_ALL, userPageByUsername.getTotalElements());
+        assertNotEquals(0L, userPageByUsername.getTotalElements());
+        assertNotEquals(COUNT_ALL, userPageByUsernameAndEmail.getTotalElements());
+        assertNotEquals(0L, userPageByUsernameAndEmail.getTotalElements());
+    }
+
 }

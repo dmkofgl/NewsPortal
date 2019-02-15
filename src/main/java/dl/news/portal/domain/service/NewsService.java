@@ -1,6 +1,7 @@
 package dl.news.portal.domain.service;
 
 import dl.news.portal.domain.dto.DtoTransfer;
+import dl.news.portal.domain.dto.SearchingSpecification;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
 import org.springframework.data.domain.Page;
@@ -18,8 +19,6 @@ public interface NewsService {
 
     Optional<News> findNewsById(Long id);
 
-    void saveNews(News news);
-
     void createNews(News news);
 
     void updateNews(Long id, DtoTransfer<News> news);
@@ -33,4 +32,8 @@ public interface NewsService {
     Page<News> findPageByAuthor(User user, Pageable pageable);
 
     List<News> findByUpdatedDate(Date start, Date end);
+
+    Page<News> getFilteredPage(SearchingSpecification<News> dto, Pageable pageable);
+
+    Long count();
 }
