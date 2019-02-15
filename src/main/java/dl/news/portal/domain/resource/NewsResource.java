@@ -38,6 +38,8 @@ public class NewsResource extends ResourceSupport {
         add(linkTo(methodOn(NewsController.class).getNewsById(id)).withSelfRel());
         add(new CustomLink(linkTo(methodOn(NewsController.class).deleteNews(id)).withRel("delete"), HttpMethod.DELETE));
         add(new CustomLink(linkTo(methodOn(NewsController.class).updateNews(id, null)).withRel("update"), HttpMethod.PATCH));
-        add(linkTo(methodOn(UserController.class).getUserById(news.getAuthor().getId())).withRel("author"));
+        if (news.getAuthor() != null) {
+            add(linkTo(methodOn(UserController.class).getUserById(news.getAuthor().getId())).withRel("author"));
+        }
     }
 }

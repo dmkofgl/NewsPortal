@@ -67,7 +67,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             }
 
             public String getValue() {
-                return objectError.getRejectedValue().toString();
+                return objectError.getRejectedValue() == null ? "null" : objectError.getRejectedValue().toString();
             }
 
             public String getMessage() {

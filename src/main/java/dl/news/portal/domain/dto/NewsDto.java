@@ -31,6 +31,7 @@ public class NewsDto implements DtoTransoform<News>, DtoTransfer<News> {
     }
 
     public NewsDto() {
+        this(null, null);
     }
 
     public NewsDto(News news) {

@@ -1,0 +1,61 @@
+package dl.news.portal.web.controller;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dl.news.portal.domain.dto.NewsDto;
+import dl.news.portal.domain.entity.News;
+import dl.news.portal.domain.entity.User;
+import dl.news.portal.domain.service.NewsService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Optional;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@RunWith(SpringRunner.class)
+@WebMvcTest(NewsController.class)
+public class NewsControllerTest {
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    private NewsService newsService;
+
+    @Test
+    public void getNewsById() throws Exception {
+        User user = new User();
+        user.setId(2L);
+        News news = new News();
+        news.setId(1L);
+        news.setContent("test");
+        news.setTitle("test");
+        news.setAuthor(user);
+
+        Mockito.when(newsService.findNewsById(1L)).thenReturn(Optional.of(news));
+        mockMvc.perform(get("/news/1")).andExpect(status().isOk());
+        mockMvc.perform(get("/news/2")).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void addNews() throws Exception {
+        User user = new User();
+        user.setId(2L);
+        NewsDto news = new NewsDto("test", "test");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        String body = mapper.writeValueAsString(news.transform());
+        mockMvc.perform(post("/news").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+        news.setTitle(null);
+        body = mapper.writeValueAsString(news.transform());
+        mockMvc.perform(post("/news").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
+    }
+}

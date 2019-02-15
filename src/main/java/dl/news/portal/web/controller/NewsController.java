@@ -24,8 +24,7 @@ public class NewsController {
     @GetMapping
     public PageResource<NewsResource> getPageNews(Pageable pageable) {
         Page<NewsResource> resourcePage = newsService.getNewsPage(pageable).map(NewsResource::new);
-        PageResource<NewsResource> resource = new PageResource(resourcePage);
-        return resource;
+        return new PageResource<>(resourcePage);
     }
 
     @GetMapping("/{id}")
