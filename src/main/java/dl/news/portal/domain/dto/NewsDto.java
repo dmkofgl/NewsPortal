@@ -5,9 +5,22 @@ import dl.news.portal.domain.entity.News;
 import javax.validation.constraints.NotBlank;
 import java.util.Optional;
 
-public class NewsDto implements DtoTransoform<News>, DtoTransfer<News> {
+public class NewsDto implements DtoTransform<News>, DtoTransfer<News> {
     private Optional<@NotBlank String> title;
     private Optional<@NotBlank String> content;
+
+    public NewsDto(String title, String content) {
+        this.title = Optional.ofNullable(title);
+        this.content = Optional.ofNullable(content);
+    }
+
+    public NewsDto(News news) {
+        this(news.getTitle(), news.getContent());
+    }
+
+    public NewsDto() {
+        this(null, null);
+    }
 
     public Optional<String> getTitle() {
         return title;
@@ -23,19 +36,6 @@ public class NewsDto implements DtoTransoform<News>, DtoTransfer<News> {
 
     public void setContent(String content) {
         this.content = Optional.ofNullable(content);
-    }
-
-    public NewsDto(String title, String content) {
-        this.title = Optional.ofNullable(title);
-        this.content = Optional.ofNullable(content);
-    }
-
-    public NewsDto() {
-        this(null, null);
-    }
-
-    public NewsDto(News news) {
-        this(news.getTitle(), news.getContent());
     }
 
     @Override

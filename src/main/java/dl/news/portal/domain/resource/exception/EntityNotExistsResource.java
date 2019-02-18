@@ -8,17 +8,17 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class EntityNotExistsResource extends ResourceSupport {
     private EntityNotExistsException exception;
 
+    public EntityNotExistsResource(EntityNotExistsException exception) {
+        this.exception = exception;
+        addSelfLink();
+    }
+
     public String getEntityName() {
         return exception.getEntityName();
     }
 
     public String getMessage() {
         return exception.getMessage();
-    }
-
-    public EntityNotExistsResource(EntityNotExistsException exception) {
-        this.exception = exception;
-        addSelfLink();
     }
 
     private void addSelfLink() {

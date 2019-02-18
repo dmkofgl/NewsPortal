@@ -9,17 +9,17 @@ import javax.validation.ConstraintViolation;
 public class ValidateExceptionResource extends ResourceSupport {
     private ConstraintViolation constraintViolation;
 
+    public ValidateExceptionResource(ConstraintViolation constraintViolation) {
+        this.constraintViolation = constraintViolation;
+        addSelfLink();
+    }
+
     public String getPath() {
         return constraintViolation.getPropertyPath().toString();
     }
 
     public String getMessage() {
         return constraintViolation.getMessage();
-    }
-
-    public ValidateExceptionResource(ConstraintViolation constraintViolation) {
-        this.constraintViolation = constraintViolation;
-        addSelfLink();
     }
 
     private void addSelfLink() {

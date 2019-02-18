@@ -18,8 +18,6 @@ public interface NewsService {
 
     Optional<News> findNewsById(Long id);
 
-    void saveNews(News news);
-
     void createNews(News news);
 
     void updateNews(Long id, DtoTransfer<News> news);

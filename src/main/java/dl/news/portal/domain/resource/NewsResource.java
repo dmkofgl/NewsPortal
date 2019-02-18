@@ -15,6 +15,17 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class NewsResource extends ResourceSupport {
     private News news;
 
+    public NewsResource(News news) {
+        this.news = news;
+        final Long id = news.getId();
+        add(linkTo(methodOn(NewsController.class).getNewsById(id)).withSelfRel());
+        add(new CustomLink(linkTo(methodOn(NewsController.class).deleteNews(id)).withRel("delete"), HttpMethod.DELETE));
+        add(new CustomLink(linkTo(methodOn(NewsController.class).updateNews(id, null)).withRel("update"), HttpMethod.PATCH));
+        if (news.getAuthor() != null) {
+            add(linkTo(methodOn(UserController.class).getUserById(news.getAuthor().getId())).withRel("author"));
+        }
+    }
+
     public String getTitle() {
         return news.getTitle();
     }
@@ -32,14 +43,4 @@ public class NewsResource extends ResourceSupport {
     }
 
 
-    public NewsResource(News news) {
-        this.news = news;
-        final Long id = news.getId();
-        add(linkTo(methodOn(NewsController.class).getNewsById(id)).withSelfRel());
-        add(new CustomLink(linkTo(methodOn(NewsController.class).deleteNews(id)).withRel("delete"), HttpMethod.DELETE));
-        add(new CustomLink(linkTo(methodOn(NewsController.class).updateNews(id, null)).withRel("update"), HttpMethod.PATCH));
-        if (news.getAuthor() != null) {
-            add(linkTo(methodOn(UserController.class).getUserById(news.getAuthor().getId())).withRel("author"));
-        }
-    }
 }

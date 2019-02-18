@@ -6,7 +6,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.util.Optional;
 
-public class UserCreatingDto implements DtoTransoform<User>, DtoTransfer<User> {
+public class UserCreatingDto implements DtoTransform<User>, DtoTransfer<User> {
     private Optional<@Size(min = 3, max = 50) String> username;
     private Optional<
             @Email(regexp = "[A-Za-z0-9._%-+]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}")
@@ -26,7 +26,6 @@ public class UserCreatingDto implements DtoTransoform<User>, DtoTransfer<User> {
         User user = new User();
         transfer(user);
         return user;
-
     }
 
     public void setUsername(String username) {

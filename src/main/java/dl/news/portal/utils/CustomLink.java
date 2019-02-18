@@ -7,13 +7,14 @@ public class CustomLink extends Link {
 
     private HttpMethod method;
 
+    public CustomLink(Link link, HttpMethod method) {
+        super(link.getHref(), link.getRel());
+        this.method = method;
+    }
+
     public HttpMethod getMethod() {
         return method;
     }
 
-    public CustomLink(Link link, HttpMethod method) {
-        super(link.getHref(), link.getRel());
 
-        this.method = method;
-    }
 }
