@@ -14,6 +14,16 @@ public class UserCreatingDto implements DtoTransform<User>, DtoTransfer<User> {
                     String> email;
     private Optional<@Size(min = 6, max = 255) String> password;
 
+    public UserCreatingDto(String username, String email, String password) {
+        this.username = Optional.ofNullable(username);
+        this.email = Optional.ofNullable(email);
+        this.password = Optional.ofNullable(password);
+    }
+
+    public UserCreatingDto() {
+        this(null, null, null);
+    }
+
     @Override
     public void transfer(User receiver) {
         username.ifPresent(receiver::setUsername);

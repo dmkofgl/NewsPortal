@@ -58,4 +58,16 @@ public class NewsControllerTest {
         body = mapper.writeValueAsString(news.transform());
         mockMvc.perform(post("/news").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
     }
+
+    @Test
+    public void addNewsNegative() throws Exception {
+        User user = new User();
+        user.setId(2L);
+        NewsDto news = new NewsDto("", "test");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        String body = mapper.writeValueAsString(news.transform());
+
+        mockMvc.perform(post("/news").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
+    }
 }
