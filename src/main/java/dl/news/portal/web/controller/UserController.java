@@ -1,8 +1,7 @@
 package dl.news.portal.web.controller;
 
 import dl.news.portal.domain.dto.UserCreatingDto;
-import dl.news.portal.domain.dto.UserDto;
-import dl.news.portal.domain.dto.UserSearchingDto;
+import dl.news.portal.domain.dto.UserUpdateDto;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.resource.PageResource;
 import dl.news.portal.domain.resource.UserResource;
@@ -45,11 +44,11 @@ public class UserController {
     @PostMapping
     public ResponseEntity<HttpStatus> addUser(@Valid @RequestBody UserCreatingDto user) {
         userService.createUser(user.transform());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<HttpStatus> updateUser(@PathVariable Long id, @Valid @RequestBody UserDto updateUser) {
+    public ResponseEntity<HttpStatus> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateDto updateUser) {
         userService.updateUser(id, updateUser);
         return new ResponseEntity<>(HttpStatus.OK);
     }

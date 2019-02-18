@@ -12,41 +12,27 @@ public class PageResource<T> extends PagedResources<T> {
         super(page.getContent(), new PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements(), page.getTotalPages()));
         this.page = page;
         addSelfLink();
-        addPageNumberLinkWithRel(0, Link.REL_FIRST);
+        addPageableLinks();
+    }
+
+    private void addPageableLinks() {
+        int firstPageNumber = 0;
         int lastPageNumber = page.getTotalPages() <= 0 ? 0 : page.getTotalPages() - 1;
+        int nextPageNumber = page.nextPageable().getPageNumber();
+        int previousPageNumber = page.previousPageable().getPageNumber();
+        addPageNumberLinkWithRel(firstPageNumber, Link.REL_FIRST);
         addPageNumberLinkWithRel(lastPageNumber, Link.REL_LAST);
         if (page.hasNext()) {
-            addPageNumberLinkWithRel(page.nextPageable().getPageNumber(), Link.REL_NEXT);
+            addPageNumberLinkWithRel(nextPageNumber, Link.REL_NEXT);
         }
         if (page.hasPrevious()) {
-            addPageNumberLinkWithRel(page.previousPageable().getPageNumber(), Link.REL_PREVIOUS);
+            addPageNumberLinkWithRel(previousPageNumber, Link.REL_PREVIOUS);
         }
-
     }
 
     private void addSelfLink() {
         String path = getCurrentRequestUriBuilder().build().toString();
         Link link = new Link(path, Link.REL_SELF);
-        add(link);
-    }
-
-    private void addFirstLink() {
-        String path = getCurrentRequestUriBuilder().replaceQueryParam("page", "0").build().toString();
-        Link link = new Link(path, Link.REL_FIRST);
-        add(link);
-    }
-
-    private void addLastLink() {
-        Integer lastPageNumber = page.getTotalPages() - 1;
-        String path = getCurrentRequestUriBuilder().replaceQueryParam("page", lastPageNumber).build().toString();
-        Link link = new Link(path, Link.REL_FIRST);
-        add(link);
-    }
-
-    private void addNextLink() {
-        Integer number = page.nextPageable().getPageNumber();
-        String path = getCurrentRequestUriBuilder().replaceQueryParam("page", number).build().toString();
-        Link link = new Link(path, Link.REL_FIRST);
         add(link);
     }
 

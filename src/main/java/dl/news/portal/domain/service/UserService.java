@@ -16,11 +16,11 @@ public interface UserService {
 
     void createUser(User user);
 
+    void updateUser(Long id, DtoTransfer<User> updatedUser);
+
     void deleteUser(Long id);
 
     Optional<User> findUserById(Long id);
-
-    void updateUser(Long id, DtoTransfer<User> updatedUser);
 
     Optional<User> findByEmail(String email);
 

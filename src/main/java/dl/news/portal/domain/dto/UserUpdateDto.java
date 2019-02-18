@@ -6,7 +6,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.util.Optional;
 
-public class UserDto implements DtoTransfer<User> {
+public class UserUpdateDto implements DtoTransfer<User> {
 
     private Optional<@Size(min = 3, max = 50) String> username;
 
@@ -15,20 +15,12 @@ public class UserDto implements DtoTransfer<User> {
             @Size(max = 100)
                     String> email;
 
-    public void setUsername(String username) {
-        this.username = Optional.ofNullable(username);
-    }
-
-    public void setEmail(String email) {
-        this.email = Optional.ofNullable(email);
-    }
-
-    public UserDto(String username, String email) {
+    public UserUpdateDto(String username, String email) {
         this.username = Optional.ofNullable(username);
         this.email = Optional.ofNullable(email);
     }
 
-    public UserDto() {
+    public UserUpdateDto() {
         this(null, null);
     }
 
@@ -36,5 +28,13 @@ public class UserDto implements DtoTransfer<User> {
     public void transfer(User receiver) {
         username.ifPresent(receiver::setUsername);
         email.ifPresent(receiver::setEmail);
+    }
+
+    public void setUsername(String username) {
+        this.username = Optional.ofNullable(username);
+    }
+
+    public void setEmail(String email) {
+        this.email = Optional.ofNullable(email);
     }
 }
