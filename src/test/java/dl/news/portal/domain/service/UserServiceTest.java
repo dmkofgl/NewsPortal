@@ -62,23 +62,40 @@ public class UserServiceTest {
     }
 
     @Test
-    public void findBySpecification() {
+    public void findByUsernameSpecification() {
         final long COUNT_ALL = userService.count();
         UserSearchingDto usernameDto = new UserSearchingDto("est", null);
+        PageRequest pageRequest = new PageRequest(0, 5);
+
+        Page<User> userPageByUsername = userService.getFilteredPage(usernameDto, pageRequest);
+
+        assertNotEquals(COUNT_ALL, userPageByUsername.getTotalElements());
+        assertNotEquals(0L, userPageByUsername.getTotalElements());
+    }
+
+    @Test
+    public void findByEmailSpecification() {
+        final long COUNT_ALL = userService.count();
         UserSearchingDto emailDto = new UserSearchingDto(null, "com");
-        UserSearchingDto usernameAndEmailDto = new UserSearchingDto("est", "com");
         PageRequest pageRequest = new PageRequest(0, 5);
 
         Page<User> userPageByEmail = userService.getFilteredPage(emailDto, pageRequest);
-        Page<User> userPageByUsername = userService.getFilteredPage(usernameDto, pageRequest);
-        Page<User> userPageByUsernameAndEmail = userService.getFilteredPage(usernameAndEmailDto, pageRequest);
 
         assertNotEquals(COUNT_ALL, userPageByEmail.getTotalElements());
         assertNotEquals(0L, userPageByEmail.getTotalElements());
-        assertNotEquals(COUNT_ALL, userPageByUsername.getTotalElements());
-        assertNotEquals(0L, userPageByUsername.getTotalElements());
+    }
+
+    @Test
+    public void findByUsernameAndEmailSpecification() {
+        final long COUNT_ALL = userService.count();
+        UserSearchingDto usernameAndEmailDto = new UserSearchingDto("est", "com");
+        PageRequest pageRequest = new PageRequest(0, 5);
+
+        Page<User> userPageByUsernameAndEmail = userService.getFilteredPage(usernameAndEmailDto, pageRequest);
+
         assertNotEquals(COUNT_ALL, userPageByUsernameAndEmail.getTotalElements());
         assertNotEquals(0L, userPageByUsernameAndEmail.getTotalElements());
     }
+
 
 }
