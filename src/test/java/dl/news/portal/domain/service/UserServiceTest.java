@@ -1,6 +1,6 @@
 package dl.news.portal.domain.service;
 
-import dl.news.portal.domain.dto.UserUpdateDto;
+import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,7 +73,7 @@ public class UserServiceTest {
     @Test
     public void updateUser() {
         String newUsername = "testTester", newEmail = "sven@qwert.ce";
-        UserUpdateDto updatedUser = new UserUpdateDto(newUsername, newEmail);
+        UserDto updatedUser = new UserDto(newUsername, newEmail,null);
         userService.updateUser(2L, updatedUser);
         User userAfterUpdate = userService.findUserById(2L).get();
         assertEquals(newUsername, userAfterUpdate.getUsername());

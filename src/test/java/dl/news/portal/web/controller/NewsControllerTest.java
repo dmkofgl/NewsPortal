@@ -52,10 +52,10 @@ public class NewsControllerTest {
         NewsDto news = new NewsDto("test", "test");
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        String body = mapper.writeValueAsString(news.transform());
+        String body = mapper.writeValueAsString(NewsDto.of(news));
         mockMvc.perform(post("/news").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
         news.setTitle(null);
-        body = mapper.writeValueAsString(news.transform());
+        body = mapper.writeValueAsString(NewsDto.of(news));
         mockMvc.perform(post("/news").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
     }
 
@@ -66,7 +66,7 @@ public class NewsControllerTest {
         NewsDto news = new NewsDto("", "test");
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        String body = mapper.writeValueAsString(news.transform());
+        String body = mapper.writeValueAsString(NewsDto.of(news));
 
         mockMvc.perform(post("/news").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
     }

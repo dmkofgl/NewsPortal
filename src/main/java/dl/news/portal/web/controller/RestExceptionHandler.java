@@ -3,6 +3,7 @@ package dl.news.portal.web.controller;
 import dl.news.portal.domain.resource.exception.BindExceptionResource;
 import dl.news.portal.domain.resource.exception.EntityNotExistsResource;
 import dl.news.portal.domain.resource.exception.ValidateExceptionResource;
+import dl.news.portal.exception.DeniedOperationException;
 import dl.news.portal.exception.EntityNotExistsException;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +34,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<EntityNotExistsResource> handleEntityNotFoundException(EntityNotExistsException ex) {
         EntityNotExistsResource resources = new EntityNotExistsResource(ex);
         return new ResponseEntity<>(resources, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({DeniedOperationException.class})
+    public ResponseEntity<Resource<String>> handleDeniedOperationException(DeniedOperationException ex) {
+        Resource<String> resource = new Resource<>(ex.getMessage());
+        return new ResponseEntity<>(resource, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler({EntityNotFoundException.class})

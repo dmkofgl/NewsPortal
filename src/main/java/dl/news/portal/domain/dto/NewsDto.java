@@ -5,7 +5,7 @@ import dl.news.portal.domain.entity.News;
 import javax.validation.constraints.NotBlank;
 import java.util.Optional;
 
-public class NewsDto implements DtoTransform<News>, DtoTransfer<News> {
+public class NewsDto {
     private Optional<@NotBlank String> title;
     private Optional<@NotBlank String> content;
 
@@ -38,16 +38,14 @@ public class NewsDto implements DtoTransform<News>, DtoTransfer<News> {
         this.content = Optional.ofNullable(content);
     }
 
-    @Override
     public void transfer(News receiver) {
         title.ifPresent(receiver::setTitle);
         content.ifPresent(receiver::setContent);
     }
 
-    @Override
-    public News transform() {
+    public static News of(NewsDto newsDto) {
         News news = new News();
-        transfer(news);
+        newsDto.transfer(news);
         return news;
     }
 }

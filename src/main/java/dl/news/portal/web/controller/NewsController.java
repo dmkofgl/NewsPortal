@@ -36,7 +36,7 @@ public class NewsController {
 
     @PostMapping
     public ResponseEntity<HttpStatus> addNews(@Valid @RequestBody NewsDto news) {
-        newsService.createNews(news.transform());
+        newsService.createNews(NewsDto.of(news));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

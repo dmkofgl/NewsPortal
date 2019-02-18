@@ -2,7 +2,7 @@ package dl.news.portal.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dl.news.portal.domain.dto.UserCreatingDto;
+import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.service.UserService;
 import org.junit.Test;
@@ -44,20 +44,20 @@ public class UserControllerTest {
 
     @Test
     public void addUser() throws Exception {
-        UserCreatingDto dto = new UserCreatingDto("testUsername", "testEmail@mail.com", "testPassword");
+        UserDto dto = new UserDto("testUsername", "testEmail@mail.com", "testPassword");
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        String body = mapper.writeValueAsString(dto.transform());
+        String body = mapper.writeValueAsString(UserDto.of(dto));
 
         mockMvc.perform(post("/users").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
     }
 
     @Test
     public void addUserNegative() throws Exception {
-        UserCreatingDto dto = new UserCreatingDto("testUsername", "qwerty", "testPassword");
+        UserDto dto = new UserDto("testUsername", "qwerty", "testPassword");
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        String body = mapper.writeValueAsString(dto.transform());
+        String body = mapper.writeValueAsString(UserDto.of(dto));
 
         mockMvc.perform(post("/users").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
     }

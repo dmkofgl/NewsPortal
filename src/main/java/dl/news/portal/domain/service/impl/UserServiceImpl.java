@@ -1,10 +1,11 @@
 package dl.news.portal.domain.service.impl;
 
-import dl.news.portal.domain.dto.DtoTransfer;
+import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.repository.UserRepository;
 import dl.news.portal.domain.service.SearchingMode;
 import dl.news.portal.domain.service.UserService;
+import dl.news.portal.exception.DeniedOperationException;
 import dl.news.portal.exception.UnexpectedSearchingModeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -46,7 +47,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(Long id, DtoTransfer<User> updatedUser) {
+    public void updateUser(Long id, UserDto updatedUser) {
+        updatedUser.getPassword().ifPresent((x) -> {
+            throw new DeniedOperationException("Password can't be changed");
+        });
         User user = userRepository.getOne(id);
         updatedUser.transfer(user);
         userRepository.saveAndFlush(user);
