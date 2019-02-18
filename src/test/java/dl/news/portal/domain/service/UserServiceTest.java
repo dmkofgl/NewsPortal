@@ -1,5 +1,6 @@
 package dl.news.portal.domain.service;
 
+import dl.news.portal.domain.dto.UserSearchingDto;
 import dl.news.portal.domain.dto.UserUpdateDto;
 import dl.news.portal.domain.entity.User;
 import org.junit.Test;
@@ -12,7 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -24,40 +24,11 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
-    @Test
-    public void findByEmail() {
-        Optional<User> user = userService.findByEmail("email@gmail.com");
-        assertTrue(user.isPresent());
-    }
 
     @Test
     public void findById() {
         Optional<User> user = userService.findUserById(1L);
         assertTrue(user.isPresent());
-    }
-
-    @Test
-    public void findAll() {
-        List<User> users = userService.getAllUsers();
-        assertEquals(users.size(), userService.count().intValue());
-    }
-
-    @Test
-    public void findByUsername() {
-        Optional<User> user = userService.findByUsername("nameTest");
-        assertTrue(user.isPresent());
-    }
-
-    @Test
-    public void findByUsernameIgnoreCase() {
-        List<User> users = userService.findByUsername("NaMe", SearchingMode.IGNORE_CASE);
-        assertTrue(users.size() != 0);
-    }
-
-    @Test
-    public void findByUsernameIdenticalCase() {
-        List<User> users = userService.findByUsername("name", SearchingMode.IDENTICAL);
-        assertTrue(users.size() != 0);
     }
 
     @Test

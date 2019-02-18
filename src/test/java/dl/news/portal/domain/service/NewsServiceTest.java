@@ -17,7 +17,6 @@ import javax.validation.ConstraintViolationException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -33,14 +32,6 @@ public class NewsServiceTest {
     public void findById() {
         Optional<News> newsOptional = newsService.findNewsById(1L);
         assertTrue(newsOptional.isPresent());
-    }
-
-
-    @Test
-    public void findByTitle() {
-        List<News> news = newsService.findByTitle("Test");
-        List<News> newsByUpper = newsService.findByTitle("TeST");
-        assertEquals(news.size(), newsByUpper.size());
     }
 
     @Test(expected = ConstraintViolationException.class)
@@ -70,24 +61,6 @@ public class NewsServiceTest {
         newsService.updateNews(1L, updatedNews);
         News news = newsService.findNewsById(1L).get();
         assertEquals(newContent, news.getContent());
-    }
-
-    @Test
-    public void findByAuthor() {
-        User user = new User();
-        user.setId(1L);
-        List<News> news = newsService.findByAuthor(user);
-        assertNotEquals(0, news.size());
-    }
-
-    @Test
-    public void findByUpdatedDateBetween() {
-        Date end = new Date();
-        Date start = new Date(end.getTime() - 31536000000L);
-
-        List<News> news = newsService.findByUpdatedDate(start, end);
-        List<News> allNews = newsService.getAllNews();
-        assertNotEquals(allNews.size(), news.size());
     }
 
     @Test

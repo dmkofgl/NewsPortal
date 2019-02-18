@@ -1,6 +1,7 @@
 package dl.news.portal.web.controller;
 
 import dl.news.portal.domain.dto.UserCreatingDto;
+import dl.news.portal.domain.dto.UserSearchingDto;
 import dl.news.portal.domain.dto.UserUpdateDto;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.resource.PageResource;

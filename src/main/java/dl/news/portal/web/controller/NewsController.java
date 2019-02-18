@@ -1,11 +1,14 @@
 package dl.news.portal.web.controller;
 
 import dl.news.portal.domain.dto.NewsDto;
+import dl.news.portal.domain.dto.NewsSearchingDto;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.resource.NewsResource;
 import dl.news.portal.domain.resource.PageResource;
 import dl.news.portal.domain.service.NewsService;
 import dl.news.portal.exception.EntityNotExistsException;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
