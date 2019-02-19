@@ -1,4 +1,4 @@
-package dl.news.portal.domain.resource.exception;
+package dl.news.portal.domain.response.exception;
 
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
@@ -6,10 +6,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.ConstraintViolation;
 
-public class ValidateExceptionResource extends ResourceSupport {
+public class ValidateExceptionResponse extends ResourceSupport {
     private ConstraintViolation constraintViolation;
 
-    public ValidateExceptionResource(ConstraintViolation constraintViolation) {
+    public ValidateExceptionResponse(ConstraintViolation constraintViolation) {
         this.constraintViolation = constraintViolation;
         addSelfLink();
     }

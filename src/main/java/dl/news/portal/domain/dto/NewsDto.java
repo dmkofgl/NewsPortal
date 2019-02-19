@@ -1,17 +1,19 @@
 package dl.news.portal.domain.dto;
 
 import dl.news.portal.domain.entity.News;
+import dl.news.portal.utils.ValidationMode;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Optional;
 
 public class NewsDto {
-    private Optional<@NotBlank String> title;
-    private Optional<@NotBlank String> content;
+    @NotBlank(groups = ValidationMode.Create.class)
+    private String title;
+    @NotBlank(groups = ValidationMode.Create.class)
+    private String content;
 
     public NewsDto(String title, String content) {
-        this.title = Optional.ofNullable(title);
-        this.content = Optional.ofNullable(content);
+        this.title = title;
+        this.content = content;
     }
 
     public NewsDto(News news) {
@@ -19,28 +21,31 @@ public class NewsDto {
     }
 
     public NewsDto() {
-        this(null, null);
     }
 
-    public Optional<String> getTitle() {
+    public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
-        this.title = Optional.ofNullable(title);
+        this.title = title;
     }
 
-    public Optional<String> getContent() {
+    public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
-        this.content = Optional.ofNullable(content);
+        this.content = content;
     }
 
     public void transfer(News receiver) {
-        title.ifPresent(receiver::setTitle);
-        content.ifPresent(receiver::setContent);
+        if (title != null) {
+            receiver.setTitle(title);
+        }
+        if (content != null) {
+            receiver.setContent(content);
+        }
     }
 
     public static News of(NewsDto newsDto) {

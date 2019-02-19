@@ -7,8 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,13 +83,5 @@ public class NewsServiceTest {
         List<News> news = newsService.findByUpdatedDate(start, end);
         List<News> allNews = newsService.getAllNews();
         assertNotEquals(allNews.size(), news.size());
-    }
-
-    @Test
-    public void findPageByAuthor() {
-        PageRequest pageRequest = new PageRequest(0, 5);
-        User user = new User();
-        user.setId(1L);
-        Page<News> news = newsService.findPageByAuthor(user, pageRequest);
     }
 }

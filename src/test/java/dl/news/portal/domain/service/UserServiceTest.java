@@ -2,6 +2,7 @@ package dl.news.portal.domain.service;
 
 import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.entity.User;
+import dl.news.portal.exception.DeniedOperationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,11 +73,18 @@ public class UserServiceTest {
 
     @Test
     public void updateUser() {
-        String newUsername = "testTester", newEmail = "sven@qwert.ce";
+        String newUsername = "testTester";
+        String newEmail = "sven@qwert.ce";
         UserDto updatedUser = new UserDto(newUsername, newEmail,null);
         userService.updateUser(2L, updatedUser);
         User userAfterUpdate = userService.findUserById(2L).get();
         assertEquals(newUsername, userAfterUpdate.getUsername());
+    }
+    @Test(expected = DeniedOperationException.class)
+    public void updateUser_whenPasswordExists_shouldReturnException() {
+        String newUsername = "testTester", newEmail = "sven@qwert.ce";
+        UserDto updatedUser = new UserDto(newUsername, newEmail,"password");
+        userService.updateUser(2L, updatedUser);
     }
 
     @Test(expected = ConstraintViolationException.class)

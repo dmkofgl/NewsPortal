@@ -1,14 +1,14 @@
-package dl.news.portal.domain.resource;
+package dl.news.portal.domain.response;
 
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-public class PageResource<T> extends PagedResources<T> {
+public class PageResponse<T> extends PagedResources<T> {
     private Page<T> page;
 
-    public PageResource(Page<T> page) {
+    public PageResponse(Page<T> page) {
         super(page.getContent(), new PageMetadata(page.getSize(), page.getNumber(), page.getTotalElements(), page.getTotalPages()));
         this.page = page;
         addSelfLink();

@@ -48,9 +48,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(Long id, UserDto updatedUser) {
-        updatedUser.getPassword().ifPresent((x) -> {
-            throw new DeniedOperationException("Password can't be changed");
-        });
+        if (updatedUser.getPassword() != null) {
+            throw new DeniedOperationException();
+        }
         User user = userRepository.getOne(id);
         updatedUser.transfer(user);
         userRepository.saveAndFlush(user);

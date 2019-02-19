@@ -1,4 +1,4 @@
-package dl.news.portal.domain.resource.exception;
+package dl.news.portal.domain.response.exception;
 
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
@@ -10,10 +10,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BindExceptionResource extends ResourceSupport {
+public class BindExceptionResponse extends ResourceSupport {
     private BindingResult bindException;
 
-    public BindExceptionResource(BindingResult bindException) {
+    public BindExceptionResponse(BindingResult bindException) {
         this.bindException = bindException;
         addSelfLink();
     }
