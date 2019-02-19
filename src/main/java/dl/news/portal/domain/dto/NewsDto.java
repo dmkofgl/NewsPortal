@@ -11,16 +11,13 @@ public class NewsDto {
     @NotBlank(groups = ValidationMode.Create.class)
     private String content;
 
-    public NewsDto(String title, String content) {
-        this.title = title;
-        this.content = content;
-    }
-
     public NewsDto(News news) {
         this(news.getTitle(), news.getContent());
     }
 
-    public NewsDto() {
+    public NewsDto(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 
     public String getTitle() {
@@ -39,18 +36,4 @@ public class NewsDto {
         this.content = content;
     }
 
-    public void transfer(News receiver) {
-        if (title != null) {
-            receiver.setTitle(title);
-        }
-        if (content != null) {
-            receiver.setContent(content);
-        }
-    }
-
-    public static News of(NewsDto newsDto) {
-        News news = new News();
-        newsDto.transfer(news);
-        return news;
-    }
 }

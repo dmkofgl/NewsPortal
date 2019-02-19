@@ -38,8 +38,8 @@ public class NewsController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> addNews(@Validated(ValidationMode.Create.class) @RequestBody NewsDto news) {
-        newsService.createNews(NewsDto.of(news));
+    public ResponseEntity<HttpStatus> addNews(@Validated(ValidationMode.Create.class) @RequestBody NewsDto newsDto) {
+        newsService.createNews(newsDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

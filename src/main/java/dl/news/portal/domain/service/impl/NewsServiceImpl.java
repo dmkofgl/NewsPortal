@@ -35,14 +35,16 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public void createNews(News news) {
+    public void createNews(NewsDto dto) {
+        News news = new News();
+        transferDto(news, dto);
         newsRepository.save(news);
     }
 
     @Override
-    public void updateNews(Long id, NewsDto dtoTransfer) {
+    public void updateNews(Long id, NewsDto dto) {
         News news = newsRepository.getOne(id);
-        dtoTransfer.transfer(news);
+        transferDto(news, dto);
         newsRepository.save(news);
     }
 
@@ -69,5 +71,16 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<News> findByUpdatedDate(Date start, Date end) {
         return newsRepository.findByUpdatedDateBetween(start, end);
+    }
+
+    private void transferDto(News receiver, NewsDto dto) {
+        String title = dto.getTitle();
+        String content = dto.getContent();
+        if (title != null) {
+            receiver.setTitle(title);
+        }
+        if (content != null) {
+            receiver.setContent(content);
+        }
     }
 }

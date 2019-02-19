@@ -13,7 +13,7 @@ public interface UserService {
 
     Page<User> getUsersPage(Pageable pageable);
 
-    void createUser(User user);
+    void createUser(UserDto user);
 
     void updateUser(Long id, UserDto updatedUser);
 

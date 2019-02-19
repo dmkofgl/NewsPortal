@@ -2,7 +2,7 @@ package dl.news.portal.web.controller;
 
 import dl.news.portal.domain.response.exception.BindExceptionResponse;
 import dl.news.portal.domain.response.exception.ValidateExceptionResponse;
-import dl.news.portal.exception.DeniedOperationException;
+import dl.news.portal.exception.DeniedParameterException;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,8 +33,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({DeniedOperationException.class})
-    public ResponseEntity<Resource<String>> handleDeniedOperationException(DeniedOperationException ex) {
+    @ExceptionHandler({DeniedParameterException.class})
+    public ResponseEntity<Resource<String>> handleDeniedDeniedParameterException(DeniedParameterException ex) {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 

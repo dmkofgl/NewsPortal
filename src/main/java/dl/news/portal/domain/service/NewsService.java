@@ -18,7 +18,7 @@ public interface NewsService {
 
     Optional<News> findNewsById(Long id);
 
-    void createNews(News news);
+    void createNews(NewsDto news);
 
     void updateNews(Long id, NewsDto news);
 

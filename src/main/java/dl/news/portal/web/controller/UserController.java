@@ -37,8 +37,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> addUser(@Validated(ValidationMode.Create.class) @RequestBody UserDto user) {
-        userService.createUser(UserDto.of(user));
+    public ResponseEntity<HttpStatus> addUser(@Validated(ValidationMode.Create.class) @RequestBody UserDto userDto) {
+        userService.createUser(userDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

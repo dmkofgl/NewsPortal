@@ -6,6 +6,7 @@ import dl.news.portal.utils.ValidationMode;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 public class UserDto {
@@ -17,15 +18,17 @@ public class UserDto {
     @NotBlank(groups = ValidationMode.Create.class)
     private String email;
     @Size(min = 6, max = 255)
+    @Null(groups = ValidationMode.Update.class)
     private String password;
+
+    public UserDto(User user) {
+        this(user.getUsername(), user.getEmail(), user.getPassword());
+    }
 
     public UserDto(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    public UserDto() {
     }
 
     public void transfer(User receiver) {
@@ -38,12 +41,6 @@ public class UserDto {
         if (password != null) {
             receiver.setPassword(password);
         }
-    }
-
-    public static User of(UserDto userDto) {
-        User user = new User();
-        userDto.transfer(user);
-        return user;
     }
 
     public void setUsername(String username) {
@@ -70,4 +67,5 @@ public class UserDto {
     public String getPassword() {
         return password;
     }
+
 }

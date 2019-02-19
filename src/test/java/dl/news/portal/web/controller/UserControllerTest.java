@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.service.UserService;
-import dl.news.portal.exception.DeniedOperationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -18,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -73,7 +71,7 @@ public class UserControllerTest {
         UserDto dto = new UserDto("testUsername", "qwerty", "testPassword");
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        String body = mapper.writeValueAsString(UserDto.of(dto));
+        String body = mapper.writeValueAsString(dto);
 
         mockMvc.perform(post(USERS_PATH).content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
     }
@@ -83,9 +81,12 @@ public class UserControllerTest {
         UserDto dto = new UserDto("testUsername", null, "testPassword");
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        String body = mapper.writeValueAsString(UserDto.of(dto));
+        String body = mapper.writeValueAsString(dto);
 
-        mockMvc.perform(post(USERS_PATH).content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
+        mockMvc.perform(post(USERS_PATH)
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -103,18 +104,17 @@ public class UserControllerTest {
     }
 
     @Test
-    public void updateUser_whenThrowException_shouldReturnBadRequest() throws Exception {
+    public void updateUser_whenPasswordExist_shouldReturnUnprocessableEntity() throws Exception {
         final String path = USERS_PATH + "/1";
         UserDto dto = new UserDto("testUsername", null, "asddfdsfdsf");
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String body = mapper.writeValueAsString(dto);
-        Mockito.doThrow(DeniedOperationException.class).when(userService).updateUser(any(Long.class), any(UserDto.class));
 
         mockMvc.perform(patch(path)
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity());
     }
 
 

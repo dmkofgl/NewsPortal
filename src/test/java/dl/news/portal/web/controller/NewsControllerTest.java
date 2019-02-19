@@ -58,14 +58,11 @@ public class NewsControllerTest {
         NewsDto news = new NewsDto("test", "test");
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        String body = mapper.writeValueAsString(NewsDto.of(news));
-        mockMvc.perform(post("/news").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
-        news.setTitle(null);
-        body = mapper.writeValueAsString(news);
-        mockMvc.perform(post(NEWS_PATH)
+        String body = mapper.writeValueAsString(news);
+        mockMvc.perform(post("/news")
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -75,7 +72,7 @@ public class NewsControllerTest {
         NewsDto news = new NewsDto(null, "test");
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        String body = mapper.writeValueAsString(NewsDto.of(news));
+        String body = mapper.writeValueAsString(news);
 
         mockMvc.perform(post(NEWS_PATH)
                 .content(body)
@@ -90,7 +87,7 @@ public class NewsControllerTest {
         NewsDto news = new NewsDto("   ", "test");
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        String body = mapper.writeValueAsString(NewsDto.of(news));
+        String body = mapper.writeValueAsString(news);
 
         mockMvc.perform(post(NEWS_PATH)
                 .content(body)
@@ -106,7 +103,10 @@ public class NewsControllerTest {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String body = mapper.writeValueAsString(dto);
 
-        mockMvc.perform(patch(path).content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        mockMvc.perform(patch(path)
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -117,6 +117,9 @@ public class NewsControllerTest {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String body = mapper.writeValueAsString(dto);
 
-        mockMvc.perform(patch(path).content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        mockMvc.perform(patch(path)
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }
