@@ -1,6 +1,6 @@
 package dl.news.portal.domain.service;
 
-import dl.news.portal.domain.dto.DtoTransfer;
+import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.dto.SearchingSpecification;
 import dl.news.portal.domain.entity.News;
 import org.springframework.data.domain.Page;
@@ -13,9 +13,9 @@ public interface NewsService {
 
     Optional<News> findNewsById(Long id);
 
-    void createNews(News news);
+    void createNews(NewsDto news);
 
-    void updateNews(Long id, DtoTransfer<News> news);
+    void updateNews(Long id, NewsDto news);
 
     void deleteById(Long id);
 

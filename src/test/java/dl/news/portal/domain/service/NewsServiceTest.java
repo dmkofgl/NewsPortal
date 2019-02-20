@@ -35,27 +35,21 @@ public class NewsServiceTest {
     }
 
     @Test(expected = ConstraintViolationException.class)
-    public void addNewsWithAuthorException() {
-        News news = new News();
-        news.setTitle("test title");
-        news.setContent("content");
+    public void addNews_whenTitleIsBlank_shouldTrowException() {
+        NewsDto news = new NewsDto("  ", "content");
         newsService.createNews(news);
     }
 
     @Test
-    public void addNews() {
-        User user = new User();
-        user.setId(1L);
-        News news = new News();
-        news.setTitle("test title");
-        news.setContent("content");
-        news.setAuthor(user);
+    public void addNews_whenNewsDtoIsvalid_shouldChangeSize() {
+        Long size = newsService.count();
+        NewsDto news = new NewsDto("test title", "content");
         newsService.createNews(news);
-        assertNotNull(news.getId());
+        assertNotEquals(size, newsService.count());
     }
 
     @Test
-    public void updateNews() {
+    public void updateNewsContent_whenTitleIsNull_contentsShouldBeEquals() {
         final String newContent = "new content";
         NewsDto updatedNews = new NewsDto(null, newContent);
         newsService.updateNews(1L, updatedNews);

@@ -18,20 +18,21 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(NewsController.class)
 public class NewsControllerTest {
+    private static final String NEWS_PATH = "/news";
     @Autowired
     private MockMvc mockMvc;
     @MockBean
     private NewsService newsService;
 
     @Test
-    public void getNewsById() throws Exception {
+    public void getNewsById_whenNewsExists_shouldReturnOk() throws Exception {
+        final String path = NEWS_PATH + "/1";
         User user = new User();
         user.setId(2L);
         News news = new News();
@@ -41,33 +42,84 @@ public class NewsControllerTest {
         news.setAuthor(user);
 
         Mockito.when(newsService.findNewsById(1L)).thenReturn(Optional.of(news));
-        mockMvc.perform(get("/news/1")).andExpect(status().isOk());
-        mockMvc.perform(get("/news/2")).andExpect(status().isNotFound());
+        mockMvc.perform(get(path)).andExpect(status().isOk());
     }
 
     @Test
-    public void addNews() throws Exception {
+    public void getNewsById_whenNewsDoesNotExist_shouldReturnNotFound() throws Exception {
+        final String path = NEWS_PATH + "/1";
+        mockMvc.perform(get(path)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void addNews_whenNewsDtoIsValid_shouldReturnCreated() throws Exception {
         User user = new User();
         user.setId(2L);
         NewsDto news = new NewsDto("test", "test");
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        String body = mapper.writeValueAsString(news.transform());
-        mockMvc.perform(post("/news").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
-        news.setTitle(null);
-        body = mapper.writeValueAsString(news.transform());
-        mockMvc.perform(post("/news").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
+        String body = mapper.writeValueAsString(news);
+        mockMvc.perform(post("/news")
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
     }
 
     @Test
-    public void addNewsNegative() throws Exception {
+    public void addNews_whenNewsDtoWithNullField_shouldReturnUnprocessableEntity() throws Exception {
         User user = new User();
         user.setId(2L);
-        NewsDto news = new NewsDto("", "test");
+        NewsDto news = new NewsDto(null, "test");
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        String body = mapper.writeValueAsString(news.transform());
+        String body = mapper.writeValueAsString(news);
 
-        mockMvc.perform(post("/news").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
+        mockMvc.perform(post(NEWS_PATH)
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void addNews_whenNewsDtoFieldIsNotValid_shouldReturnUnprocessableEntity() throws Exception {
+        User user = new User();
+        user.setId(2L);
+        NewsDto news = new NewsDto("   ", "test");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        String body = mapper.writeValueAsString(news);
+
+        mockMvc.perform(post(NEWS_PATH)
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void updateUser_whenUserDtoWithNullField_shouldReturnOk() throws Exception {
+        final String path = NEWS_PATH + "/1";
+        NewsDto dto = new NewsDto(null, "new content");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        String body = mapper.writeValueAsString(dto);
+
+        mockMvc.perform(patch(path)
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateUser_whenUserDtoIsValid_shouldReturnOk() throws Exception {
+        final String path = NEWS_PATH + "/1";
+        NewsDto dto = new NewsDto("newTitle", "new content");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        String body = mapper.writeValueAsString(dto);
+
+        mockMvc.perform(patch(path)
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }

@@ -1,6 +1,6 @@
 package dl.news.portal.domain.service.impl;
 
-import dl.news.portal.domain.dto.DtoTransfer;
+import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.dto.SearchingSpecification;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.repository.NewsRepository;
@@ -30,14 +30,16 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public void createNews(News news) {
+    public void createNews(NewsDto dto) {
+        News news = new News();
+        transferDto(news, dto);
         newsRepository.save(news);
     }
 
     @Override
-    public void updateNews(Long id, DtoTransfer<News> dtoTransfer) {
+    public void updateNews(Long id, NewsDto dto) {
         News news = newsRepository.getOne(id);
-        dtoTransfer.transfer(news);
+        transferDto(news, dto);
         newsRepository.save(news);
     }
 
@@ -49,5 +51,16 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public Long count() {
         return newsRepository.count();
+    }
+
+    private void transferDto(News receiver, NewsDto dto) {
+        String title = dto.getTitle();
+        String content = dto.getContent();
+        if (title != null) {
+            receiver.setTitle(title);
+        }
+        if (content != null) {
+            receiver.setContent(content);
+        }
     }
 }

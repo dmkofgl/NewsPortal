@@ -5,7 +5,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -22,7 +21,6 @@ public class News {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @NotNull
     private User author;
 
     @Temporal(TemporalType.TIMESTAMP)

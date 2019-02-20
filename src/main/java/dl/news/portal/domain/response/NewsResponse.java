@@ -1,7 +1,7 @@
-package dl.news.portal.domain.resource;
+package dl.news.portal.domain.response;
 
 import dl.news.portal.domain.entity.News;
-import dl.news.portal.utils.CustomLink;
+import dl.news.portal.utils.HateoasLink;
 import dl.news.portal.web.controller.NewsController;
 import dl.news.portal.web.controller.UserController;
 import io.swagger.models.HttpMethod;
@@ -12,15 +12,15 @@ import java.util.Date;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-public class NewsResource extends ResourceSupport {
+public class NewsResponse extends ResourceSupport {
     private News news;
 
-    public NewsResource(News news) {
+    public NewsResponse(News news) {
         this.news = news;
         final Long id = news.getId();
         add(linkTo(methodOn(NewsController.class).getNewsById(id)).withSelfRel());
-        add(new CustomLink(linkTo(methodOn(NewsController.class).deleteNews(id)).withRel("delete"), HttpMethod.DELETE));
-        add(new CustomLink(linkTo(methodOn(NewsController.class).updateNews(id, null)).withRel("update"), HttpMethod.PATCH));
+        add(new HateoasLink(linkTo(methodOn(NewsController.class).deleteNews(id)).withRel("delete"), HttpMethod.DELETE));
+        add(new HateoasLink(linkTo(methodOn(NewsController.class).updateNews(id, null)).withRel("update"), HttpMethod.PATCH));
         if (news.getAuthor() != null) {
             add(linkTo(methodOn(UserController.class).getUserById(news.getAuthor().getId())).withRel("author"));
         }
