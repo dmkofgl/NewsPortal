@@ -5,7 +5,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -13,14 +12,17 @@ public class News {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
+
+    @NotBlank(message = "Title can't be blank")
     private String title;
+
     @Column(columnDefinition = "text")
-    @NotBlank
+    @NotBlank(message = "Content can't be blank")
     private String content;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @NotNull
     private User author;
+
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     @ColumnDefault("CURRENT_TIMESTAMP")
@@ -65,5 +67,13 @@ public class News {
 
     public Date getCreatedDate() {
         return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
     }
 }

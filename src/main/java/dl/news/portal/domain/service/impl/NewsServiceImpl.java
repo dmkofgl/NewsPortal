@@ -1,6 +1,6 @@
 package dl.news.portal.domain.service.impl;
 
-import dl.news.portal.domain.dto.DtoTransfer;
+import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.repository.NewsRepository;
@@ -35,21 +35,17 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public void saveNews(News news) {
+    public void createNews(NewsDto dto) {
+        News news = new News();
+        transformDto(news, dto);
         newsRepository.save(news);
     }
 
     @Override
-    public void createNews(News news) {
+    public void updateNews(Long id, NewsDto dto) {
+        News news = newsRepository.getOne(id);
+        transformDto(news, dto);
         newsRepository.save(news);
-    }
-
-    @Override
-    public void updateNews(Long id, DtoTransfer<News> news) {
-        News oldNews = newsRepository.getOne(id);
-        news.transfer(oldNews);
-        newsRepository.save(oldNews);
-
     }
 
     @Override
@@ -68,7 +64,25 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    public Page<News> findPageByAuthor(User user, Pageable pageable) {
+        return newsRepository.findPageByAuthor(user, pageable);
+    }
+
+    @Override
     public List<News> findByUpdatedDate(Date start, Date end) {
         return newsRepository.findByUpdatedDateBetween(start, end);
+    }
+
+    private void transformDto(News receiver, NewsDto dto) {
+        String title = dto.getTitle();
+        String content = dto.getContent();
+
+        if (title != null) {
+            receiver.setTitle(title);
+        }
+
+        if (content != null) {
+            receiver.setContent(content);
+        }
     }
 }

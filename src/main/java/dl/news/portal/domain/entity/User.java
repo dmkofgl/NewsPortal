@@ -1,6 +1,6 @@
 package dl.news.portal.domain.entity;
 
-import org.hibernate.validator.constraints.Length;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,7 +14,8 @@ public class User {
     @Column(unique = true, length = 50)
     @Size(min = 3, max = 50)
     private String username;
-    @Length(min = 6, max = 255)
+    @Size(min = 6, max = 255)
+    @JsonIgnore
     private String password;
     @Email(regexp = "[A-Za-z0-9._%-+]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}")
     @Column(unique = true, length = 100)

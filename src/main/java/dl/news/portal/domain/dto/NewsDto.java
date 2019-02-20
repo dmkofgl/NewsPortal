@@ -1,29 +1,39 @@
 package dl.news.portal.domain.dto;
 
 import dl.news.portal.domain.entity.News;
-import dl.news.portal.domain.entity.User;
+import dl.news.portal.utils.ValidationMode;
 
-import java.util.Optional;
+import javax.validation.constraints.NotBlank;
 
-public class NewsDto implements DtoTransfer<News> {
-    private Optional<String> title;
-    private Optional<String> content;
-    private Optional<User> author;
+public class NewsDto {
+    @NotBlank(groups = ValidationMode.Create.class)
+    private String title;
+    @NotBlank(groups = ValidationMode.Create.class)
+    private String content;
 
-    public NewsDto(String title, String content, User author) {
-        this.title = Optional.ofNullable(title);
-        this.content = Optional.ofNullable(content);
-        this.author = Optional.ofNullable(author);
+    public NewsDto(News news) {
+        this(news.getTitle(), news.getContent());
     }
 
-    public NewsDto() {
-        this(null, null, null);
+    public NewsDto(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 
-    @Override
-    public void transfer(News receiver) {
-        title.ifPresent(receiver::setTitle);
-        content.ifPresent(receiver::setContent);
-        author.ifPresent(receiver::setAuthor);
+    public String getTitle() {
+        return title;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
 }

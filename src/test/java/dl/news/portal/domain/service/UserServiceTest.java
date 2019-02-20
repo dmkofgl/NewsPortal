@@ -2,6 +2,7 @@ package dl.news.portal.domain.service;
 
 import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.entity.User;
+import dl.news.portal.exception.DeniedParameterException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,32 +60,33 @@ public class UserServiceTest {
     }
 
     @Test
-    public void add() {
-        User user = new User();
-        user.setPassword("password");
-        user.setUsername("nAMe2Test");
-        user.setEmail("mailcom@ccs.cc");
-
+    public void addUser_whenUserDtoIsValid_shouldChangeSize() {
+        int size = userService.getAllUsers().size();
+        UserDto user = new UserDto("nAMe2Test", "mailcom@ccs.cc", "password");
         userService.createUser(user);
-
-        assertNotNull(user.getId());
+        assertNotEquals(size, userService.getAllUsers().size());
     }
 
     @Test
-    public void updateUser() {
-        String newUsername = "testTester", newEmail = "sven@qwert.ce";
-        UserDto updatedUser = new UserDto(newUsername, newEmail);
+    public void updateUser_whenUserDtoIsValid_shouldUsernameEquals() {
+        String newUsername = "testTester";
+        String newEmail = "sven@qwert.ce";
+        UserDto updatedUser = new UserDto(newUsername, newEmail, null);
         userService.updateUser(2L, updatedUser);
         User userAfterUpdate = userService.findUserById(2L).get();
         assertEquals(newUsername, userAfterUpdate.getUsername());
     }
 
+    @Test(expected = DeniedParameterException.class)
+    public void updateUser_whenPasswordExists_shouldReturnException() {
+        String newUsername = "testTester", newEmail = "sven@qwert.ce";
+        UserDto updatedUser = new UserDto(newUsername, newEmail, "password");
+        userService.updateUser(2L, updatedUser);
+    }
+
     @Test(expected = ConstraintViolationException.class)
-    public void addUserWithPasswordException() {
-        User user = new User();
-        user.setPassword("pws12");
-        user.setUsername("user");
-        user.setEmail("mailcom@ccs.cc");
+    public void addUser_whenPasswordIsInvalid_shouldReturnException() {
+        UserDto user = new UserDto("user", "mailcom@ccs.cc", "pws12");
         userService.createUser(user);
     }
 }
