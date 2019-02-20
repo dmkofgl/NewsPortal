@@ -63,7 +63,6 @@ public class UserControllerTest {
         user.setEmail("testEmail@mail.com");
         userList.add(user);
         Page<User> userPage = new PageImpl<>(userList);
-        UserDto dto = new UserDto();
         Mockito.when(userService.getFilteredPage(any(UserDto.class), any(Pageable.class))).thenReturn(userPage);
 
         mockMvc.perform(get(USERS_PATH))

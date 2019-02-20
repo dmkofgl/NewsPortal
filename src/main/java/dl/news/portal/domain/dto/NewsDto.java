@@ -8,10 +8,12 @@ import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 public class NewsDto {
+
     @NotBlank(groups = ValidationMode.Create.class)
     private String title;
     @NotBlank(groups = ValidationMode.Create.class)
     private String content;
+
     private Date createDate;
     private Date endCreateDate;
 
