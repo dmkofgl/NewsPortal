@@ -1,6 +1,5 @@
 package dl.news.portal.domain.service.impl;
 
-import dl.news.portal.domain.dto.SearchingSpecification;
 import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.repository.UserRepository;
@@ -12,6 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 
 @Service
@@ -31,7 +33,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
@@ -48,8 +49,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> getFilteredPage(SearchingSpecification<User> dto, Pageable pageable) {
-        Specification<User> specification = dto.getSpecification();
+    public Page<User> getFilteredPage(UserDto dto, Pageable pageable) {
+        Specification<User> specification = getSpecification(dto);
         return userRepository.findAll(specification, pageable);
     }
 
@@ -71,5 +72,20 @@ public class UserServiceImpl implements UserService {
         if (password != null) {
             receiver.setPassword(password);
         }
+    }
+
+    private Specification<User> getSpecification(UserDto userDto) {
+        String username = userDto.getUsername();
+        String email = userDto.getEmail();
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Collection<Predicate> predicates = new HashSet<>();
+            if (username != null) {
+                predicates.add(criteriaBuilder.like(root.get("username"), "%" + username + "%"));
+            }
+            if (email != null) {
+                predicates.add(criteriaBuilder.like(root.get("email"), "%" + email + "%"));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 }

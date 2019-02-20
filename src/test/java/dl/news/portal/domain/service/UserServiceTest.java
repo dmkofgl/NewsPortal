@@ -1,7 +1,6 @@
 package dl.news.portal.domain.service;
 
 import dl.news.portal.domain.dto.UserDto;
-import dl.news.portal.domain.dto.UserSearchingDto;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.exception.DeniedParameterException;
 import org.junit.Test;
@@ -66,7 +65,7 @@ public class UserServiceTest {
     @Test
     public void findByUsernameSpecification() {
         final long COUNT_ALL = userService.count();
-        UserSearchingDto usernameDto = new UserSearchingDto("est", null);
+        UserDto usernameDto = new UserDto("est", null, null);
         PageRequest pageRequest = new PageRequest(0, 5);
 
         Page<User> userPageByUsername = userService.getFilteredPage(usernameDto, pageRequest);
@@ -78,7 +77,7 @@ public class UserServiceTest {
     @Test
     public void findByEmailSpecification() {
         final long COUNT_ALL = userService.count();
-        UserSearchingDto emailDto = new UserSearchingDto(null, "com");
+        UserDto emailDto = new UserDto(null, "com", null);
         PageRequest pageRequest = new PageRequest(0, 5);
 
         Page<User> userPageByEmail = userService.getFilteredPage(emailDto, pageRequest);
@@ -90,7 +89,7 @@ public class UserServiceTest {
     @Test
     public void findByUsernameAndEmailSpecification() {
         final long COUNT_ALL = userService.count();
-        UserSearchingDto usernameAndEmailDto = new UserSearchingDto("est", "com");
+        UserDto usernameAndEmailDto = new UserDto("est", "com", null);
         PageRequest pageRequest = new PageRequest(0, 5);
 
         Page<User> userPageByUsernameAndEmail = userService.getFilteredPage(usernameAndEmailDto, pageRequest);

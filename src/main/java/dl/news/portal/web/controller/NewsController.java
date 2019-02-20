@@ -1,7 +1,6 @@
 package dl.news.portal.web.controller;
 
 import dl.news.portal.domain.dto.NewsDto;
-import dl.news.portal.domain.dto.NewsSearchingDto;
 import dl.news.portal.domain.response.NewsResponse;
 import dl.news.portal.domain.response.PageResponse;
 import dl.news.portal.domain.service.NewsService;
@@ -32,7 +31,7 @@ public class NewsController {
             @ApiImplicitParam(name = "createDate", paramType = "query"),
             @ApiImplicitParam(name = "endCreateDate", paramType = "query")
     })
-    public PageResponse<NewsResponse> getPageNews(NewsSearchingDto dto, Pageable pageable) {
+    public PageResponse<NewsResponse> getPageNews(NewsDto dto, Pageable pageable) {
         Page<NewsResponse> resourcePage = newsService.getFilteredPage(dto, pageable).map(NewsResponse::new);
         return new PageResponse<>(resourcePage);
     }

@@ -1,9 +1,8 @@
 package dl.news.portal.domain.service;
 
 import dl.news.portal.domain.dto.NewsDto;
-import dl.news.portal.domain.dto.NewsSearchingDto;
+import dl.news.portal.domain.dto.NewsDtoBuilder;
 import dl.news.portal.domain.entity.News;
-import dl.news.portal.domain.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class NewsServiceTest {
     private NewsService newsService;
 
     @Test
-    public void findById() {
+    public void findById_whenNewsExists_shouldBePresent() {
         Optional<News> newsOptional = newsService.findNewsById(1L);
         assertTrue(newsOptional.isPresent());
     }
@@ -41,7 +40,7 @@ public class NewsServiceTest {
     }
 
     @Test
-    public void addNews_whenNewsDtoIsvalid_shouldChangeSize() {
+    public void addNews_whenNewsDtoIsValid_shouldChangeSize() {
         Long size = newsService.count();
         NewsDto news = new NewsDto("test title", "content");
         newsService.createNews(news);
@@ -58,75 +57,90 @@ public class NewsServiceTest {
     }
 
     @Test
-    public void findByTitleSpecifications() throws ParseException {
-        final long COUNT_ALL = newsService.count();
-        NewsSearchingDto titleDto = new NewsSearchingDto("test", null, null);
+    public void findBySpecifications_whenFilterOnlyTitle_shouldCountEqual() throws ParseException {
+        final String TITLE = "test";
+        final long COUNT = newsService.getAllNews().stream().filter(n -> n.getTitle().contains(TITLE)).count();
+
+        NewsDto titleDto = new NewsDtoBuilder().withTitle(TITLE).build();
         PageRequest pageRequest = new PageRequest(0, 5);
 
         Page<News> userPageByTitle = newsService.getFilteredPage(titleDto, pageRequest);
 
-        assertNotEquals(COUNT_ALL, userPageByTitle.getTotalElements());
-        assertNotEquals(0L, userPageByTitle.getTotalElements());
+        assertEquals(COUNT, userPageByTitle.getTotalElements());
     }
 
     @Test
-    public void findByCreatedDateSpecifications() throws ParseException {
-        final long COUNT_ALL = newsService.count();
+    public void findBySpecifications_whenFilterByCreatedDate_shouldCountEqual() throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat();
         dateFormat.applyPattern("yyyy-MM-dd");
         Date end = dateFormat.parse("2015-03-01");
         Date start = dateFormat.parse("2015-01-01");
-        NewsSearchingDto dateDto = new NewsSearchingDto(null, start, end);
+        final long COUNT = newsService.getAllNews().stream()
+                .filter(n -> n.getCreatedDate().compareTo(start) >= 0)
+                .filter(n -> n.getCreatedDate().compareTo(end) <= 0)
+                .count();
+
+        NewsDto dateDto = new NewsDtoBuilder()
+                .withStartCreatedDate(start)
+                .withEndCreatedDate(end)
+                .build();
         PageRequest pageRequest = new PageRequest(0, 5);
 
         Page<News> userPageByEndDate = newsService.getFilteredPage(dateDto, pageRequest);
 
-        assertNotEquals(COUNT_ALL, userPageByEndDate.getTotalElements());
-        assertNotEquals(0L, userPageByEndDate.getTotalElements());
+        assertEquals(COUNT, userPageByEndDate.getTotalElements());
     }
 
     @Test
-    public void findByEndCreatedDateSpecifications() throws ParseException {
-        final long COUNT_ALL = newsService.count();
+    public void findBySpecifications_whenFilterByEndCreatedDate_shouldCountEqual() throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat();
         dateFormat.applyPattern("yyyy-MM-dd");
         Date end = dateFormat.parse("2015-03-01");
-        NewsSearchingDto dateDto = new NewsSearchingDto(null, null, end);
+        final long COUNT = newsService.getAllNews().stream()
+                .filter(n -> n.getCreatedDate().compareTo(end) <= 0)
+                .count();
+        NewsDto dateDto = new NewsDtoBuilder().withEndCreatedDate(end).build();
         PageRequest pageRequest = new PageRequest(0, 5);
 
         Page<News> userPageByEndDate = newsService.getFilteredPage(dateDto, pageRequest);
 
-        assertNotEquals(COUNT_ALL, userPageByEndDate.getTotalElements());
-        assertNotEquals(0L, userPageByEndDate.getTotalElements());
+        assertEquals(COUNT, userPageByEndDate.getTotalElements());
     }
 
     @Test
-    public void findByStartCreatedDateSpecifications() throws ParseException {
-        final long COUNT_ALL = newsService.count();
+    public void findBySpecifications_whenFilterByStartCreatedDate_shouldCountEqual() throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat();
         dateFormat.applyPattern("yyyy-MM-dd");
         Date start = dateFormat.parse("2015-03-01");
-        NewsSearchingDto startDateDto = new NewsSearchingDto(null, start, null);
+        final long COUNT = newsService.getAllNews().stream()
+                .filter(n -> n.getCreatedDate().compareTo(start) >= 0)
+                .count();
+        NewsDto startDateDto = new NewsDtoBuilder().withStartCreatedDate(start).build();
         PageRequest pageRequest = new PageRequest(0, 5);
 
         Page<News> userPageByStartDate = newsService.getFilteredPage(startDateDto, pageRequest);
 
-        assertNotEquals(COUNT_ALL, userPageByStartDate.getTotalElements());
-        assertNotEquals(0L, userPageByStartDate.getTotalElements());
+        assertEquals(COUNT, userPageByStartDate.getTotalElements());
     }
 
     @Test
-    public void findByCreatedDateAndTitleSpecifications() throws ParseException {
-        final long COUNT_ALL = newsService.count();
+    public void findBySpecifications_whenFilterByTitleAndEndCreatedDate_shouldCountEqual() throws ParseException {
+        final String TITLE = "test";
         PageRequest pageRequest = new PageRequest(0, 5);
         SimpleDateFormat dateFormat = new SimpleDateFormat();
         dateFormat.applyPattern("yyyy-MM-dd");
         Date end = dateFormat.parse("2015-03-01");
-        NewsSearchingDto titleAndEndDateDto = new NewsSearchingDto("test", null, end);
+        final long COUNT = newsService.getAllNews().stream()
+                .filter(n -> n.getCreatedDate().compareTo(end) <= 0)
+                .filter(n -> n.getTitle().contains(TITLE))
+                .count();
+        NewsDto titleAndEndDateDto = new NewsDtoBuilder()
+                .withTitle(TITLE)
+                .withEndCreatedDate(end)
+                .build();
 
         Page<News> userPageByTitleAndEndDate = newsService.getFilteredPage(titleAndEndDateDto, pageRequest);
 
-        assertNotEquals(COUNT_ALL, userPageByTitleAndEndDate.getTotalElements());
-        assertNotEquals(0L, userPageByTitleAndEndDate.getTotalElements());
+        assertEquals(COUNT, userPageByTitleAndEndDate.getTotalElements());
     }
 }

@@ -31,6 +31,9 @@ public class UserDto {
         this.password = password;
     }
 
+    public UserDto() {
+    }
+
     public void transfer(User receiver) {
         if (username != null) {
             receiver.setUsername(username);

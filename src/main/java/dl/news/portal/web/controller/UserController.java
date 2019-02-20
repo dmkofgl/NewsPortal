@@ -1,7 +1,6 @@
 package dl.news.portal.web.controller;
 
 import dl.news.portal.domain.dto.UserDto;
-import dl.news.portal.domain.dto.UserSearchingDto;
 import dl.news.portal.domain.response.PageResponse;
 import dl.news.portal.domain.response.UserResponse;
 import dl.news.portal.domain.service.UserService;
@@ -38,7 +37,7 @@ public class UserController {
             @ApiImplicitParam(name = "username", paramType = "query"),
             @ApiImplicitParam(name = "email", paramType = "query")
     })
-    public PageResponse<UserResponse> getFilteredUsers(UserSearchingDto dto, Pageable pageable) {
+    public PageResponse<UserResponse> getFilteredUsers(UserDto dto, Pageable pageable) {
         Page<UserResponse> userPage = userService.getFilteredPage(dto, pageable).map(UserResponse::new);
         return new PageResponse<>(userPage);
     }
