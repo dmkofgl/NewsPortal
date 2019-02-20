@@ -20,10 +20,12 @@ public class PageResponse<T> extends PagedResources<T> {
         int lastPageNumber = page.getTotalPages() <= 0 ? 0 : page.getTotalPages() - 1;
         addPageNumberLinkWithRel(firstPageNumber, Link.REL_FIRST);
         addPageNumberLinkWithRel(lastPageNumber, Link.REL_LAST);
+
         if (page.hasNext()) {
             int nextPageNumber = page.nextPageable().getPageNumber();
             addPageNumberLinkWithRel(nextPageNumber, Link.REL_NEXT);
         }
+
         if (page.hasPrevious()) {
             int previousPageNumber = page.previousPageable().getPageNumber();
             addPageNumberLinkWithRel(previousPageNumber, Link.REL_PREVIOUS);

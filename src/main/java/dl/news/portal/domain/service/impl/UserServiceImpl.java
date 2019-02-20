@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser(UserDto dto) {
         User user = new User();
-        transferDto(user, dto);
+        transformDto(user, dto);
         userRepository.save(user);
     }
 
@@ -59,16 +59,19 @@ public class UserServiceImpl implements UserService {
         return userRepository.count();
     }
 
-    private void transferDto(User receiver, UserDto dto) {
+    private void transformDto(User receiver, UserDto dto) {
         String email = dto.getEmail();
         String username = dto.getUsername();
         String password = dto.getPassword();
+
         if (email != null) {
             receiver.setEmail(email);
         }
+
         if (username != null) {
             receiver.setUsername(username);
         }
+
         if (password != null) {
             receiver.setPassword(password);
         }
