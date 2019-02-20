@@ -11,12 +11,19 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,6 +53,76 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
                 .andExpect(jsonPath("$._links.self").hasJsonPath());
     }
+
+    @Test
+    public void getUsers_whenDtoIsEmpty_shouldReturnOk() throws Exception {
+        List<User> userList = new ArrayList<>();
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("testUsername");
+        user.setEmail("testEmail@mail.com");
+        userList.add(user);
+        Page<User> userPage = new PageImpl<>(userList);
+        UserDto dto = new UserDto();
+        Mockito.when(userService.getFilteredPage(any(UserDto.class), any(Pageable.class))).thenReturn(userPage);
+
+        mockMvc.perform(get(USERS_PATH))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.userResponseList[0].username").value(user.getUsername()))
+                .andExpect(jsonPath("$._embedded.userResponseList[0].email").value(user.getEmail()))
+                .andExpect(jsonPath("$.page").hasJsonPath())
+                .andExpect(jsonPath("$._links.self").hasJsonPath());
+    }
+
+    @Test
+    public void getUsers_whenModifyPage_shouldReturnOk() throws Exception {
+        List<User> userList = new ArrayList<>();
+        Pageable pageable = new PageRequest(0, 1);
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("testUsername");
+        user.setEmail("testEmail@mail.com");
+        userList.add(user);
+        Page<User> userPage = new PageImpl<>(userList, pageable, 2L);
+
+        Mockito.when(userService.getFilteredPage(any(UserDto.class), any(Pageable.class))).thenReturn(userPage);
+
+        mockMvc.perform(get(USERS_PATH))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.page").hasJsonPath())
+                .andExpect(jsonPath("$.page.size").value(1))
+                .andExpect(jsonPath("$.page.number").value(0))
+                .andExpect(jsonPath("$._links.self").hasJsonPath());
+    }
+
+    @Test
+    public void getUsers_whenExistFilteringByEmail_shouldReturnOk() throws Exception {
+        final int FILTERED_COUNT = 1;
+        List<User> userList = new ArrayList<>();
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("testUsername");
+        user.setEmail("testEmail@mail.com");
+        User filtereduser = new User();
+        user.setId(1L);
+        user.setUsername("testUsername");
+        user.setEmail("testingEmail@mail.com");
+        userList.add(user);
+        UserDto dto = new UserDto();
+        dto.setEmail("tmail");
+        Page<User> userPage = new PageImpl<>(userList);
+
+        Mockito.when(userService.getFilteredPage(any(UserDto.class), any(Pageable.class))).thenReturn(userPage);
+
+        mockMvc.perform(get(USERS_PATH))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.page").hasJsonPath())
+                .andExpect(jsonPath("$._embedded.userResponseList[0].username").value(user.getUsername()))
+                .andExpect(jsonPath("$._embedded.userResponseList[0].email").value(user.getEmail()))
+                .andExpect(jsonPath("$._embedded.userResponseList[1]").doesNotExist())
+                .andExpect(jsonPath("$.page.totalElements").value(FILTERED_COUNT));
+    }
+
 
     @Test
     public void getUserById_whenUserDoesNotExist_shouldReturnNotFound() throws Exception {
