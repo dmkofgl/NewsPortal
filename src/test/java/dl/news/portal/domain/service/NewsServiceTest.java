@@ -45,7 +45,7 @@ public class NewsServiceTest {
     }
 
     @Test
-    public void addNews_whenNewsDtoIsvalid_shouldChangeSize() {
+    public void addNews_whenNewsDtoIsValid_shouldChangeSize() {
         int size = newsService.getAllNews().size();
         NewsDto news = new NewsDto("test title", "content");
         newsService.createNews(news);

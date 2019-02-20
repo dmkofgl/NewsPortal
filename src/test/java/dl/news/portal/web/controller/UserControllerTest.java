@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -39,7 +40,11 @@ public class UserControllerTest {
 
         Mockito.when(userService.findUserById(1L)).thenReturn(Optional.of(user));
 
-        mockMvc.perform(get(path)).andExpect(status().isOk());
+        mockMvc.perform(get(path))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value(user.getUsername()))
+                .andExpect(jsonPath("$.email").value(user.getEmail()))
+                .andExpect(jsonPath("$._links.self").hasJsonPath());
     }
 
     @Test
@@ -63,7 +68,10 @@ public class UserControllerTest {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String body = mapper.writeValueAsString(dto);
 
-        mockMvc.perform(post(USERS_PATH).content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+        mockMvc.perform(post(USERS_PATH)
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -73,7 +81,11 @@ public class UserControllerTest {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String body = mapper.writeValueAsString(dto);
 
-        mockMvc.perform(post(USERS_PATH).content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnprocessableEntity());
+        mockMvc.perform(post(USERS_PATH)
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors[0].field").value("email"));
     }
 
     @Test
@@ -86,7 +98,8 @@ public class UserControllerTest {
         mockMvc.perform(post(USERS_PATH)
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors[0].field").value("email"));
     }
 
     @Test
@@ -106,7 +119,7 @@ public class UserControllerTest {
     @Test
     public void updateUser_whenPasswordExist_shouldReturnUnprocessableEntity() throws Exception {
         final String path = USERS_PATH + "/1";
-        UserDto dto = new UserDto("testUsername", null, "asddfdsfdsf");
+        UserDto dto = new UserDto("testUsername", "mail@tester.cd", "asddfdsfdsf");
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String body = mapper.writeValueAsString(dto);
@@ -114,7 +127,8 @@ public class UserControllerTest {
         mockMvc.perform(patch(path)
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors[0].field").value("password"));
     }
 
 

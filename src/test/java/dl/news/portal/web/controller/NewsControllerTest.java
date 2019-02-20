@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -40,9 +41,13 @@ public class NewsControllerTest {
         news.setContent("test");
         news.setTitle("test");
         news.setAuthor(user);
-
         Mockito.when(newsService.findNewsById(1L)).thenReturn(Optional.of(news));
-        mockMvc.perform(get(path)).andExpect(status().isOk());
+        mockMvc.perform(get(path))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("test"))
+                .andExpect(jsonPath("$.content").value("test"))
+                .andExpect(jsonPath("$._links.self").hasJsonPath());
+
     }
 
     @Test
@@ -77,7 +82,9 @@ public class NewsControllerTest {
         mockMvc.perform(post(NEWS_PATH)
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors.[0].field").value("title"))
+                .andExpect(jsonPath("$._links.self").hasJsonPath());
     }
 
     @Test
@@ -92,7 +99,10 @@ public class NewsControllerTest {
         mockMvc.perform(post(NEWS_PATH)
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors.[0].field").value("title"))
+                .andExpect(jsonPath("$.errors.[0].value").value("   "))
+                .andExpect(jsonPath("$._links.self").hasJsonPath());
     }
 
     @Test
