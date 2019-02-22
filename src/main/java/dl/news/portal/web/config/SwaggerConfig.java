@@ -2,10 +2,13 @@ package dl.news.portal.web.config;
 
 import com.fasterxml.classmate.TypeResolver;
 import dl.news.portal.domain.response.exception.BindExceptionResponse;
+import dl.news.portal.domain.response.exception.ErrorResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +32,9 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+    @Autowired
+    private TypeResolver resolve;
+
     @Bean
     public Docket apiDocket() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -37,10 +43,13 @@ public class SwaggerConfig {
                 .paths(PathSelectors.any())
                 .build()
                 .useDefaultResponseMessages(false)
-                .globalResponseMessage(RequestMethod.POST, concatenatedList(message422Validate(), message404()))
+                .globalResponseMessage(RequestMethod.POST, concatenatedList(message201(), message422Validate(), message404()))
                 .globalResponseMessage(RequestMethod.PATCH, concatenatedList(message422Validate(), message404()))
-                .globalResponseMessage(RequestMethod.DELETE, concatenatedList(message404()))
-                .additionalModels(new TypeResolver().resolve(BindExceptionResponse.class));
+                .globalResponseMessage(RequestMethod.DELETE, concatenatedList(message204(), message404()))
+                .additionalModels(new TypeResolver().resolve(BindExceptionResponse.class))
+                .additionalModels(new TypeResolver().resolve(LinkResponse.class))
+                .additionalModels(new TypeResolver().resolve(ErrorResponse.class))
+                .directModelSubstitute(LinkResponse.class, Link.class);
     }
 
     private static <T> List<T> concatenatedList(List<T>... collections) {
@@ -59,6 +68,21 @@ public class SwaggerConfig {
         return Arrays.asList(new ResponseMessageBuilder()
                 .code(HttpStatus.NOT_FOUND.value())
                 .message(HttpStatus.NOT_FOUND.getReasonPhrase())
+                .responseModel(new ModelRef("ErrorResponse"))
+                .build());
+    }
+
+    private List<ResponseMessage> message201() {
+        return Arrays.asList(new ResponseMessageBuilder()
+                .code(HttpStatus.CREATED.value())
+                .message(HttpStatus.CREATED.getReasonPhrase())
+                .build());
+    }
+
+    private List<ResponseMessage> message204() {
+        return Arrays.asList(new ResponseMessageBuilder()
+                .code(HttpStatus.NO_CONTENT.value())
+                .message(HttpStatus.NO_CONTENT.getReasonPhrase())
                 .build());
     }
 
@@ -75,7 +99,8 @@ public class SwaggerConfig {
             @Override
             public List<AlternateTypeRule> rules() {
                 return Arrays.asList(
-                        newRule(resolver.resolve(Pageable.class), resolver.resolve(pageableMixin()))
+                        newRule(resolver.resolve(Pageable.class), resolver.resolve(pageableMixin())),
+                        newRule(resolver.resolve(Link.class), resolver.resolve(LinkResponse.class))
                 );
             }
         };
@@ -102,4 +127,16 @@ public class SwaggerConfig {
                 .withCanRead(true)
                 .withCanWrite(true);
     }
+
+    public interface LinkResponse {
+
+        void setRel(String rel);
+
+        void setHref(String rel);
+
+        void setMethod(String rel);
+
+
+    }
+
 }

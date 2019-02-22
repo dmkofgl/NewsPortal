@@ -1,6 +1,7 @@
 package dl.news.portal.web.exceptionHandler;
 
 import dl.news.portal.domain.response.exception.BindExceptionResponse;
+import dl.news.portal.domain.response.exception.ErrorResponse;
 import dl.news.portal.domain.response.exception.ValidateExceptionResponse;
 import dl.news.portal.exception.DeniedParameterException;
 import org.springframework.hateoas.Resource;
@@ -29,8 +30,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({EntityNotFoundException.class})
-    public ResponseEntity<HttpStatus> handleEntityNotFoundException(EntityNotFoundException ex) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponse> handleEntityNotFoundException(EntityNotFoundException ex) {
+        ErrorResponse response = new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.getReasonPhrase());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({DeniedParameterException.class})
