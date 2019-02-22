@@ -4,10 +4,9 @@ import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.response.NewsResponse;
 import dl.news.portal.domain.response.PageResponse;
 import dl.news.portal.domain.response.exception.BindExceptionResponse;
+import dl.news.portal.domain.response.exception.ErrorResponse;
 import dl.news.portal.domain.service.NewsService;
 import dl.news.portal.utils.ValidationMode;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +29,6 @@ public class NewsController {
     private NewsService newsService;
 
     @GetMapping
-    @ApiImplicitParams({@ApiImplicitParam(name = "title", paramType = "query"),
-            @ApiImplicitParam(name = "createDate", paramType = "query"),
-            @ApiImplicitParam(name = "endCreateDate", paramType = "query")
-    })
     @ApiResponses(value = {
             @ApiResponse(code = 422, message = "Validation error", response = BindExceptionResponse.class)
     })
@@ -44,7 +39,7 @@ public class NewsController {
 
     @GetMapping(ID_PATH)
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "Not Found")
+            @ApiResponse(code = 404, message = "Not Found", response = ErrorResponse.class)
     })
     public NewsResponse getNewsById(@PathVariable Long id) {
         return newsService.findNewsById(id)
