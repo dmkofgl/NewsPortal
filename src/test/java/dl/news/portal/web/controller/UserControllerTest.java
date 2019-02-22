@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -102,18 +103,13 @@ public class UserControllerTest {
         user.setId(1L);
         user.setUsername("testUsername");
         user.setEmail("testEmail@mail.com");
-        User filtereduser = new User();
-        user.setId(1L);
-        user.setUsername("testUsername");
-        user.setEmail("testingEmail@mail.com");
         userList.add(user);
         UserDto dto = new UserDto();
-        dto.setEmail("tmail");
+        dto.setEmail("temail");
         Page<User> userPage = new PageImpl<>(userList);
+        Mockito.when(userService.getFilteredPage(refEq(dto), any(Pageable.class))).thenReturn(userPage);
 
-        Mockito.when(userService.getFilteredPage(any(UserDto.class), any(Pageable.class))).thenReturn(userPage);
-
-        mockMvc.perform(get(USERS_PATH))
+        mockMvc.perform(get(USERS_PATH).param("email", dto.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.page").hasJsonPath())
                 .andExpect(jsonPath("$._embedded.userResponseList[0].username").value(user.getUsername()))
