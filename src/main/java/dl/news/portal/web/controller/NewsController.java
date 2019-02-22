@@ -5,6 +5,8 @@ import dl.news.portal.domain.response.NewsResponse;
 import dl.news.portal.domain.response.PageResponse;
 import dl.news.portal.domain.service.NewsService;
 import dl.news.portal.utils.ValidationMode;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,8 +27,12 @@ public class NewsController {
     private NewsService newsService;
 
     @GetMapping
-    public PageResponse<NewsResponse> getPageNews(Pageable pageable) {
-        Page<NewsResponse> resourcePage = newsService.getNewsPage(pageable).map(NewsResponse::new);
+    @ApiImplicitParams({@ApiImplicitParam(name = "title", paramType = "query"),
+            @ApiImplicitParam(name = "createDate", paramType = "query"),
+            @ApiImplicitParam(name = "endCreateDate", paramType = "query")
+    })
+    public PageResponse<NewsResponse> getPageNews(NewsDto dto, Pageable pageable) {
+        Page<NewsResponse> resourcePage = newsService.getFilteredPage(dto, pageable).map(NewsResponse::new);
         return new PageResponse<>(resourcePage);
     }
 

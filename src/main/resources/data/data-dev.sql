@@ -6,6 +6,7 @@ INSERT INTO `news`(`content`,`title`,`author_id`)VALUES('Shock news5','bla-bla4'
 INSERT INTO `news`(`content`,`title`,`author_id`)VALUES('Shock news6','bla-bla5',1);
 INSERT INTO `news`(`content`,`title`,`author_id`)VALUES('Shock news7','bla-bla6',1);
 INSERT INTO `news`(`content`,`title`,`author_id`)VALUES('Shock news8','bla-bla7',1);
+INSERT INTO `news`(`content`,`title`,`author_id`,`created_Date`) VALUES('Shock news9','bla-bla8',1,'2015-02-04 14:23:10');
 
 
 

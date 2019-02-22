@@ -7,11 +7,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -23,11 +24,6 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
-    @Test
-    public void findByEmail() {
-        Optional<User> user = userService.findByEmail("email@gmail.com");
-        assertTrue(user.isPresent());
-    }
 
     @Test
     public void findById() {
@@ -36,35 +32,11 @@ public class UserServiceTest {
     }
 
     @Test
-    public void findAll() {
-        List<User> users = userService.getAllUsers();
-        assertEquals(users.size(), 2);
-    }
-
-    @Test
-    public void findByUsername() {
-        Optional<User> user = userService.findByUsername("nameTest");
-        assertTrue(user.isPresent());
-    }
-
-    @Test
-    public void findByUsernameIgnoreCase() {
-        List<User> users = userService.findByUsername("NaMe", SearchingMode.IGNORE_CASE);
-        assertTrue(users.size() != 0);
-    }
-
-    @Test
-    public void findByUsernameIdenticalCase() {
-        List<User> users = userService.findByUsername("name", SearchingMode.IDENTICAL);
-        assertTrue(users.size() != 0);
-    }
-
-    @Test
     public void addUser_whenUserDtoIsValid_shouldChangeSize() {
-        int size = userService.getAllUsers().size();
+        Long size = userService.count();
         UserDto user = new UserDto("nAMe2Test", "mailcom@ccs.cc", "password");
         userService.createUser(user);
-        assertNotEquals(size, userService.getAllUsers().size());
+        assertNotEquals(size, userService.count());
     }
 
     @Test
@@ -89,4 +61,42 @@ public class UserServiceTest {
         UserDto user = new UserDto("user", "mailcom@ccs.cc", "pws12");
         userService.createUser(user);
     }
+
+    @Test
+    public void findByUsernameSpecification() {
+        final long COUNT_ALL = userService.count();
+        UserDto usernameDto = new UserDto("est", null, null);
+        PageRequest pageRequest = new PageRequest(0, 5);
+
+        Page<User> userPageByUsername = userService.getFilteredPage(usernameDto, pageRequest);
+
+        assertNotEquals(COUNT_ALL, userPageByUsername.getTotalElements());
+        assertNotEquals(0L, userPageByUsername.getTotalElements());
+    }
+
+    @Test
+    public void findByEmailSpecification() {
+        final long COUNT_ALL = userService.count();
+        UserDto emailDto = new UserDto(null, "com", null);
+        PageRequest pageRequest = new PageRequest(0, 5);
+
+        Page<User> userPageByEmail = userService.getFilteredPage(emailDto, pageRequest);
+
+        assertNotEquals(COUNT_ALL, userPageByEmail.getTotalElements());
+        assertNotEquals(0L, userPageByEmail.getTotalElements());
+    }
+
+    @Test
+    public void findByUsernameAndEmailSpecification() {
+        final long COUNT_ALL = userService.count();
+        UserDto usernameAndEmailDto = new UserDto("est", "com", null);
+        PageRequest pageRequest = new PageRequest(0, 5);
+
+        Page<User> userPageByUsernameAndEmail = userService.getFilteredPage(usernameAndEmailDto, pageRequest);
+
+        assertNotEquals(COUNT_ALL, userPageByUsernameAndEmail.getTotalElements());
+        assertNotEquals(0L, userPageByUsernameAndEmail.getTotalElements());
+    }
+
+
 }

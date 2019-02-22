@@ -1,4 +1,4 @@
-package dl.news.portal.web.controller;
+package dl.news.portal.web.exceptionHandler;
 
 import dl.news.portal.domain.response.exception.BindExceptionResponse;
 import dl.news.portal.domain.response.exception.ValidateExceptionResponse;

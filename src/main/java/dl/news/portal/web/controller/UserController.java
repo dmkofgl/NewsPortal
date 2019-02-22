@@ -5,6 +5,8 @@ import dl.news.portal.domain.response.PageResponse;
 import dl.news.portal.domain.response.UserResponse;
 import dl.news.portal.domain.service.UserService;
 import dl.news.portal.utils.ValidationMode;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,8 +33,12 @@ public class UserController {
     }
 
     @GetMapping
-    public PageResponse<UserResponse> getAllUsers(Pageable pageable) {
-        Page<UserResponse> userPage = userService.getUsersPage(pageable).map(UserResponse::new);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username", paramType = "query"),
+            @ApiImplicitParam(name = "email", paramType = "query")
+    })
+    public PageResponse<UserResponse> getFilteredUsers(UserDto dto, Pageable pageable) {
+        Page<UserResponse> userPage = userService.getFilteredPage(dto, pageable).map(UserResponse::new);
         return new PageResponse<>(userPage);
     }
 

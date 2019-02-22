@@ -2,17 +2,16 @@ package dl.news.portal.domain.service.impl;
 
 import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.entity.News;
-import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.repository.NewsRepository;
 import dl.news.portal.domain.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import javax.persistence.criteria.Predicate;
+import java.util.*;
 
 @Service
 public class NewsServiceImpl implements NewsService {
@@ -20,8 +19,9 @@ public class NewsServiceImpl implements NewsService {
     private NewsRepository newsRepository;
 
     @Override
-    public Page<News> getNewsPage(Pageable pageable) {
-        return newsRepository.findAll(pageable);
+    public Page<News> getFilteredPage(NewsDto dto, Pageable pageable) {
+        Specification<News> specification = getSearchingSpecification(dto);
+        return newsRepository.findAll(specification, pageable);
     }
 
     @Override
@@ -54,23 +54,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<News> findByTitle(String title) {
-        return newsRepository.findByTitleIgnoreCaseContaining(title);
-    }
-
-    @Override
-    public List<News> findByAuthor(User user) {
-        return newsRepository.findByAuthor(user);
-    }
-
-    @Override
-    public Page<News> findPageByAuthor(User user, Pageable pageable) {
-        return newsRepository.findPageByAuthor(user, pageable);
-    }
-
-    @Override
-    public List<News> findByUpdatedDate(Date start, Date end) {
-        return newsRepository.findByUpdatedDateBetween(start, end);
+    public Long count() {
+        return newsRepository.count();
     }
 
     private void transformDto(News receiver, NewsDto dto) {
@@ -84,5 +69,24 @@ public class NewsServiceImpl implements NewsService {
         if (content != null) {
             receiver.setContent(content);
         }
+    }
+
+    private Specification<News> getSearchingSpecification(NewsDto dto) {
+        String title = dto.getTitle();
+        Date createDate = dto.getCreateDate();
+        Date endCreateDate = dto.getEndCreateDate();
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            Collection<Predicate> predicates = new HashSet<>();
+            if (title != null) {
+                predicates.add(criteriaBuilder.like(root.get("title"), "%" + title + "%"));
+            }
+            if (createDate != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdDate"), createDate));
+            }
+            if (endCreateDate != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("createdDate"), endCreateDate));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 }
