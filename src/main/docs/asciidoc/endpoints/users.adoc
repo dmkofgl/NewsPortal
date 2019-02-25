@@ -1,8 +1,9 @@
 [[Endpoints-Users-get]]
 ==== Get users
-
+Use 'GET' method.
 [[Endpoints-Users-get-all]]
 ===== Get users
+Get users in page container.
 
 ====== Http request
 .Example
@@ -24,7 +25,7 @@ Links::
 include::{snippets}/get-users/all/ok/links.adoc[]
 [[Endpoints-Users-get-one]]
 ===== Get user
-
+Get single user.
 ====== Http request
 .Example
 include::{snippets}/get-user/ok/http-request.adoc[]
@@ -39,12 +40,29 @@ include::{snippets}/get-user/ok/response-fields.adoc[]
 Links::
 include::{snippets}/get-user/ok/links.adoc[]
 
-
 [[Endpoints-Users-get-search]]
 ===== Search user
 
+====== Http request
+.Example
+include::{snippets}/get-users/filtered/ok/http-request.adoc[]
+Available Parameters::
+include::{snippets}/get-users/filtered/ok/request-parameters.adoc[]
+
 [[Endpoints-Users-post]]
 ==== Create user
+
+====== Http request
+.Example
+include::{snippets}/create-user/ok/http-request.adoc[]
+Body::
+include::{snippets}/create-user/ok/request-body.adoc[]
+Fields::
+include::{snippets}/create-user/ok/request-fields.adoc[]
+
+====== Http response
+.Example
+include::{snippets}/create-user/ok/http-response.adoc[]
 
 [[Endpoints-Users-putch]]
 ==== Update users

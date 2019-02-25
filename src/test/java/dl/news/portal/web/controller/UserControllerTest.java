@@ -29,6 +29,7 @@ import static org.mockito.ArgumentMatchers.refEq;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -45,20 +46,21 @@ public class UserControllerTest {
 
     @Test
     public void getUserById_whenUserExists_shouldReturnOk() throws Exception {
-        final String path = USERS_PATH + "/1";
+        final long ID = 1L;
         User user = new User();
-        user.setId(1L);
+        user.setId(ID);
         user.setUsername("testUsername");
         user.setEmail("testEmail@mail.com");
 
         Mockito.when(userService.findUserById(1L)).thenReturn(Optional.of(user));
 
-        mockMvc.perform(get(path))
+        mockMvc.perform(get(USERS_PATH + "/{id}", ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value(user.getUsername()))
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
                 .andExpect(jsonPath("$._links.self").hasJsonPath())
                 .andDo(document("get-user/ok",
+                        pathParameters(parameterWithName("id").description("user's id")),
                         links(halLinks(),
                                 linkWithRel("self").description("self link"),
                                 linkWithRel("update").description("link to update user"),
@@ -149,7 +151,10 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$._embedded.userResponseList[0].username").value(user.getUsername()))
                 .andExpect(jsonPath("$._embedded.userResponseList[0].email").value(user.getEmail()))
                 .andExpect(jsonPath("$._embedded.userResponseList[1]").doesNotExist())
-                .andExpect(jsonPath("$.page.totalElements").value(FILTERED_COUNT));
+                .andExpect(jsonPath("$.page.totalElements").value(FILTERED_COUNT))
+                .andDo(document("get-users/filtered/ok", requestParameters(
+                        parameterWithName("email").optional().description("email part"),
+                        parameterWithName("username").optional().description("username part"))));
     }
 
 
@@ -177,7 +182,12 @@ public class UserControllerTest {
         mockMvc.perform(post(USERS_PATH)
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andDo(document("create-user/ok",
+                        requestFields(
+                                fieldWithPath("username").description("User's username"),
+                                fieldWithPath("email").description("User's email"),
+                                fieldWithPath("password").description("user's password"))));
     }
 
     @Test
@@ -219,7 +229,12 @@ public class UserControllerTest {
         mockMvc.perform(patch(path)
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("update-user/ok",
+                        requestFields(
+                                fieldWithPath("username").optional().description("User's username"),
+                                fieldWithPath("email").type(String.class).optional().description("User's email"))));
+
     }
 
     @Test
