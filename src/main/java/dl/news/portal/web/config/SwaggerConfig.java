@@ -43,9 +43,9 @@ public class SwaggerConfig {
                 .paths(PathSelectors.any())
                 .build()
                 .useDefaultResponseMessages(false)
-                .globalResponseMessage(RequestMethod.POST, concatenatedList(message201(), message422Validate(), message404()))
-                .globalResponseMessage(RequestMethod.PATCH, concatenatedList(message422Validate(), message404()))
-                .globalResponseMessage(RequestMethod.DELETE, concatenatedList(message204(), message404()))
+                .globalResponseMessage(RequestMethod.POST, concatenatedList(messageCreated(), messageUnprocessableEntity(), messageNotFound()))
+                .globalResponseMessage(RequestMethod.PATCH, concatenatedList(messageUnprocessableEntity(), messageNotFound()))
+                .globalResponseMessage(RequestMethod.DELETE, concatenatedList(messageNoContent(), messageNotFound()))
                 .additionalModels(new TypeResolver().resolve(BindExceptionResponse.class))
                 .additionalModels(new TypeResolver().resolve(LinkResponse.class))
                 .additionalModels(new TypeResolver().resolve(ErrorResponse.class))
@@ -56,7 +56,7 @@ public class SwaggerConfig {
         return Arrays.stream(collections).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
-    private List<ResponseMessage> message422Validate() {
+    private List<ResponseMessage> messageUnprocessableEntity() {
         return Arrays.asList(new ResponseMessageBuilder()
                 .code(HttpStatus.UNPROCESSABLE_ENTITY.value())
                 .message("Validation error")
@@ -64,7 +64,7 @@ public class SwaggerConfig {
                 .build());
     }
 
-    private List<ResponseMessage> message404() {
+    private List<ResponseMessage> messageNotFound() {
         return Arrays.asList(new ResponseMessageBuilder()
                 .code(HttpStatus.NOT_FOUND.value())
                 .message(HttpStatus.NOT_FOUND.getReasonPhrase())
@@ -72,14 +72,14 @@ public class SwaggerConfig {
                 .build());
     }
 
-    private List<ResponseMessage> message201() {
+    private List<ResponseMessage> messageCreated() {
         return Arrays.asList(new ResponseMessageBuilder()
                 .code(HttpStatus.CREATED.value())
                 .message(HttpStatus.CREATED.getReasonPhrase())
                 .build());
     }
 
-    private List<ResponseMessage> message204() {
+    private List<ResponseMessage> messageNoContent() {
         return Arrays.asList(new ResponseMessageBuilder()
                 .code(HttpStatus.NO_CONTENT.value())
                 .message(HttpStatus.NO_CONTENT.getReasonPhrase())
