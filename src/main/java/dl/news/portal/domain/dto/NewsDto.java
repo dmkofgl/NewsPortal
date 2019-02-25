@@ -1,5 +1,6 @@
 package dl.news.portal.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.utils.ValidationMode;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -45,10 +46,12 @@ public class NewsDto {
         this.content = content;
     }
 
+    @JsonIgnore
     public Date getEndCreateDate() {
         return endCreateDate;
     }
 
+    @JsonIgnore
     public Date getCreateDate() {
         return createDate;
     }
