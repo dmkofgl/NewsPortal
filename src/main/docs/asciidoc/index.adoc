@@ -1,0 +1,30 @@
+= RESTful API Guide
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[overview]]
+= Overview
+
+[[overview-http-verbs]]
+== HTTP verbs
+include::methods.adoc[]
+
+[[overview-http-status-codes]]
+== HTTP status codes
+include::codes.adoc[]
+
+[[Endpoints]]
+= Endpoints
+
+[[Endpoints-Users]]
+=== Users
+include::users.adoc[]
+
+[[Endpoints-News]]
+=== News
+
+include::news.adoc[]

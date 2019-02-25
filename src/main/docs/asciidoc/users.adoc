@@ -1,0 +1,20 @@
+[[Endpoints-Users-get]]
+==== Get users
+
+[[Endpoints-Users-get-all]]
+===== Get users
+
+[[Endpoints-Users-get-one]]
+===== Get user
+
+[[Endpoints-Users-get-search]]
+===== Search user
+
+[[Endpoints-Users-post]]
+==== Create user
+
+[[Endpoints-Users-putch]]
+==== Update users
+
+[[Endpoints-Users-delete]]
+==== Delete users
