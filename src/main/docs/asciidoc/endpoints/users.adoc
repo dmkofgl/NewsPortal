@@ -4,8 +4,41 @@
 [[Endpoints-Users-get-all]]
 ===== Get users
 
+====== Http request
+.Example
+include::{snippets}/get-users/all/ok/http-request.adoc[]
+
+====== Http response
+.Example
+include::{snippets}/get-users/all/ok/http-response.adoc[]
+Body::
+include::{snippets}/get-users/all/ok/response-body.adoc[]
+
+Fields::
+Users list::
+include::{snippets}/get-users/all/ok/response-fields-beneath-_embedded.userResponseList.adoc[]
+Page::
+include::{snippets}/get-users/all/ok/response-fields-beneath-page.adoc[]
+
+Links::
+include::{snippets}/get-users/all/ok/links.adoc[]
 [[Endpoints-Users-get-one]]
 ===== Get user
+
+====== Http request
+.Example
+include::{snippets}/get-user/ok/http-request.adoc[]
+
+====== Http response
+.Example
+include::{snippets}/get-user/ok/http-response.adoc[]
+Body::
+include::{snippets}/get-user/ok/response-body.adoc[]
+Fields::
+include::{snippets}/get-user/ok/response-fields.adoc[]
+Links::
+include::{snippets}/get-user/ok/links.adoc[]
+
 
 [[Endpoints-Users-get-search]]
 ===== Search user

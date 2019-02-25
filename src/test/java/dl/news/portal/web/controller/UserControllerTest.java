@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -25,12 +26,16 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.refEq;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
+@AutoConfigureRestDocs(outputDir = "target/snippets")
 public class UserControllerTest {
     private static final String USERS_PATH = "/users";
     @Autowired
@@ -52,7 +57,19 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value(user.getUsername()))
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
-                .andExpect(jsonPath("$._links.self").hasJsonPath());
+                .andExpect(jsonPath("$._links.self").hasJsonPath())
+                .andDo(document("get-user/ok",
+                        links(halLinks(),
+                                linkWithRel("self").description("self link"),
+                                linkWithRel("update").description("link to update user"),
+                                linkWithRel("delete").description("link to delete user")),
+                        responseFields(
+                                fieldWithPath("email").description("user's email"),
+                                fieldWithPath("username").description("user's username"),
+                                subsectionWithPath("_links").description("links to relative operations")
+
+                        )));
+
     }
 
     @Test
@@ -71,7 +88,24 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$._embedded.userResponseList[0].username").value(user.getUsername()))
                 .andExpect(jsonPath("$._embedded.userResponseList[0].email").value(user.getEmail()))
                 .andExpect(jsonPath("$.page").hasJsonPath())
-                .andExpect(jsonPath("$._links.self").hasJsonPath());
+                .andExpect(jsonPath("$._links.self").hasJsonPath())
+                .andDo(document("get-users/all/ok",
+                        links(halLinks(),
+                                linkWithRel("self").description("self link"),
+                                linkWithRel("last").description("link to last page"),
+                                linkWithRel("first").description("link to first page"),
+                                linkWithRel("next").optional().description("link to next page if exists"),
+                                linkWithRel("previous").optional().description("link to previous page if exists")),
+                        relaxedResponseFields(beneathPath("_embedded.userResponseList"),
+                                fieldWithPath("email").description("user's email"),
+                                fieldWithPath("username").description("user's username"),
+                                subsectionWithPath("_links").description("links to relative operations")
+                        ),
+                        relaxedResponseFields(beneathPath("page"),
+                                fieldWithPath("size").description("user's email"),
+                                fieldWithPath("totalElements").description("Total number of elements"),
+                                fieldWithPath("totalPages").description("Total number of pages"),
+                                fieldWithPath("number").description("Current page number"))));
     }
 
     @Test
