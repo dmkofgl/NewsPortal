@@ -23,9 +23,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
@@ -43,47 +41,43 @@ public class SwaggerConfig {
                 .paths(PathSelectors.any())
                 .build()
                 .useDefaultResponseMessages(false)
-                .globalResponseMessage(RequestMethod.POST, concatenatedList(messageCreated(), messageUnprocessableEntity(), messageNotFound()))
-                .globalResponseMessage(RequestMethod.PATCH, concatenatedList(messageUnprocessableEntity(), messageNotFound()))
-                .globalResponseMessage(RequestMethod.DELETE, concatenatedList(messageNoContent(), messageNotFound()))
+                .globalResponseMessage(RequestMethod.POST, Arrays.asList(messageCreated(), messageUnprocessableEntity(), messageNotFound()))
+                .globalResponseMessage(RequestMethod.PATCH, Arrays.asList(messageUnprocessableEntity(), messageNotFound()))
+                .globalResponseMessage(RequestMethod.DELETE, Arrays.asList(messageNoContent(), messageNotFound()))
                 .additionalModels(new TypeResolver().resolve(BindExceptionResponse.class))
                 .additionalModels(new TypeResolver().resolve(LinkResponse.class))
                 .additionalModels(new TypeResolver().resolve(ErrorResponse.class))
                 .directModelSubstitute(LinkResponse.class, Link.class);
     }
 
-    private static <T> List<T> concatenatedList(List<T>... collections) {
-        return Arrays.stream(collections).flatMap(Collection::stream).collect(Collectors.toList());
-    }
-
-    private List<ResponseMessage> messageUnprocessableEntity() {
-        return Arrays.asList(new ResponseMessageBuilder()
+    private ResponseMessage messageUnprocessableEntity() {
+        return new ResponseMessageBuilder()
                 .code(HttpStatus.UNPROCESSABLE_ENTITY.value())
                 .message("Validation error")
                 .responseModel(new ModelRef("BindExceptionResponse"))
-                .build());
+                .build();
     }
 
-    private List<ResponseMessage> messageNotFound() {
-        return Arrays.asList(new ResponseMessageBuilder()
+    private ResponseMessage messageNotFound() {
+        return new ResponseMessageBuilder()
                 .code(HttpStatus.NOT_FOUND.value())
                 .message(HttpStatus.NOT_FOUND.getReasonPhrase())
                 .responseModel(new ModelRef("ErrorResponse"))
-                .build());
+                .build();
     }
 
-    private List<ResponseMessage> messageCreated() {
-        return Arrays.asList(new ResponseMessageBuilder()
+    private ResponseMessage messageCreated() {
+        return new ResponseMessageBuilder()
                 .code(HttpStatus.CREATED.value())
                 .message(HttpStatus.CREATED.getReasonPhrase())
-                .build());
+                .build();
     }
 
-    private List<ResponseMessage> messageNoContent() {
-        return Arrays.asList(new ResponseMessageBuilder()
+    private ResponseMessage messageNoContent() {
+        return new ResponseMessageBuilder()
                 .code(HttpStatus.NO_CONTENT.value())
                 .message(HttpStatus.NO_CONTENT.getReasonPhrase())
-                .build());
+                .build();
     }
 
     @Bean
