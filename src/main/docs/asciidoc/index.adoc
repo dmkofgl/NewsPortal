@@ -8,23 +8,15 @@
 
 [[overview]]
 = Overview
-
-[[overview-http-verbs]]
+News portal project.
+[[http-verbs]]
 == HTTP verbs
 include::methods.adoc[]
 
-[[overview-http-status-codes]]
+[[http-status-codes]]
 == HTTP status codes
 include::codes.adoc[]
 
 [[Endpoints]]
-= Endpoints
-
-[[Endpoints-Users]]
-=== Users
-include::users.adoc[]
-
-[[Endpoints-News]]
-=== News
-
-include::news.adoc[]
+== Endpoints
+include::endpoints.adoc[]
