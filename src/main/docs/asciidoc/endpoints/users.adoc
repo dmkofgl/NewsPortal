@@ -1,16 +1,17 @@
 [[Endpoints-Users-get]]
 ==== Get users
-Use 'GET' method.
+To get information about users use 'GET' method.
 [[Endpoints-Users-get-all]]
 ===== Get users
 Get users in page container.
 
-====== Http request
+.Http request
 .Example
 include::{snippets}/get-users/all/ok/http-request.adoc[]
 
-====== Http response
+.Http response
 .Example
+
 include::{snippets}/get-users/all/ok/http-response.adoc[]
 Body::
 include::{snippets}/get-users/all/ok/response-body.adoc[]
@@ -26,11 +27,16 @@ include::{snippets}/get-users/all/ok/links.adoc[]
 [[Endpoints-Users-get-one]]
 ===== Get user
 Get single user.
-====== Http request
+
+.Http request
+
 .Example
 include::{snippets}/get-user/ok/http-request.adoc[]
+Path parameters::
+include::{snippets}/get-user/ok/path-parameters.adoc[]
 
-====== Http response
+.Http response
+
 .Example
 include::{snippets}/get-user/ok/http-response.adoc[]
 Body::
@@ -43,7 +49,7 @@ include::{snippets}/get-user/ok/links.adoc[]
 [[Endpoints-Users-get-search]]
 ===== Search user
 
-====== Http request
+.Http request
 .Example
 include::{snippets}/get-users/filtered/ok/http-request.adoc[]
 Available Parameters::
@@ -52,7 +58,7 @@ include::{snippets}/get-users/filtered/ok/request-parameters.adoc[]
 [[Endpoints-Users-post]]
 ==== Create user
 
-====== Http request
+.Http request
 .Example
 include::{snippets}/create-user/ok/http-request.adoc[]
 Body::
@@ -60,12 +66,66 @@ include::{snippets}/create-user/ok/request-body.adoc[]
 Fields::
 include::{snippets}/create-user/ok/request-fields.adoc[]
 
-====== Http response
+.Http response
 .Example
 include::{snippets}/create-user/ok/http-response.adoc[]
 
+.Errors
+.Example unprocessable entity
+Request::
+include::{snippets}/create-user/error/unprocessable-entity/http-request.adoc[]
+Response::
+include::{snippets}/create-user/error/unprocessable-entity/http-response.adoc[]
+fields::
+include::{snippets}/create-user/error/unprocessable-entity/response-fields-beneath-errors.adoc[]
+Links::
+include::{snippets}/create-user/error/unprocessable-entity/links.adoc[]
 [[Endpoints-Users-putch]]
 ==== Update users
 
+.Http request
+ include::{snippets}/update-user/ok/http-request.adoc[]
+Body::
+include::{snippets}/update-user/ok/request-body.adoc[]
+Fields::
+include::{snippets}/update-user/ok/request-fields.adoc[]
+
+.Http response
+ include::{snippets}/update-user/ok/http-response.adoc[]
+
+.Errors
+--
+.Unprocessable entity
+Request::
+include::{snippets}/update-user/error/unprocessable-entity/http-request.adoc[]
+Response::
+include::{snippets}/update-user/error/unprocessable-entity/http-response.adoc[]
+fields::
+include::{snippets}/update-user/error/unprocessable-entity/response-fields-beneath-errors.adoc[]
+Links::
+include::{snippets}/update-user/error/unprocessable-entity/links.adoc[]
+--
 [[Endpoints-Users-delete]]
 ==== Delete users
+
+.Http request
+
+include::{snippets}/delete-user/ok/http-request.adoc[]
+Path parameters::
+include::{snippets}/delete-user/ok/path-parameters.adoc[]
+
+.Http response
+include::{snippets}/delete-user/ok/http-response.adoc[]
+
+.Errors
+--
+.Not found
+Request::
+include::{snippets}/delete-user/error/not-found/http-request.adoc[]
+Response::
+include::{snippets}/delete-user/error/not-found/http-response.adoc[]
+fields::
+include::{snippets}/delete-user/error/not-found/response-fields.adoc[]
+Links::
+include::{snippets}/delete-user/error/not-found/links.adoc[]
+--
