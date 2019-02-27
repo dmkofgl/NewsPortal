@@ -2,43 +2,41 @@
 ==== Get users
 To get information about users use 'GET' method.
 [[Endpoints-Users-get-all]]
-===== Get users
-Get users in page container.
+===== Get all users
+Get users wrapped in page container.
 
-.Http request
-.Example
+Http request looks like:
+
+.request
 include::{snippets}/get-users/all/ok/http-request.adoc[]
 
-.Http response
-.Example
-
+Response can be next:
+.response
 include::{snippets}/get-users/all/ok/http-response.adoc[]
+
 Body::
 include::{snippets}/get-users/all/ok/response-body.adoc[]
-
 Fields::
 Users list::
 include::{snippets}/get-users/all/ok/response-fields-beneath-_embedded.userResponseList.adoc[]
 Page::
 include::{snippets}/get-users/all/ok/response-fields-beneath-page.adoc[]
-
 Links::
 include::{snippets}/get-users/all/ok/links.adoc[]
 [[Endpoints-Users-get-one]]
-===== Get user
+===== Get one user
 Get single user.
 
-.Http request
-
-.Example
+.request
 include::{snippets}/get-user/ok/http-request.adoc[]
+
 Path parameters::
 include::{snippets}/get-user/ok/path-parameters.adoc[]
 
-.Http response
+.response
 
-.Example
 include::{snippets}/get-user/ok/http-response.adoc[]
+
 Body::
 include::{snippets}/get-user/ok/response-body.adoc[]
 Fields::
@@ -46,12 +44,26 @@ include::{snippets}/get-user/ok/response-fields.adoc[]
 Links::
 include::{snippets}/get-user/ok/links.adoc[]
 
+.Errors
+404 Not Found::
+Request::
+include::{snippets}/delete-user/error/not-found/http-request.adoc[]
+Response::
+include::{snippets}/delete-user/error/not-found/http-response.adoc[]
+fields::
+include::{snippets}/delete-user/error/not-found/response-fields.adoc[]
+Links::
+include::{snippets}/delete-user/error/not-found/links.adoc[]
+
 [[Endpoints-Users-get-search]]
 ===== Search user
+For searching user use get all users endpoint with searching parameters for example:
 
-.Http request
-.Example
+.request
 include::{snippets}/get-users/filtered/ok/http-request.adoc[]
+
+For searching can be used 2 criterion. Use searching parameters to find all users matched ыуфксрштп скшеукшщты.
+
 Available Parameters::
 include::{snippets}/get-users/filtered/ok/request-parameters.adoc[]
 

@@ -153,22 +153,27 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$._embedded.userResponseList[1]").doesNotExist())
                 .andExpect(jsonPath("$.page.totalElements").value(FILTERED_COUNT))
                 .andDo(document("get-users/filtered/ok", requestParameters(
-                        parameterWithName("email").optional().description("email part"),
-                        parameterWithName("username").optional().description("username part"))));
+                        parameterWithName("email").optional().description("Email matcher"),
+                        parameterWithName("username").optional().description("Username matcher"))));
     }
 
 
     @Test
     public void getUserById_whenUserDoesNotExist_shouldReturnNotFound() throws Exception {
-        final String path = USERS_PATH + "/2";
-        User user = new User();
-        user.setId(1L);
-        user.setUsername("testUsername");
-        user.setEmail("testEmail@mail.com");
+        final Long ID = 1L;
 
-        Mockito.when(userService.findUserById(1L)).thenReturn(Optional.of(user));
+        Mockito.doThrow(EntityNotFoundException.class).when(userService).findUserById(anyLong());
 
-        mockMvc.perform(get(path)).andExpect(status().isNotFound());
+        mockMvc.perform(get(USER_ID_PATH_TEMPLATE, ID)).andExpect(status().isNotFound())
+                .andDo(document("get-user/error/not-found",
+                        links(halLinks(),
+                                linkWithRel("self").description("Self link")),
+                        pathParameters(parameterWithName("id").description("user's id")),
+                        responseFields(
+                                fieldWithPath("code").description("Http response code"),
+                                fieldWithPath("message").description("Error message"),
+                                subsectionWithPath("_links").description("redundant").ignored()
+                        )));
     }
 
 
