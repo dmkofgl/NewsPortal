@@ -289,7 +289,7 @@ public class UserControllerTest {
         Mockito.doThrow(EntityNotFoundException.class).when(userService).deleteUser(anyLong());
         mockMvc.perform(delete(USER_ID_PATH_TEMPLATE, ID))
                 .andExpect(status().isNotFound())
-                .andDo(document("delete-user/error/not-found",
+                .andDo(document("user/error/not-found",
                         links(halLinks(),
                                 linkWithRel("self").description("Self link")),
                         pathParameters(parameterWithName("id").description("user's id")),
