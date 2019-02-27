@@ -1,0 +1,7 @@
+[[Endpoints-Users]]
+=== Users
+include::endpoints/users.adoc[]
+
+[[Endpoints-News]]
+=== News
+include::endpoints/news.adoc[]

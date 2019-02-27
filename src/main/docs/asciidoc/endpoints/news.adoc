@@ -1,0 +1,20 @@
+[[Endpoints-News-get]]
+==== Get news
+
+[[Endpoints-News-get-all]]
+===== Get news
+
+[[Endpoints-News-get-one]]
+===== Get one news
+
+[[Endpoints-News-get-search]]
+===== Search news
+
+[[Endpoints-News-post]]
+==== Create news
+
+[[Endpoints-News-putch]]
+==== Update news
+
+[[Endpoints-News-delete]]
+==== Delete news

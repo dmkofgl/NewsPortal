@@ -1,0 +1,22 @@
+= RESTful API Guide
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[overview]]
+= Overview
+News portal project.
+[[http-verbs]]
+== HTTP verbs
+include::methods.adoc[]
+
+[[http-status-codes]]
+== HTTP status codes
+include::codes.adoc[]
+
+[[Endpoints]]
+== Endpoints
+include::endpoints.adoc[]
