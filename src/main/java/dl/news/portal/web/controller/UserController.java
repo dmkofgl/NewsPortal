@@ -3,10 +3,12 @@ package dl.news.portal.web.controller;
 import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.response.PageResponse;
 import dl.news.portal.domain.response.UserResponse;
+import dl.news.portal.domain.response.exception.BindExceptionResponse;
+import dl.news.portal.domain.response.exception.ErrorResponse;
 import dl.news.portal.domain.service.UserService;
 import dl.news.portal.utils.ValidationMode;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,9 @@ public class UserController {
     private UserService userService;
 
     @GetMapping(ID_PATH)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Not Found", response = ErrorResponse.class)
+    })
     public UserResponse getUserById(@PathVariable Long id) {
         return userService.findUserById(id)
                 .map(UserResponse::new)
@@ -33,9 +38,8 @@ public class UserController {
     }
 
     @GetMapping
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "username", paramType = "query"),
-            @ApiImplicitParam(name = "email", paramType = "query")
+    @ApiResponses(value = {
+            @ApiResponse(code = 422, message = "Validation error", response = BindExceptionResponse.class)
     })
     public PageResponse<UserResponse> getFilteredUsers(UserDto dto, Pageable pageable) {
         Page<UserResponse> userPage = userService.getFilteredPage(dto, pageable).map(UserResponse::new);
