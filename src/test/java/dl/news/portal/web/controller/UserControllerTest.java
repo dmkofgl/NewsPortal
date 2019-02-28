@@ -171,7 +171,7 @@ public class UserControllerTest {
                         pathParameters(parameterWithName("id").description("user's id")),
                         responseFields(
                                 fieldWithPath("code").description("Http response code"),
-                                fieldWithPath("message").description("Error message"),
+                                fieldWithPath("message").type(String.class).description("Error message"),
                                 subsectionWithPath("_links").ignored()
                         )));
     }
