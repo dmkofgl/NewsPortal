@@ -268,7 +268,7 @@ public class UserControllerTest {
                                 linkWithRel("self").optional().description("Self link")),
                         responseFields(beneathPath("errors"),
                                 fieldWithPath("field").description("Field with exception"),
-                                fieldWithPath("message").optional().description("Exception message"),
+                                fieldWithPath("message").type(String.class).optional().description("Exception message"),
                                 fieldWithPath("value").type(String.class).optional().description("Invalid value")
                         )));
     }
@@ -295,8 +295,8 @@ public class UserControllerTest {
                         pathParameters(parameterWithName("id").description("user's id")),
                         responseFields(
                                 fieldWithPath("code").description("Http response code"),
-                                fieldWithPath("message").description("Error message"),
-                                subsectionWithPath("_links").description("redundant").ignored()
+                                fieldWithPath("message").type(String.class).description("Error message"),
+                                subsectionWithPath("_links").ignored()
                         )));
     }
 
