@@ -1,20 +1,177 @@
 [[Endpoints-Users-get]]
 ==== Get users
-
+To get information about users use 'GET' method.
 [[Endpoints-Users-get-all]]
-===== Get users
+===== Get all users
+Get users wrapped in page container.
 
+Http request looks like:
+
+.request
+include::{snippets}/get-users/all/ok/http-request.adoc[]
+
+Response can be next:
+
+.response
+include::{snippets}/get-users/all/ok/http-response.adoc[]
+
+Body::
+include::{snippets}/get-users/all/ok/response-body.adoc[]
+Fields::
+Response body consists of 3 fields:
+
+_embedded::
+Contain only one item is userResponseList which is array of next entity:
+include::{snippets}/get-users/all/ok/response-fields-beneath-_embedded.userResponseList.adoc[]
+Page::
+include::{snippets}/get-users/all/ok/response-fields-beneath-page.adoc[]
+Links::
+include::{snippets}/get-users/all/ok/links.adoc[]
 [[Endpoints-Users-get-one]]
-===== Get user
+===== Get one user
+Get single user.
 
+.request
+include::{snippets}/get-user/ok/http-request.adoc[]
+
+Path parameters::
+include::{snippets}/get-user/ok/path-parameters.adoc[]
+
+.response
+
+include::{snippets}/get-user/ok/http-response.adoc[]
+
+Body::
+include::{snippets}/get-user/ok/response-body.adoc[]
+Fields::
+include::{snippets}/get-user/ok/response-fields.adoc[]
+Links::
+include::{snippets}/get-user/ok/links.adoc[]
+
+.Errors
+--
+.404 Not Found::
+Cannot find user.
+
+Request::
+include::{snippets}/user/error/not-found/http-request.adoc[]
+Response::
+include::{snippets}/user/error/not-found/http-response.adoc[]
+fields::
+include::{snippets}/user/error/not-found/response-fields.adoc[]
+Links::
+include::{snippets}/user/error/not-found/links.adoc[]
+--
 [[Endpoints-Users-get-search]]
 ===== Search user
 
+For searching user use <<Endpoints-Users-get-all, get all users>>  endpoint with searching parameters for example:
+
+.request
+include::{snippets}/get-users/filtered/ok/http-request.adoc[]
+
+For searching can be used 2 parameters.
+
+Available Parameters::
+include::{snippets}/get-users/filtered/ok/request-parameters.adoc[]
+
 [[Endpoints-Users-post]]
 ==== Create user
+To create user use 'POST' method.
 
+.request
+include::{snippets}/create-user/ok/http-request.adoc[]
+Body::
+include::{snippets}/create-user/ok/request-body.adoc[]
+Fields::
+include::{snippets}/create-user/ok/request-fields.adoc[]
+
+If request is success response will be like this:
+
+.response
+include::{snippets}/create-user/ok/http-response.adoc[]
+
+.Errors
+--
+.422 unprocessable entity
+
+Invalid data in request.
+
+For example:
+
+Request::
+include::{snippets}/create-user/error/unprocessable-entity/http-request.adoc[]
+
+Email is incorrect. Email should contains one '@' and at least one '.'.
+
+Response::
+include::{snippets}/create-user/error/unprocessable-entity/http-response.adoc[]
+fields::
+include::{snippets}/create-user/error/unprocessable-entity/response-fields-beneath-errors.adoc[]
+Links::
+include::{snippets}/create-user/error/unprocessable-entity/links.adoc[]
+--
 [[Endpoints-Users-putch]]
 ==== Update users
 
+To update user use 'PATCH' method.
+To change username request will be like:
+
+.request
+include::{snippets}/update-user/ok/http-request.adoc[]
+Body::
+include::{snippets}/update-user/ok/request-body.adoc[]
+ Available fields::
+include::{snippets}/update-user/ok/request-fields.adoc[]
+
+.response
+include::{snippets}/update-user/ok/http-response.adoc[]
+
+.Errors
+--
+.422 Unprocessable entity
+Invalid data in request.
+Request::
+include::{snippets}/update-user/error/unprocessable-entity/http-request.adoc[]
+Response::
+include::{snippets}/update-user/error/unprocessable-entity/http-response.adoc[]
+fields::
+include::{snippets}/update-user/error/unprocessable-entity/response-fields-beneath-errors.adoc[]
+Links::
+include::{snippets}/update-user/error/unprocessable-entity/links.adoc[]
+--
 [[Endpoints-Users-delete]]
 ==== Delete users
+To delete user use 'DELETE' method.
+Http endpoint looks like:
+
+[source,http,options="nowrap"]
+----
+DELETE /users/{id} HTTP/1.1
+Host: localhost:8080
+----
+Example:
+
+.request
+
+include::{snippets}/delete-user/ok/http-request.adoc[]
+Path parameters::
+include::{snippets}/delete-user/ok/path-parameters.adoc[]
+
+.Http response
+include::{snippets}/delete-user/ok/http-response.adoc[]
+
+.Errors
+--
+.404 Not found
+Cannot find user.
+
+Request::
+include::{snippets}/user/error/not-found/http-request.adoc[]
+Response::
+include::{snippets}/user/error/not-found/http-response.adoc[]
+fields::
+include::{snippets}/user/error/not-found/response-fields.adoc[]
+Links::
+include::{snippets}/user/error/not-found/links.adoc[]
+--
