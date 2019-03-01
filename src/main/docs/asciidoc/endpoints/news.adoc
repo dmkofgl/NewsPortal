@@ -1,20 +1,190 @@
 [[Endpoints-News-get]]
 ==== Get news
-
+To get information about news use 'GET' http method.
 [[Endpoints-News-get-all]]
 ===== Get news
+Get news wrapped in page container.
 
+To receive information about news send http request like :
+
+.request
+include::{snippets}/get-news/all/ok/http-request.adoc[]
+
+Response can be next:
+
+.response
+include::{snippets}/get-users/all/ok/http-response.adoc[]
+
+Body::
+include::{snippets}/get-users/all/ok/response-body.adoc[]
+Fields::
+Response body consists of 3 fields:
+
+_embedded::
+Contain only one item is newsResponseList which is array of next entity:
+include::{snippets}/get-news/all/ok/response-fields-beneath-_embedded.newsResponseList.adoc[]
+Page::
+include::{snippets}/get-news/all/ok/response-fields-beneath-page.adoc[]
+Links::
+include::{snippets}/get-news/all/ok/links.adoc[]
 [[Endpoints-News-get-one]]
 ===== Get one news
+To receive only one news send http request like:
 
+.request
+include::{snippets}/get-news/single/ok/http-request.adoc[]
+Path parameter clarifies which news is interested.
+
+Path parameter::
+include::{snippets}/get-news/single/ok/path-parameters.adoc[]
+
+.response
+
+include::{snippets}/get-news/single/ok/http-response.adoc[]
+
+Body::
+include::{snippets}/get-news/single/ok/response-body.adoc[]
+Fields::
+include::{snippets}/get-news/single/ok/response-fields.adoc[]
+Links::
+include::{snippets}/get-news/single/ok/links.adoc[]
+
+.Errors
+--
+.404 Not Found
+Cannot find news with requested id.
+
+.request
+include::{snippets}/get-news/single/error/not-found/http-request.adoc[]
+
+.response
+include::{snippets}/get-news/single/error/not-found/http-response.adoc[]
+fields::
+include::{snippets}/get-news/single/error/not-found/response-fields.adoc[]
+Links::
+include::{snippets}/get-news/single/error/not-found/links.adoc[]
+--
 [[Endpoints-News-get-search]]
 ===== Search news
 
+For searching news use <<Endpoints-News-get-all, get all news>>  endpoint with searching parameters.
+
+If need to find all news which title contain "tle" request will be like :
+.request
+include::{snippets}/get-news/filtered/ok/http-request.adoc[]
+
+For searching can be used 3 parameters.
+
+Available Parameters::
+include::{snippets}/get-news/filtered/ok/request-parameters.adoc[]
+
+.response
+include::{snippets}/get-news/filtered/ok/http-response.adoc[]
+
 [[Endpoints-News-post]]
 ==== Create news
+To create news use 'POST' method.
 
+Put information about news in request body.For example:
+
+.request
+include::{snippets}/create-news/ok/http-request.adoc[]
+Body::
+include::{snippets}/create-news/ok/request-body.adoc[]
+Fields::
+include::{snippets}/create-news/ok/request-fields.adoc[]
+
+If request is success response will be like this:
+
+.response
+include::{snippets}/create-news/ok/http-response.adoc[]
+
+.Errors
+--
+.422 unprocessable entity
+
+Incorrect data in request.
+
+Request body should contain :
+
+* Not blank field "title"
+* Not blank field "content"
+
+For example:
+
+Request::
+include::{snippets}/create-news/error/unprocessable-entity/http-request.adoc[]
+Response::
+include::{snippets}/create-news/error/unprocessable-entity/http-response.adoc[]
+fields::
+include::{snippets}/create-news/error/unprocessable-entity/response-fields-beneath-errors.adoc[]
+Links::
+include::{snippets}/create-news/error/unprocessable-entity/links.adoc[]
+--
 [[Endpoints-News-putch]]
 ==== Update news
 
+To update user use 'PATCH' method.
+To change news' title and content request will be like:
+
+.request
+include::{snippets}/update-news/ok/http-request.adoc[]
+Body::
+include::{snippets}/update-news/ok/request-body.adoc[]
+ Available fields::
+include::{snippets}/update-news/ok/request-fields.adoc[]
+
+.response
+include::{snippets}/update-news/ok/http-response.adoc[]
+
+.Errors
+--
+.404 Not Found
+Cannot find news with requested id.
+
+.request
+include::{snippets}/update-news/error/not-found/http-request.adoc[]
+
+.response
+include::{snippets}/update-news/error/not-found/http-response.adoc[]
+fields::
+include::{snippets}/update-news/error/not-found/response-fields.adoc[]
+Links::
+include::{snippets}/update-news/error/not-found/links.adoc[]
+--
 [[Endpoints-News-delete]]
 ==== Delete news
+To delete news use 'DELETE' method.
+Http request looks like:
+
+[source,http,options="nowrap"]
+----
+DELETE /news/{id} HTTP/1.1
+Host: localhost:8080
+----
+Example:
+
+.request
+
+include::{snippets}/delete-news/ok/http-request.adoc[]
+Path parameters::
+include::{snippets}/delete-news/ok/path-parameters.adoc[]
+
+.Http response
+include::{snippets}/delete-news/ok/http-response.adoc[]
+
+.Errors
+--
+.404 Not found
+Cannot find user.
+
+.request
+include::{snippets}/delete-news/error/not-found/http-request.adoc[]
+
+.response
+include::{snippets}/delete-news/error/not-found/http-response.adoc[]
+fields::
+include::{snippets}/delete-news/error/not-found/response-fields.adoc[]
+Links::
+include::{snippets}/delete-news/error/not-found/links.adoc[]
+--
