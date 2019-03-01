@@ -1,0 +1,39 @@
+|
+            {
+                          "_embedded" : {
+                            "userResponseList" : [ {
+                              "username" : "testUsername",
+                              "email" : "testEmail@mail.com",
+                              "_links" : {
+                                "self" : {
+                                  "href" : "http://localhost:8080/users/1"
+                                },
+                                "delete" : {
+                                  "href" : "http://localhost:8080/users/1",
+                                  "method" : "DELETE"
+                                },
+                                "update" : {
+                                  "href" : "http://localhost:8080/users/1",
+                                  "method" : "PATCH"
+                                }
+                              }
+                            } ]
+                          },
+                          "_links" : {
+                            "self" : {
+                              "href" : "http://localhost:8080/users"
+                            },
+                            "first" : {
+                              "href" : "http://localhost:8080/users?page=0"
+                            },
+                            "last" : {
+                              "href" : "http://localhost:8080/users?page=0"
+                            }
+                          },
+                          "page" : {
+                            "size" : 0,
+                            "totalElements" : 1,
+                            "totalPages" : 1,
+                            "number" : 0
+                          }
+                        }

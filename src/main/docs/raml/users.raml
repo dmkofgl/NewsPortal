@@ -1,0 +1,18 @@
+description: "The Users resource."
+get:
+  queryParameters:
+    username ?: string
+    email ?: string
+  description: "Returns a page of users."
+  responses:
+    200: !include response/users/getUsersOk.raml
+post:
+  description: "Create new user."
+  body:
+    application/json:
+      type: CreatingUser
+  responses:
+    201:
+      description: "User created"
+    422: !include response/users/usersUnprocessableEntity.raml
+/{id}: !include user.raml
