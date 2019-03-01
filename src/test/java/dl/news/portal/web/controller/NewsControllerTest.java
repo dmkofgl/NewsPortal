@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,8 +85,8 @@ public class NewsControllerTest {
                         responseFields(
                                 fieldWithPath("title").description("News title"),
                                 fieldWithPath("content").description("News content"),
-                                fieldWithPath("updatedDate").description("News last update date"),
-                                fieldWithPath("createdDate").description("Date when that news was saved first time."),
+                                fieldWithPath("updatedDate").type(Date.class).description("News last update date"),
+                                fieldWithPath("createdDate").type(Date.class).description("Date when that news was saved first time."),
                                 subsectionWithPath("_links").description("links to relative operations"))));
     }
 
@@ -118,8 +119,8 @@ public class NewsControllerTest {
                         responseFields(beneathPath("_embedded.newsResponseList"),
                                 fieldWithPath("title").description("News title"),
                                 fieldWithPath("content").description("News content"),
-                                fieldWithPath("updatedDate").description("News last update date"),
-                                fieldWithPath("createdDate").description("Date when that news was saved first time."),
+                                fieldWithPath("updatedDate").type(Date.class).description("News last update date"),
+                                fieldWithPath("createdDate").type(Date.class).description("Date when that news was saved first time."),
                                 subsectionWithPath("_links").description("links to relative operations")),
                         responseFields(beneathPath("page"),
                                 fieldWithPath("size").description("Page size, default 20"),
@@ -197,7 +198,7 @@ public class NewsControllerTest {
                                 linkWithRel("self").optional().description("Self link")),
                         responseFields(beneathPath("errors"),
                                 fieldWithPath("field").description("Field with exception"),
-                                fieldWithPath("message").description("Exception message"),
+                                fieldWithPath("message").type(String.class).description("Exception message"),
                                 fieldWithPath("value").type(String.class).description("Invalid value"))));
     }
 

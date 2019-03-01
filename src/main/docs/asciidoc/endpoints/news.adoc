@@ -13,10 +13,10 @@ include::{snippets}/get-news/all/ok/http-request.adoc[]
 Response can be next:
 
 .response
-include::{snippets}/get-users/all/ok/http-response.adoc[]
+include::{snippets}/get-news/all/ok/http-response.adoc[]
 
 Body::
-include::{snippets}/get-users/all/ok/response-body.adoc[]
+include::{snippets}/get-news/all/ok/response-body.adoc[]
 Fields::
 Response body consists of 3 fields:
 
@@ -124,7 +124,7 @@ include::{snippets}/create-news/error/unprocessable-entity/links.adoc[]
 [[Endpoints-News-putch]]
 ==== Update news
 
-To update user use 'PATCH' method.
+To update news use 'PATCH' method.
 To change news' title and content request will be like:
 
 .request
@@ -176,7 +176,7 @@ include::{snippets}/delete-news/ok/http-response.adoc[]
 .Errors
 --
 .404 Not found
-Cannot find user.
+Cannot find news.
 
 .request
 include::{snippets}/delete-news/error/not-found/http-request.adoc[]
