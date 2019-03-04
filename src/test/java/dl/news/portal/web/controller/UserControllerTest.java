@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -31,13 +33,16 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
+@AutoConfigureMockMvc
 @AutoConfigureRestDocs(outputDir = "target/snippets")
+@WithMockUser(username = "name")
 public class UserControllerTest {
     private static final String USERS_PATH = "/users";
     private static final String USER_ID_PATH_TEMPLATE = USERS_PATH + "/{id}";
@@ -184,7 +189,7 @@ public class UserControllerTest {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String body = mapper.writeValueAsString(dto);
 
-        mockMvc.perform(post(USERS_PATH)
+        mockMvc.perform(post(USERS_PATH).with(csrf())
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -202,7 +207,7 @@ public class UserControllerTest {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String body = mapper.writeValueAsString(dto);
 
-        mockMvc.perform(post(USERS_PATH)
+        mockMvc.perform(post(USERS_PATH).with(csrf())
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity())
@@ -224,7 +229,7 @@ public class UserControllerTest {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String body = mapper.writeValueAsString(dto);
 
-        mockMvc.perform(post(USERS_PATH)
+        mockMvc.perform(post(USERS_PATH).with(csrf())
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity())
@@ -239,7 +244,7 @@ public class UserControllerTest {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String body = mapper.writeValueAsString(dto);
 
-        mockMvc.perform(patch(USER_ID_PATH_TEMPLATE, USER_ID)
+        mockMvc.perform(patch(USER_ID_PATH_TEMPLATE, USER_ID).with(csrf())
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -258,7 +263,7 @@ public class UserControllerTest {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String body = mapper.writeValueAsString(dto);
 
-        mockMvc.perform(patch(USER_ID_PATH_TEMPLATE, USER_ID)
+        mockMvc.perform(patch(USER_ID_PATH_TEMPLATE, USER_ID).with(csrf())
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity())
@@ -277,7 +282,7 @@ public class UserControllerTest {
     public void deleteUser_whenUserExists_shouldReturnOk() throws Exception {
         final long ID = 1L;
 
-        mockMvc.perform(delete(USER_ID_PATH_TEMPLATE, ID))
+        mockMvc.perform(delete(USER_ID_PATH_TEMPLATE, ID).with(csrf()))
                 .andExpect(status().isNoContent())
                 .andDo(document("delete-user/ok",
                         pathParameters(parameterWithName("id").description("user's id"))));
@@ -287,7 +292,7 @@ public class UserControllerTest {
     public void deleteUser_whenUserNotExists_shouldReturnNotFound() throws Exception {
         final long ID = -1;
         Mockito.doThrow(EntityNotFoundException.class).when(userService).deleteUser(anyLong());
-        mockMvc.perform(delete(USER_ID_PATH_TEMPLATE, ID))
+        mockMvc.perform(delete(USER_ID_PATH_TEMPLATE, ID).with(csrf()))
                 .andExpect(status().isNotFound())
                 .andDo(document("user/error/not-found",
                         links(halLinks(),

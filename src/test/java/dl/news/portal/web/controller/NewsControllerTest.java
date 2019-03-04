@@ -6,6 +6,7 @@ import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.service.NewsService;
+import dl.news.portal.domain.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -30,6 +31,9 @@ public class NewsControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private NewsService newsService;
+    @MockBean
+    private UserService userService;
+
 
     @Test
     public void getNewsById_whenNewsExists_shouldReturnOk() throws Exception {
