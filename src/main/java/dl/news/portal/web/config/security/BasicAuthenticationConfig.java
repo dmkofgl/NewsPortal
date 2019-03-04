@@ -1,6 +1,6 @@
-package dl.news.portal.web.config;
+package dl.news.portal.web.config.security;
 
-import dl.news.portal.web.config.security.UserDetailService;
+import dl.news.portal.domain.service.impl.UserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,7 +18,7 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
-        auth.userDetailsService(customUserDetailsService())
+        auth.userDetailsService(newsPortalUserDetailsService())
                 .passwordEncoder(passwordEncoder());
     }
 
@@ -34,7 +34,7 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public UserDetailsService customUserDetailsService() {
+    public UserDetailsService newsPortalUserDetailsService() {
         return new UserDetailService();
     }
 

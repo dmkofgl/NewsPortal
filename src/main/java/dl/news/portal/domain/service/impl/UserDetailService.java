@@ -1,4 +1,4 @@
-package dl.news.portal.web.config.security;
+package dl.news.portal.domain.service.impl;
 
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.service.UserService;
