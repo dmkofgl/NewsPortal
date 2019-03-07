@@ -3,6 +3,7 @@ package dl.news.portal.domain.service.impl;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,7 +34,7 @@ public class UserDetailService implements UserDetailsService {
         UserDetails userDetails = new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 passwordEncoder.encode(user.getPassword()),
-                Collections.emptyList());
+                Collections.singletonList(new SimpleGrantedAuthority("user")));
         return userDetails;
 
     }
