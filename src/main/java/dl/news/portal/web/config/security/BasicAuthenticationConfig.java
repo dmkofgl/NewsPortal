@@ -33,8 +33,7 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic()
-                .realmName("Basic auth:")
-                .and();
+                .realmName("Basic auth:");
     }
 
     @Bean
