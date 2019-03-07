@@ -7,6 +7,8 @@ import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.service.NewsService;
 import dl.news.portal.domain.service.UserService;
+import dl.news.portal.web.config.security.jwt.JwtAuthenticationEntryPoint;
+import dl.news.portal.web.config.security.jwt.TokenProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(NewsController.class)
+@WithMockUser(username = "name")
 public class NewsControllerTest {
     private static final String NEWS_PATH = "/news";
     @Autowired
@@ -33,7 +38,12 @@ public class NewsControllerTest {
     private NewsService newsService;
     @MockBean
     private UserService userService;
-
+    @MockBean
+    private UserDetailsService userDetailsService;
+    @MockBean
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    @MockBean
+    private TokenProvider tokenProvider;
 
     @Test
     public void getNewsById_whenNewsExists_shouldReturnOk() throws Exception {
