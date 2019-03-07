@@ -4,7 +4,9 @@ import dl.news.portal.domain.dto.RefreshTokenDto;
 import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.entity.AuthToken;
 import dl.news.portal.domain.entity.RefreshToken;
+import dl.news.portal.domain.response.exception.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,5 +53,11 @@ public class AuthenticationController {
         String newAccessToken = jwtTokenUtil.generateAccessToken(authentication);
 
         return ResponseEntity.ok(new AuthToken(newAccessToken, newRefreshToken));
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        ErrorResponse resources = new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+        return new ResponseEntity<>(resources, HttpStatus.BAD_REQUEST);
     }
 }

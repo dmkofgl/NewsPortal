@@ -1,10 +1,12 @@
 package dl.news.portal.web.exceptionHandler;
 
+import com.fasterxml.jackson.core.io.JsonEOFException;
 import dl.news.portal.domain.response.exception.BindExceptionResponse;
 import dl.news.portal.domain.response.exception.ErrorResponse;
 import dl.news.portal.domain.response.exception.ValidateExceptionResponse;
 import dl.news.portal.exception.DeniedParameterException;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -55,6 +57,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({ExpiredJwtException.class})
     public ResponseEntity<ErrorResponse> handleExpiredJwtException(ExpiredJwtException ex) {
+        ErrorResponse resources = new ErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        return new ResponseEntity<>(resources, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({SignatureException.class})
+    public ResponseEntity<ErrorResponse> handleSignatureException(SignatureException ex) {
+        ErrorResponse resources = new ErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        return new ResponseEntity<>(resources, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({JsonEOFException.class})
+    public ResponseEntity<ErrorResponse> handleSignatureException(JsonEOFException ex) {
         ErrorResponse resources = new ErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         return new ResponseEntity<>(resources, HttpStatus.UNAUTHORIZED);
     }

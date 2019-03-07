@@ -68,11 +68,6 @@ public class TokenProvider {
         return refreshTokenService.takeRefreshToken(authentication);
     }
 
-    public RefreshToken getRefreshToken(String token) {
-        Long tokenId = Long.parseLong(getSubFromToken(token));
-        return refreshTokenService.getById(tokenId).orElseThrow(RuntimeException::new);
-    }
-
     public String refreshToken(Authentication authentication, RefreshToken refreshToken) {
         refreshToken.setActive(false);
         refreshTokenService.saveRefreshToken(refreshToken);
@@ -87,9 +82,9 @@ public class TokenProvider {
 
     public RefreshToken validateRefreshToken(String token) {
         Long tokenId = Long.parseLong(getSubFromToken(token));
-        RefreshToken refreshToken = refreshTokenService.getById(tokenId).orElseThrow(RuntimeException::new);
+        RefreshToken refreshToken = refreshTokenService.getById(tokenId).orElseThrow(() -> new IllegalArgumentException("Token does not exist."));
         if (!refreshToken.getActive()) {
-            throw new RuntimeException("Not active token");
+            throw new IllegalArgumentException("Token already had been used.");
         }
         return refreshToken;
     }
