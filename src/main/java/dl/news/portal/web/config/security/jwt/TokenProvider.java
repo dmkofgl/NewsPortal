@@ -1,9 +1,6 @@
 package dl.news.portal.web.config.security.jwt;
 
-import dl.news.portal.domain.entity.RefreshToken;
-import dl.news.portal.domain.service.RefreshTokenService;
 import io.jsonwebtoken.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,8 +20,6 @@ public class TokenProvider {
     private static final String AUTHORITIES_KEY = "scopes";
     private static final String SIGNING_KEY = "newsPortal";
     private static final long ACCESS_TOKEN_VALIDITY_SECONDS = 5 * 60;
-    @Autowired
-    private RefreshTokenService refreshTokenService;
 
     public String getSubFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -64,34 +59,11 @@ public class TokenProvider {
                 .compact();
     }
 
-    public String generateRefreshToken(Authentication authentication) {
-        return refreshTokenService.takeRefreshToken(authentication);
-    }
-
-    public RefreshToken getRefreshToken(String token) {
-        Long tokenId = Long.parseLong(getSubFromToken(token));
-        return refreshTokenService.getById(tokenId).orElseThrow(RuntimeException::new);
-    }
-
-    public String refreshToken(Authentication authentication, RefreshToken refreshToken) {
-        refreshToken.setActive(false);
-        refreshTokenService.saveRefreshToken(refreshToken);
-        return generateRefreshToken(authentication);
-    }
 
     public Boolean validateAccessToken(String token, UserDetails userDetails) {
         final String username = getSubFromToken(token);
         return (username.equals(userDetails.getUsername())
                 && !isTokenExpired(token));
-    }
-
-    public RefreshToken validateRefreshToken(String token) {
-        Long tokenId = Long.parseLong(getSubFromToken(token));
-        RefreshToken refreshToken = refreshTokenService.getById(tokenId).orElseThrow(RuntimeException::new);
-        if (!refreshToken.getActive()) {
-            throw new RuntimeException("Not active token");
-        }
-        return refreshToken;
     }
 
     UsernamePasswordAuthenticationToken getAuthentication(final String token, final UserDetails userDetails) {

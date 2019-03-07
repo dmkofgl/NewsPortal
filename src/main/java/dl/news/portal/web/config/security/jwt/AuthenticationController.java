@@ -1,9 +1,6 @@
 package dl.news.portal.web.config.security.jwt;
 
-import dl.news.portal.domain.dto.RefreshTokenDto;
 import dl.news.portal.domain.dto.UserDto;
-import dl.news.portal.domain.entity.AuthToken;
-import dl.news.portal.domain.entity.RefreshToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,23 +30,7 @@ public class AuthenticationController {
                 )
         );
         final String accessToken = jwtTokenUtil.generateAccessToken(authentication);
-        final String refreshToken = jwtTokenUtil.generateRefreshToken(authentication);
-        return ResponseEntity.ok(new AuthToken(accessToken, refreshToken));
+        return ResponseEntity.ok(new AuthToken(accessToken));
     }
 
-    @RequestMapping(value = "/refresh", method = RequestMethod.POST)
-    public ResponseEntity getAuthToken(@RequestBody RefreshTokenDto oldRefreshToken) throws AuthenticationException {
-        RefreshToken refreshToken = jwtTokenUtil.validateRefreshToken(oldRefreshToken.getRefreshToken());
-
-        final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        refreshToken.getOwner().getUsername(),
-                        refreshToken.getOwner().getPassword()
-                )
-        );
-        String newRefreshToken = jwtTokenUtil.refreshToken(authentication, refreshToken);
-        String newAccessToken = jwtTokenUtil.generateAccessToken(authentication);
-
-        return ResponseEntity.ok(new AuthToken(newAccessToken, newRefreshToken));
-    }
 }
