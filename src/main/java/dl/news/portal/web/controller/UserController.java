@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 
 @RestController
-@RequestMapping(value = "/users",produces =MediaType.APPLICATION_JSON_VALUE )
+@RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
     private static final String ID_PATH = "/{id}";
 
