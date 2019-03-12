@@ -10,7 +10,10 @@ import java.util.Optional;
 public interface UserService {
     Page<User> getFilteredPage(UserDto dto, Pageable pageable);
 
+    Optional<User> findByUsername(String username);
+
     void createUser(UserDto user);
+
 
     void updateUser(Long id, UserDto updatedUser);
 

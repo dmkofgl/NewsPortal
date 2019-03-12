@@ -18,14 +18,23 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
     private static final String ID_PATH = "/{id}";
+    private static final String ME = "/me";
 
     @Autowired
     private UserService userService;
+
+    @GetMapping(ME)
+    public UserResponse getCurrentUser(Principal principal) {
+        return userService.findByUsername(principal.getName())
+                .map(UserResponse::new)
+                .orElseThrow(() -> new EntityNotFoundException("Unable to find user with username " + principal.getName()));
+    }
 
     @GetMapping(ID_PATH)
     @ApiResponses(value = {
