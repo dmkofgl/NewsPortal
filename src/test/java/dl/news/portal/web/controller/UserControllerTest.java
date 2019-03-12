@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.service.UserService;
+import dl.news.portal.web.config.security.jwt.JwtAuthenticationEntryPoint;
+import dl.news.portal.web.config.security.jwt.TokenProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -18,6 +20,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -50,6 +54,14 @@ public class UserControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private UserService userService;
+    @MockBean
+    private UserDetailsService userDetailsService;
+    @MockBean
+    private PasswordEncoder passwordEncoder;
+    @MockBean
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    @MockBean
+    private TokenProvider tokenProvider;
 
     @Test
     public void getUserById_whenUserExists_shouldReturnOk() throws Exception {

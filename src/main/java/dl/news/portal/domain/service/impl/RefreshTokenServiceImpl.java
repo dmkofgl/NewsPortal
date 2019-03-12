@@ -12,8 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -35,12 +35,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
         RefreshToken refreshToken = new RefreshToken();
-        User owner = userService.findUserByUsername(authentication.getName()).orElseThrow(RuntimeException::new);
+        User owner = userService.findUserByUsername(authentication.getName()).orElseThrow(EntityNotFoundException::new);
         refreshToken.setOwner(owner);
         refreshToken.setIssuedAt(new Date());
-        refreshToken.setExpiration(new Date(refreshToken.getIssuedAt().getTime() + REFRESH_TOKEN_VALIDITY_SECONDS));
+        refreshToken.setExpiration(new Date(refreshToken.getIssuedAt().getTime() + REFRESH_TOKEN_VALIDITY_SECONDS * 1000));
         refreshToken.setAuthorities(authorities);
         refreshToken.setActive(true);
+
+        saveRefreshToken(refreshToken);
         return refreshToken;
     }
 
@@ -56,12 +58,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
-    public List<RefreshToken> getTokens(Authentication authentication) {
-        User owner = userService.findUserByUsername(authentication.getName()).orElseThrow(RuntimeException::new);
-        return tokenRepository.findAllByOwner(owner);
-    }
-
-    @Override
     public String buildToken(RefreshToken refreshToken) {
         return Jwts.builder()
                 .setSubject(refreshToken.getId().toString())
@@ -74,12 +70,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     public String takeRefreshToken(Authentication authentication) {
         RefreshToken refreshToken = createRefreshToken(authentication);
-        saveRefreshToken(refreshToken);
         return buildToken(refreshToken);
-    }
-
-    @Override
-    public Boolean checkToken(RefreshToken refreshToken) {
-        return tokenRepository.existsById(refreshToken.getId());
     }
 }

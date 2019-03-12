@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
-public class UserDetailService implements UserDetailsService {
+public class UserDetailServiceImpl implements UserDetailsService {
     @Autowired
     private UserService userService;
     @Autowired
@@ -23,19 +23,16 @@ public class UserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
-        UserDetails userDetails = userService.findUserByUsername(s)
-                .map(this::mapUser)
-                .orElseThrow(() -> new UsernameNotFoundException("No user found with username " + s));
-        return userDetails;
+        return userService.findUserByUsername(s)
+                .map(this::convertUser)
+                .orElseThrow(() -> new UsernameNotFoundException("No user with username " + s));
     }
 
-    private UserDetails mapUser(User user) {
-
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+    private UserDetails convertUser(User user) {
+        return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 passwordEncoder.encode(user.getPassword()),
                 Collections.singletonList(new SimpleGrantedAuthority("user")));
-        return userDetails;
 
     }
 }

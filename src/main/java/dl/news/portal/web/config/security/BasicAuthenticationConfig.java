@@ -1,8 +1,6 @@
 package dl.news.portal.web.config.security;
 
-import dl.news.portal.domain.service.impl.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,11 +16,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
-        auth.userDetailsService(newsPortalUserDetailsService())
+        auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder);
     }
 
@@ -36,9 +36,5 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .realmName("Basic auth:");
     }
 
-    @Bean
-    public UserDetailsService newsPortalUserDetailsService() {
-        return new UserDetailService();
-    }
 
 }

@@ -1,13 +1,12 @@
 package dl.news.portal.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AuthToken {
-
+    @JsonProperty("access_token")
     private String accessToken;
+    @JsonProperty("refresh_token")
     private String refreshToken;
-
-    public AuthToken() {
-
-    }
 
     public AuthToken(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
