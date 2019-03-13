@@ -25,6 +25,7 @@ import java.util.List;
 @Configuration
 @EnableOAuth2Client
 public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
+    private static final int OAUTH_FILTER_ORDER_IN_CHAIN = -100;
     @Autowired
     OAuth2ClientContext oauth2ClientContext;
 
@@ -73,7 +74,7 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
     public FilterRegistrationBean<OAuth2ClientContextFilter> oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
         FilterRegistrationBean<OAuth2ClientContextFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(filter);
-        registration.setOrder(-100);
+        registration.setOrder(OAUTH_FILTER_ORDER_IN_CHAIN);
         return registration;
     }
 
