@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
+    private static final int BCRIPT_STRENGTH = 5;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
@@ -40,6 +41,6 @@ public class BasicAuthenticationConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(5);
+        return new BCryptPasswordEncoder(BCRIPT_STRENGTH);
     }
 }
