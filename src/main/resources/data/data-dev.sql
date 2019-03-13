@@ -7,8 +7,3 @@ INSERT INTO `news`(`content`,`title`,`author_id`)VALUES('Shock news6','bla-bla5'
 INSERT INTO `news`(`content`,`title`,`author_id`)VALUES('Shock news7','bla-bla6',1);
 INSERT INTO `news`(`content`,`title`,`author_id`)VALUES('Shock news8','bla-bla7',1);
 INSERT INTO `news`(`content`,`title`,`author_id`,`created_Date`) VALUES('Shock news9','bla-bla8',1,'2015-02-04 14:23:10');
-
-
-
-INSERT INTO `user`(`id`,`email`,`password`,`username`)VALUES(1,"email@gmail.com","password","name");
-INSERT INTO `user`(`email`,`password`,`username`)VALUES("email2@gmail.com","password","name2");

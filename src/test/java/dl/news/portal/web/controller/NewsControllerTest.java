@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
+import dl.news.portal.domain.entity.UserProfile;
 import dl.news.portal.domain.service.NewsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +35,7 @@ public class NewsControllerTest {
     @Test
     public void getNewsById_whenNewsExists_shouldReturnOk() throws Exception {
         final String path = NEWS_PATH + "/1";
-        User user = new User();
+        UserProfile user = new UserProfile();
         user.setId(2L);
         News news = new News();
         news.setId(1L);

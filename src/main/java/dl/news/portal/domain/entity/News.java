@@ -21,7 +21,7 @@ public class News {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User author;
+    private UserProfile author;
 
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
@@ -49,11 +49,11 @@ public class News {
         this.content = content;
     }
 
-    public User getAuthor() {
+    public UserProfile getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(UserProfile author) {
         this.author = author;
     }
 

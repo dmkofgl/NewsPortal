@@ -35,6 +35,7 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/login**", "/webjars/**", "/error**", "/logout**")
                 .permitAll()
                 .mvcMatchers(HttpMethod.GET, "/**").permitAll()
+                .mvcMatchers(HttpMethod.POST, "/users").permitAll()
                 .anyRequest().authenticated()
                 .and().logout().logoutSuccessUrl("/").permitAll()
                 .and().csrf().disable()

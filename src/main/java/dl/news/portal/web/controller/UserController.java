@@ -1,6 +1,7 @@
 package dl.news.portal.web.controller;
 
 import dl.news.portal.domain.dto.UserDto;
+import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.response.PageResponse;
 import dl.news.portal.domain.response.UserResponse;
 import dl.news.portal.domain.response.exception.BindExceptionResponse;
@@ -56,7 +57,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> addUser(@Validated(ValidationMode.Create.class) @RequestBody UserDto userDto) {
+    public ResponseEntity<HttpStatus> addUser(@Validated(ValidationMode.Create.class) @RequestBody User userDto) {
         userService.createUser(userDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

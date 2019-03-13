@@ -1,6 +1,6 @@
 package dl.news.portal.web.config.oauth2;
 
-import dl.news.portal.domain.dto.UserDto;
+import dl.news.portal.domain.entity.OauthUser;
 import dl.news.portal.domain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -23,18 +23,18 @@ public class OauthAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
         OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) authentication;
         String username = oAuth2Authentication.getName();
         if (!userService.findByUsername(username).isPresent()) {
-            UserDto userDto = createNewUserDto(oAuth2Authentication.getUserAuthentication());
-            userService.createUser(userDto);
+            OauthUser oauthUser = createNewOauthUser(oAuth2Authentication.getUserAuthentication());
+            userService.createOauthUser(oauthUser);
         }
     }
 
-    private UserDto createNewUserDto(Authentication authentication) {
-        String email = (String) ((Map) authentication.getDetails()).get("email");
-        UserDto userDto = new UserDto();
-        userDto.setUsername(authentication.getName());
-        userDto.setPassword("password");
-        userDto.setEmail(email);
-        return userDto;
+    private OauthUser createNewOauthUser(Authentication authentication) {
+        Long id = new Long(((Map) authentication.getDetails()).get("id").toString());
+        OauthUser oauthUser = new OauthUser();
+        oauthUser.setUsername(authentication.getName());
+        oauthUser.setIdFromProvider(id);
+
+        return oauthUser;
     }
 
 }
