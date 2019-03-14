@@ -1,0 +1,24 @@
+uriParameters:
+  id:
+    type: integer
+get:
+  description: "Return the news with given id."
+  responses:
+    200: !include response/news/getOneNewsOk.raml
+    404: !include response/news/newsNotFound.raml
+patch:
+  description: "Update the news with given id."
+  body:
+        application/json:
+          type: UpdateNews
+  responses:
+    200:
+      description: "OK"
+    404: !include response/news/newsNotFound.raml
+    422: !include response/news/newsUnprocessableEntity.raml
+delete:
+  description: "Delete the news with given id."
+  responses:
+    204:
+       description: "No content."
+    404: !include response/news/newsNotFound.raml
