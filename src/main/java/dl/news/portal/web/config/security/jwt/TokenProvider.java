@@ -19,7 +19,7 @@ public class TokenProvider {
 
     private static final String AUTHORITIES_KEY = "scopes";
     private static final String SIGNING_KEY = "newsPortal";
-    private static final long ACCESS_TOKEN_VALIDITY_SECONDS = 5 * 60;
+    private static final long ACCESS_TOKEN_VALIDITY_MILLISECONDS = 180_000;
 
     public String getSubFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -55,7 +55,7 @@ public class TokenProvider {
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_MILLISECONDS))
                 .compact();
     }
 
