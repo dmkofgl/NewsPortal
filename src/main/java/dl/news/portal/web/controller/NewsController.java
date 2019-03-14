@@ -54,7 +54,7 @@ public class NewsController {
     }
 
     @PatchMapping(ID_PATH)
-    public ResponseEntity<HttpStatus> updateNews(@PathVariable Long id, @Valid @RequestBody NewsDto newsDto) {
+    public ResponseEntity<HttpStatus> updateNews(@PathVariable Long id, @RequestBody NewsDto newsDto) {
         newsService.updateNews(id, newsDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }

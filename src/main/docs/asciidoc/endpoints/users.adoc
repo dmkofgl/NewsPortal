@@ -3,14 +3,11 @@
 To get information about users use 'GET' method.
 [[Endpoints-Users-get-all]]
 ===== Get all users
-Get users wrapped in page container.
-
-Http request looks like:
+To receive users send request like:
 
 .request
 include::{snippets}/get-users/all/ok/http-request.adoc[]
-
-Response can be next:
+Response contain page of users and relative links:
 
 .response
 include::{snippets}/get-users/all/ok/http-response.adoc[]
@@ -29,16 +26,18 @@ Links::
 include::{snippets}/get-users/all/ok/links.adoc[]
 [[Endpoints-Users-get-one]]
 ===== Get one user
-Get single user.
+To obtain information about only one user modify url with user's id.
+For example to receive user with id equals 1 request will be like this:
 
 .request
 include::{snippets}/get-user/ok/http-request.adoc[]
 
 Path parameters::
+Used to specify requested user.
+
 include::{snippets}/get-user/ok/path-parameters.adoc[]
 
 .response
-
 include::{snippets}/get-user/ok/http-response.adoc[]
 
 Body::
@@ -50,12 +49,13 @@ include::{snippets}/get-user/ok/links.adoc[]
 
 .Errors
 --
-.404 Not Found::
-Cannot find user.
+.404 Not Found
+If user not exists or we can't find it response will be like:
 
-Request::
+.request
 include::{snippets}/user/error/not-found/http-request.adoc[]
-Response::
+
+.response
 include::{snippets}/user/error/not-found/http-response.adoc[]
 fields::
 include::{snippets}/user/error/not-found/response-fields.adoc[]
@@ -65,7 +65,8 @@ include::{snippets}/user/error/not-found/links.adoc[]
 [[Endpoints-Users-get-search]]
 ===== Search user
 
-For searching user use <<Endpoints-Users-get-all, get all users>>  endpoint with searching parameters for example:
+For searching user use <<Endpoints-Users-get-all, get all users>>  endpoint with searching parameters for example
+ if need to find all users which in email contain "temail" request will be like :
 
 .request
 include::{snippets}/get-users/filtered/ok/http-request.adoc[]
@@ -77,7 +78,7 @@ include::{snippets}/get-users/filtered/ok/request-parameters.adoc[]
 
 [[Endpoints-Users-post]]
 ==== Create user
-To create user use 'POST' method.
+To create user use 'POST' method. Additionally, put in request body information about new user.For example:
 
 .request
 include::{snippets}/create-user/ok/http-request.adoc[]
@@ -95,15 +96,23 @@ include::{snippets}/create-user/ok/http-response.adoc[]
 --
 .422 unprocessable entity
 
-Invalid data in request.
+Incorrect data in request.
+User's email should contains of:
+
+ * symbol '@'
+ * at least 1 symbol before '@';
+ * at least 1 symbol after '@';
+ * symbol '.' after previous point;
+ * after '.' should be between 2 and 4 symbols;
+
+User's  username length should be between 3 and 50;
+
+User's  password length should be between 6 and 255;
 
 For example:
 
 Request::
 include::{snippets}/create-user/error/unprocessable-entity/http-request.adoc[]
-
-Email is incorrect. Email should contains one '@' and at least one '.'.
-
 Response::
 include::{snippets}/create-user/error/unprocessable-entity/http-response.adoc[]
 fields::
@@ -131,9 +140,11 @@ include::{snippets}/update-user/ok/http-response.adoc[]
 --
 .422 Unprocessable entity
 Invalid data in request.
-Request::
+
+.request
 include::{snippets}/update-user/error/unprocessable-entity/http-request.adoc[]
-Response::
+
+.response
 include::{snippets}/update-user/error/unprocessable-entity/http-response.adoc[]
 fields::
 include::{snippets}/update-user/error/unprocessable-entity/response-fields-beneath-errors.adoc[]
@@ -143,7 +154,7 @@ include::{snippets}/update-user/error/unprocessable-entity/links.adoc[]
 [[Endpoints-Users-delete]]
 ==== Delete users
 To delete user use 'DELETE' method.
-Http endpoint looks like:
+Http request looks like:
 
 [source,http,options="nowrap"]
 ----
@@ -166,9 +177,10 @@ include::{snippets}/delete-user/ok/http-response.adoc[]
 .404 Not found
 Cannot find user.
 
-Request::
+.request
 include::{snippets}/user/error/not-found/http-request.adoc[]
-Response::
+
+.response
 include::{snippets}/user/error/not-found/http-response.adoc[]
 fields::
 include::{snippets}/user/error/not-found/response-fields.adoc[]
