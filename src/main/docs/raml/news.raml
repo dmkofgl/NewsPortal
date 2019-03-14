@@ -1,0 +1,25 @@
+description: "The News resource."
+get:
+  queryParameters:
+    title ?:
+      type: string
+      description: "To Search news by title. Find all news with title that contain this value. Case insensitive."
+    createDate ?:
+      type: string
+      description: "To Search news by created date. Find all news with created date after or equal this value."
+    endCreateDate ?:
+      type: string
+      description: "To Search news by created date. Find all news with created date before or equal this value."
+  description: "Returns a page of news."
+  responses:
+    200: !include response/news/getNewsOk.raml
+post:
+  description: "Create news."
+  body:
+    application/json:
+      type: CreateNews
+  responses:
+    201:
+      description: "News created"
+    422: !include response/news/newsUnprocessableEntity.raml
+/{id}: !include oneNews.raml
