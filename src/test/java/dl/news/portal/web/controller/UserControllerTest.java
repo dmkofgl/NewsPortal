@@ -94,12 +94,12 @@ public class UserControllerTest {
                                 linkWithRel("first").description("link to first page"),
                                 linkWithRel("next").optional().description("link to next page if exists"),
                                 linkWithRel("previous").optional().description("link to previous page if exists")),
-                        relaxedResponseFields(beneathPath("_embedded.userResponseList"),
+                        responseFields(beneathPath("_embedded.userResponseList"),
                                 fieldWithPath("email").description("user's email"),
                                 fieldWithPath("username").description("user's username"),
                                 subsectionWithPath("_links").description("links to relative operations")
                         ),
-                        relaxedResponseFields(beneathPath("page"),
+                        responseFields(beneathPath("page"),
                                 fieldWithPath("size").description("user's email"),
                                 fieldWithPath("totalElements").description("Total number of elements"),
                                 fieldWithPath("totalPages").description("Total number of pages"),
@@ -164,8 +164,8 @@ public class UserControllerTest {
                         pathParameters(parameterWithName("id").description("user's id")),
                         responseFields(
                                 fieldWithPath("code").description("Http response code"),
-                                fieldWithPath("message").description("Error message"),
-                                subsectionWithPath("_links").description("redundant").ignored()
+                                fieldWithPath("message").type(String.class).description("Error message"),
+                                subsectionWithPath("_links").ignored()
                         )));
     }
 
@@ -205,8 +205,8 @@ public class UserControllerTest {
                                 linkWithRel("self").optional().description("Self link")),
                         responseFields(beneathPath("errors"),
                                 fieldWithPath("field").description("Field with exception"),
-                                fieldWithPath("message").optional().description("Exception message"),
-                                fieldWithPath("value").type(String.class).optional().description("Invalid value")
+                                fieldWithPath("message").description("Exception message"),
+                                fieldWithPath("value").type(String.class).description("Invalid value")
                         )));
     }
 
@@ -261,7 +261,7 @@ public class UserControllerTest {
                                 linkWithRel("self").optional().description("Self link")),
                         responseFields(beneathPath("errors"),
                                 fieldWithPath("field").description("Field with exception"),
-                                fieldWithPath("message").optional().description("Exception message"),
+                                fieldWithPath("message").type(String.class).optional().description("Exception message"),
                                 fieldWithPath("value").type(String.class).optional().description("Invalid value")
                         )));
     }
@@ -288,8 +288,8 @@ public class UserControllerTest {
                         pathParameters(parameterWithName("id").description("user's id")),
                         responseFields(
                                 fieldWithPath("code").description("Http response code"),
-                                fieldWithPath("message").description("Error message"),
-                                subsectionWithPath("_links").description("redundant").ignored()
+                                fieldWithPath("message").type(String.class).description("Error message"),
+                                subsectionWithPath("_links").ignored()
                         )));
     }
 

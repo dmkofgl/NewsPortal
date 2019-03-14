@@ -57,6 +57,17 @@ public class NewsServiceTest {
     }
 
     @Test
+    public void updateNewsContent_whenTitleIsBlank_contentsShouldBeEquals() {
+        final String NEW_CONTENT = "new content";
+        final String NEW_TITLE = "    ";
+        NewsDto updatedNews = new NewsDto(NEW_TITLE, NEW_CONTENT);
+        newsService.updateNews(1L, updatedNews);
+        News news = newsService.findNewsById(1L).get();
+        assertEquals(NEW_CONTENT, news.getContent());
+        assertNotEquals(NEW_TITLE, news.getTitle());
+    }
+
+    @Test
     public void findBySpecifications_whenFilterOnlyTitle_shouldCountEqual() throws ParseException {
         final String TITLE = "test";
         final long COUNT = newsService.getAllNews().stream().filter(n -> n.getTitle().contains(TITLE)).count();
