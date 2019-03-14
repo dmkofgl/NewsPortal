@@ -8,12 +8,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 public class Application {
+    private static final int BCRIPT_STRENGTH = 5;
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(5);
+        return new BCryptPasswordEncoder(BCRIPT_STRENGTH);
     }
 }
