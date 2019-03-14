@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
-    private static final long REFRESH_TOKEN_VALIDITY_SECONDS = 5 * 60 * 60 * 24;
+    private static final long REFRESH_TOKEN_VALIDITY_MILLISECONDS = 5 * 60 * 60 * 24 * 1000;
     private static final String SIGNING_KEY = "newsPortal";
     private static final String AUTHORITIES_KEY = "scopes";
 
@@ -38,7 +38,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         User owner = userService.findUserByUsername(authentication.getName()).orElseThrow(EntityNotFoundException::new);
         refreshToken.setOwner(owner);
         refreshToken.setIssuedAt(new Date());
-        refreshToken.setExpiration(new Date(refreshToken.getIssuedAt().getTime() + REFRESH_TOKEN_VALIDITY_SECONDS * 1000));
+        refreshToken.setExpiration(new Date(refreshToken.getIssuedAt().getTime() + REFRESH_TOKEN_VALIDITY_MILLISECONDS));
         refreshToken.setAuthorities(authorities);
         refreshToken.setActive(true);
 
@@ -64,7 +64,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 .claim(AUTHORITIES_KEY, refreshToken.getAuthorities())
                 .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY_SECONDS * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY_MILLISECONDS * 1000))
                 .compact();
     }
 

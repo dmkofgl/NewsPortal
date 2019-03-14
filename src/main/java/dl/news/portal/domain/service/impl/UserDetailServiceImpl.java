@@ -26,11 +26,11 @@ public class UserDetailServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
         return userService.findUserByUsername(s)
-                .map(this::convertUser)
+                .map(this::createUserDetailsOfUser)
                 .orElseThrow(() -> new UsernameNotFoundException("No user with username " + s));
     }
 
-    private UserDetails convertUser(User user) {
+    private UserDetails createUserDetailsOfUser(User user) {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 passwordEncoder.encode(user.getPassword()),
