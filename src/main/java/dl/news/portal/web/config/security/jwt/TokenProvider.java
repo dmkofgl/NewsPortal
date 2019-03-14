@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 
 @Component
 public class TokenProvider {
-
     private static final String AUTHORITIES_KEY = "scopes";
     private static final String SIGNING_KEY = "newsPortal";
-    private static final long ACCESS_TOKEN_VALIDITY_SECONDS = 5 * 60;
+    private static final long ACCESS_TOKEN_VALIDITY_MILLISECONDS = 180_000L;
+
     @Autowired
     private RefreshTokenService refreshTokenService;
     @Autowired
@@ -65,7 +65,7 @@ public class TokenProvider {
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_MILLISECONDS ))
                 .compact();
     }
 

@@ -15,6 +15,7 @@ import java.util.Collections;
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
     private final String USER_AUTHORITY = "user";
+
     @Autowired
     private UserService userService;
     @Autowired
