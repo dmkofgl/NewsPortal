@@ -52,30 +52,12 @@ public class RefreshToken {
         this.id = id;
     }
 
-    public boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-
     public String getAuthorities() {
         return authorities;
     }
 
     public void setAuthorities(String authorities) {
         this.authorities = authorities;
-    }
-
-    @Override
-    public String toString() {
-        return "RefreshToken{" +
-                "id=" + id +
-                ", owner=" + owner +
-                ", issuedAt=" + issuedAt +
-                ", expiration=" + expiration +
-                '}';
     }
 
     public Boolean getActive() {

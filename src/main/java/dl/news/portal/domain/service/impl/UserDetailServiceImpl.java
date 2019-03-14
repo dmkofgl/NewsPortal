@@ -14,6 +14,7 @@ import java.util.Collections;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
+    private final String USER_AUTHORITY = "user";
     @Autowired
     private UserService userService;
     @Autowired
@@ -32,7 +33,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 passwordEncoder.encode(user.getPassword()),
-                Collections.singletonList(new SimpleGrantedAuthority("user")));
+                Collections.singletonList(new SimpleGrantedAuthority(USER_AUTHORITY)));
 
     }
 }
