@@ -64,7 +64,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 .claim(AUTHORITIES_KEY, refreshToken.getAuthorities())
                 .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY_MILLISECONDS * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY_MILLISECONDS ))
                 .compact();
     }
 
