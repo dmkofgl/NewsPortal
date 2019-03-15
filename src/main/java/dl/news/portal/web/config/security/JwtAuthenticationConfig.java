@@ -44,7 +44,7 @@ public class JwtAuthenticationConfig extends WebSecurityConfigurerAdapter {
                 authorizeRequests()
                 .mvcMatchers(HttpMethod.POST, "/token/**").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/users").permitAll()
-//                .mvcMatchers(HttpMethod.GET, "/**").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
