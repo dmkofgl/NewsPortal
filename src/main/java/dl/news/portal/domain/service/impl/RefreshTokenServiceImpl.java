@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
-    private static final long REFRESH_TOKEN_VALIDITY_MILLISECONDS = 5 * 60 * 60 * 24 * 1000;
+    private static final long REFRESH_TOKEN_VALIDITY_MILLISECONDS = 432_000_000L;
     private static final String SIGNING_KEY = "newsPortal";
     private static final String AUTHORITIES_KEY = "scopes";
 
