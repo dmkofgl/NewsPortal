@@ -24,12 +24,12 @@ public class UserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
         UserDetails userDetails = userService.findUserByUsername(s)
-                .map(this::createUserDetailsOfUser)
+                .map(this::mapUserToUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException("No user found with username " + s));
         return userDetails;
     }
 
-    private UserDetails createUserDetailsOfUser(User user) {
+    private UserDetails mapUserToUserDetails(User user) {
 
         UserDetails userDetails = new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
