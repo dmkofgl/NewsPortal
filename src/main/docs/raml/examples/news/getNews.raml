@@ -1,0 +1,44 @@
+|
+  {
+    "_embedded" : {
+      "newsResponseList" : [ {
+        "content" : "This is content.",
+        "title" : "Title",
+        "createdDate" : null,
+        "updatedDate" : null,
+        "_links" : {
+          "self" : {
+            "href" : "http://localhost:8080/news/1"
+          },
+          "delete" : {
+            "href" : "http://localhost:8080/news/1",
+            "method" : "DELETE"
+          },
+          "update" : {
+            "href" : "http://localhost:8080/news/1",
+            "method" : "PATCH"
+          },
+          "author" : {
+            "href" : "http://localhost:8080/users/1"
+          }
+        }
+      } ]
+    },
+    "_links" : {
+      "self" : {
+        "href" : "http://localhost:8080/news"
+      },
+      "first" : {
+        "href" : "http://localhost:8080/news?page=0"
+      },
+      "last" : {
+        "href" : "http://localhost:8080/news?page=0"
+      }
+    },
+    "page" : {
+      "size" : 0,
+      "totalElements" : 1,
+      "totalPages" : 1,
+      "number" : 0
+    }
+  }
