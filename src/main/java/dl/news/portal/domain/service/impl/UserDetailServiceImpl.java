@@ -32,11 +32,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
     }
 
     private UserDetails mapUserToUserDetails(User user) {
-
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+        return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 passwordEncoder.encode(user.getPassword()),
                 Collections.singletonList(new SimpleGrantedAuthority(USER_AUTHORITY)));
-
     }
 }

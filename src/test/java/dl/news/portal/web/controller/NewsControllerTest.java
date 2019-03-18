@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.snippet.Snippet;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -65,6 +66,8 @@ public class NewsControllerTest {
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @MockBean
     private TokenProvider tokenProvider;
+    @MockBean
+    private PasswordEncoder passwordEncoder;
 
     @Before
     public void setUp() throws Exception {
