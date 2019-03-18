@@ -8,6 +8,9 @@ import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.service.NewsService;
 import dl.news.portal.domain.service.UserService;
 import org.junit.Before;
+import dl.news.portal.domain.service.UserService;
+import dl.news.portal.web.config.security.jwt.JwtAuthenticationEntryPoint;
+import dl.news.portal.web.config.security.jwt.TokenProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -20,6 +23,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.snippet.Snippet;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -43,6 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest(NewsController.class)
 @AutoConfigureRestDocs(outputDir = "target/snippets")
+@WithMockUser(username = "name")
 public class NewsControllerTest {
     private static final String NEWS_PATH = "/news";
     private static final String NEWS_ID_PATH_TEMPLATE = NEWS_PATH + "/{id}";
@@ -53,7 +59,12 @@ public class NewsControllerTest {
     private NewsService newsService;
     @MockBean
     private UserService userService;
-
+    @MockBean
+    private UserDetailsService userDetailsService;
+    @MockBean
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    @MockBean
+    private TokenProvider tokenProvider;
 
     @Before
     public void setUp() throws Exception {
