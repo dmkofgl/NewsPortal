@@ -4,10 +4,12 @@ import dl.news.portal.domain.response.exception.BindExceptionResponse;
 import dl.news.portal.domain.response.exception.ErrorResponse;
 import dl.news.portal.domain.response.exception.ValidateExceptionResponse;
 import dl.news.portal.exception.DeniedParameterException;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -51,4 +53,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         BindExceptionResponse resource = new BindExceptionResponse(ex.getBindingResult());
         return new ResponseEntity<>(resource, HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+    @ExceptionHandler({ExpiredJwtException.class})
+    public ResponseEntity<ErrorResponse> handleExpiredJwtException(ExpiredJwtException ex) {
+        ErrorResponse resources = new ErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        return new ResponseEntity<>(resources, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({BadCredentialsException.class})
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
+        ErrorResponse resources = new ErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        return new ResponseEntity<>(resources, HttpStatus.UNAUTHORIZED);
+    }
+
 }
