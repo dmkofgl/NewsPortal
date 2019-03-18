@@ -1,5 +1,6 @@
 package dl.news.portal.domain.service.impl;
 
+import com.mysql.cj.util.StringUtils;
 import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.repository.NewsRepository;
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
+import javax.validation.Valid;
 import java.util.*;
 
 @Service
@@ -42,8 +44,9 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public void updateNews(Long id, NewsDto dto) {
-        News news = newsRepository.getOne(id);
+
+    public void updateNews(Long id, @Valid NewsDto dto) {
+        News news = newsRepository.findById(id).get();
         transformDto(news, dto);
         newsRepository.save(news);
     }
@@ -62,11 +65,11 @@ public class NewsServiceImpl implements NewsService {
         String title = dto.getTitle();
         String content = dto.getContent();
 
-        if (title != null) {
+        if (!StringUtils.isEmptyOrWhitespaceOnly(title)) {
             receiver.setTitle(title);
         }
 
-        if (content != null) {
+        if (!StringUtils.isEmptyOrWhitespaceOnly(content)) {
             receiver.setContent(content);
         }
     }
