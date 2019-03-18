@@ -17,6 +17,7 @@ public interface UserService {
     void deleteUser(Long id);
 
     Optional<User> findUserById(Long id);
+
     Optional<User> findUserByUsername(String username);
 
     Long count();

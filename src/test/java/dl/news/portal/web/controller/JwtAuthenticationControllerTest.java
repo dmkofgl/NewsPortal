@@ -1,9 +1,12 @@
-package dl.news.portal.web.config.security.jwt;
+package dl.news.portal.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.service.UserService;
+import dl.news.portal.web.config.security.jwt.JwtAuthenticationEntryPoint;
+import dl.news.portal.web.config.security.jwt.TokenProvider;
+import dl.news.portal.web.controller.JwtAuthenticationController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -16,6 +19,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,8 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(AuthenticationController.class)
-public class AuthenticationControllerTest {
+@WebMvcTest(JwtAuthenticationController.class)
+public class JwtAuthenticationControllerTest {
     private static final String GENERATE_TOKEN_PATH = "/token/generate";
     @Autowired
     private MockMvc mockMvc;
@@ -38,14 +42,17 @@ public class AuthenticationControllerTest {
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @MockBean
     private TokenProvider tokenProvider;
-    @MockBean()
+    @MockBean
     private AuthenticationManager authenticationManager;
+    @MockBean
+    private PasswordEncoder passwordEncoder;
 
     @Test
     public void getAuthToken_whenCredentialsIsCorrect_returnOk() throws Exception {
         final String username = "testUser";
         final String password = "password";
         final String token = "IT.is.ToKeN";
+        final String refreshToken = "IT.is.RefreshToKeN";
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
         UserDto dto = new UserDto();
         dto.setUsername(username);
@@ -54,15 +61,14 @@ public class AuthenticationControllerTest {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String body = mapper.writeValueAsString(dto);
 
-        Mockito.when(authenticationManager.authenticate(
-                any(Authentication.class)))
-                .thenReturn(authentication);
-        Mockito.when(tokenProvider.generateAccessToken(authentication)).thenReturn(token);
+        Mockito.when(tokenProvider.generateAccessToken(any(UserDto.class))).thenReturn(token);
+        Mockito.when(tokenProvider.generateRefreshToken(any(UserDto.class))).thenReturn(refreshToken);
         mockMvc.perform(post(GENERATE_TOKEN_PATH)
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken").value(token));
+                .andExpect(jsonPath("$.access_token").value(token))
+                .andExpect(jsonPath("$.refresh_token").value(refreshToken));
     }
 
     @Test

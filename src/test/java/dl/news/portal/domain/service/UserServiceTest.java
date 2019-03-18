@@ -97,6 +97,4 @@ public class UserServiceTest {
         assertNotEquals(COUNT_ALL, userPageByUsernameAndEmail.getTotalElements());
         assertNotEquals(0L, userPageByUsernameAndEmail.getTotalElements());
     }
-
-
 }

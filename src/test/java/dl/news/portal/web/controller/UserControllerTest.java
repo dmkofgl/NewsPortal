@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -55,6 +56,8 @@ public class UserControllerTest {
     private UserService userService;
     @MockBean
     private UserDetailsService userDetailsService;
+    @MockBean
+    private PasswordEncoder passwordEncoder;
     @MockBean
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @MockBean
