@@ -6,6 +6,7 @@ import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.service.NewsService;
+import dl.news.portal.domain.service.UserService;
 import org.junit.Before;
 import dl.news.portal.domain.service.UserService;
 import dl.news.portal.web.config.security.jwt.JwtAuthenticationEntryPoint;
@@ -215,6 +216,7 @@ public class NewsControllerTest {
                                 fieldWithPath("message").type(String.class).description("Exception message"),
                                 fieldWithPath("value").type(String.class).description("Invalid value"))));
     }
+
 
     @Test
     public void addNews_whenNewsDtoFieldIsNotValid_shouldReturnUnprocessableEntity() throws Exception {
