@@ -7,7 +7,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,10 +22,8 @@ import java.io.IOException;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String HEADER_STRING = "Authorization";
-    public static final String TOKEN_PREFIX = "Bearer ";
+    private static final String TOKEN_PREFIX = "Bearer ";
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
     @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
@@ -43,6 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 tokenSub = jwtTokenUtil.getSubFromToken(authToken);
             } catch (IllegalArgumentException e) {
                 responseError(res, "an error occured during getting username from token", HttpStatus.UNAUTHORIZED);
+                return;
             } catch (ExpiredJwtException e) {
                 responseError(res, "the token is expired and not valid anymore", HttpStatus.UNAUTHORIZED);
                 return;
@@ -65,11 +63,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void responseError(HttpServletResponse response, String message, HttpStatus httpStatus) throws IOException {
-        response.setStatus(httpStatus.value());
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String result = mapper.writeValueAsString(
                 new ErrorResponse(message, httpStatus.getReasonPhrase()));
+        response.setStatus(httpStatus.value());
+        response.setContentLength(result.length());
         response.getWriter().write(result);
     }
 }

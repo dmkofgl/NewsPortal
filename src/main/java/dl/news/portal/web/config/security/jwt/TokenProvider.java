@@ -1,6 +1,11 @@
 package dl.news.portal.web.config.security.jwt;
 
+import dl.news.portal.domain.dto.UserDto;
+import dl.news.portal.domain.entity.RefreshToken;
+import dl.news.portal.domain.service.RefreshTokenService;
 import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,10 +21,14 @@ import java.util.stream.Collectors;
 
 @Component
 public class TokenProvider {
-
     private static final String AUTHORITIES_KEY = "scopes";
     private static final String SIGNING_KEY = "newsPortal";
-    private static final long ACCESS_TOKEN_VALIDITY_MILLISECONDS = 180_000;
+    private static final long ACCESS_TOKEN_VALIDITY_MILLISECONDS = 180_000L;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     public String getSubFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -46,7 +55,8 @@ public class TokenProvider {
         return expiration.before(new Date());
     }
 
-    public String generateAccessToken(Authentication authentication) {
+    public String generateAccessToken(UserDto userDto) {
+        Authentication authentication = authenticateUser(userDto);
         final String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -59,11 +69,40 @@ public class TokenProvider {
                 .compact();
     }
 
+    private Authentication authenticateUser(UserDto userDto) {
+        return authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userDto.getUsername(),
+                        userDto.getPassword()
+                )
+        );
+    }
+
+    public String generateRefreshToken(UserDto userDto) {
+        Authentication authentication = authenticateUser(userDto);
+        return refreshTokenService.takeRefreshToken(authentication);
+    }
+
+    public String refreshToken(RefreshToken refreshToken) {
+        refreshToken.setActive(false);
+        UserDto userDto = new UserDto(refreshToken.getOwner());
+        refreshTokenService.saveRefreshToken(refreshToken);
+        return generateRefreshToken(userDto);
+    }
 
     public Boolean validateAccessToken(String token, UserDetails userDetails) {
         final String username = getSubFromToken(token);
         return (username.equals(userDetails.getUsername())
                 && !isTokenExpired(token));
+    }
+
+    public RefreshToken validateRefreshToken(String token) {
+        Long tokenId = Long.parseLong(getSubFromToken(token));
+        RefreshToken refreshToken = refreshTokenService.getById(tokenId).orElseThrow(() -> new IllegalArgumentException("Token does not exist."));
+        if (!refreshToken.getActive()) {
+            throw new IllegalArgumentException("Token had been used.");
+        }
+        return refreshToken;
     }
 
     UsernamePasswordAuthenticationToken getAuthentication(final String token, final UserDetails userDetails) {

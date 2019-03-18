@@ -1,5 +1,7 @@
-package dl.news.portal.web.config.security.jwt;
+package dl.news.portal.web.config.security;
 
+import dl.news.portal.web.config.security.jwt.JwtAuthenticationEntryPoint;
+import dl.news.portal.web.config.security.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

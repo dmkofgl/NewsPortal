@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
-public class UserDetailService implements UserDetailsService {
+public class UserDetailServiceImpl implements UserDetailsService {
+    private final String USER_AUTHORITY = "user";
+
     @Autowired
     private UserService userService;
     @Autowired
@@ -30,12 +32,9 @@ public class UserDetailService implements UserDetailsService {
     }
 
     private UserDetails mapUserToUserDetails(User user) {
-
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+        return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 passwordEncoder.encode(user.getPassword()),
-                Collections.singletonList(new SimpleGrantedAuthority("user")));
-        return userDetails;
-
+                Collections.singletonList(new SimpleGrantedAuthority(USER_AUTHORITY)));
     }
 }
