@@ -11,9 +11,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, length = 50)
-    @Size(min = 3, max = 50)
-    private String username;
+    @MapsId
+    @OneToOne
+    @JoinColumn
+    private UserProfile userProfile;
+
     @Size(min = 6, max = 255)
     @JsonIgnore
     private String password;
@@ -22,20 +24,8 @@ public class User {
     @Size(max = 100)
     private String email;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    {
+        userProfile = new UserProfile();
     }
 
     public String getPassword() {
@@ -53,4 +43,21 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Long getId() {
+        return userProfile.getId();
+    }
+
+    public void setId(Long id) {
+        userProfile.setId(id);
+    }
+
+    public String getUsername() {
+        return userProfile.getUsername();
+    }
+
+    public void setUsername(String username) {
+        userProfile.setUsername(username);
+    }
+
 }

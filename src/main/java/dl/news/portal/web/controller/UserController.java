@@ -1,6 +1,7 @@
 package dl.news.portal.web.controller;
 
 import dl.news.portal.domain.dto.UserDto;
+import dl.news.portal.domain.entity.User;
 import dl.news.portal.domain.response.PageResponse;
 import dl.news.portal.domain.response.UserResponse;
 import dl.news.portal.domain.response.exception.BindExceptionResponse;
@@ -19,14 +20,23 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.security.Principal;
 
 @RestController
 @RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
     private static final String ID_PATH = "/{id}";
+    private static final String ME = "/me";
 
     @Autowired
     private UserService userService;
+
+    @GetMapping(ME)
+    public UserResponse getCurrentUser(Principal principal) {
+        return userService.findByUsername(principal.getName())
+                .map(UserResponse::new)
+                .orElseThrow(() -> new EntityNotFoundException("Unable to find user with username " + principal.getName()));
+    }
 
     @GetMapping(ID_PATH)
     @ApiResponses(value = {
@@ -48,7 +58,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> addUser(@Validated(ValidationMode.Create.class) @RequestBody UserDto userDto) {
+    public ResponseEntity<HttpStatus> addUser(@Validated(ValidationMode.Create.class) @RequestBody User userDto) {
         userService.createUser(userDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

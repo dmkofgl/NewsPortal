@@ -3,7 +3,7 @@ package dl.news.portal.web.controller;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dl.news.portal.domain.dto.UserDto;
-import dl.news.portal.domain.entity.User;
+import dl.news.portal.domain.entity.UserProfile;
 import dl.news.portal.domain.service.UserService;
 import dl.news.portal.web.config.security.jwt.JwtAuthenticationEntryPoint;
 import dl.news.portal.web.config.security.jwt.TokenProvider;
@@ -66,17 +66,15 @@ public class UserControllerTest {
     @Test
     public void getUserById_whenUserExists_shouldReturnOk() throws Exception {
         final long ID = 1L;
-        User user = new User();
+        UserProfile user = new UserProfile();
         user.setId(ID);
         user.setUsername("testUsername");
-        user.setEmail("testEmail@mail.com");
 
         Mockito.when(userService.findUserById(1L)).thenReturn(Optional.of(user));
 
         mockMvc.perform(get(USER_ID_PATH_TEMPLATE, ID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value(user.getUsername()))
-                .andExpect(jsonPath("$.email").value(user.getEmail()))
                 .andExpect(jsonPath("$._links.self").hasJsonPath())
                 .andDo(document("get-user/ok",
                         pathParameters(parameterWithName("id").description("user's id")),
@@ -93,19 +91,17 @@ public class UserControllerTest {
 
     @Test
     public void getUsers_whenDtoIsEmpty_shouldReturnOk() throws Exception {
-        List<User> userList = new ArrayList<>();
-        User user = new User();
+        List<UserProfile> userList = new ArrayList<>();
+        UserProfile user = new UserProfile();
         user.setId(1L);
         user.setUsername("testUsername");
-        user.setEmail("testEmail@mail.com");
         userList.add(user);
-        Page<User> userPage = new PageImpl<>(userList);
+        Page<UserProfile> userPage = new PageImpl<>(userList);
         Mockito.when(userService.getFilteredPage(any(UserDto.class), any(Pageable.class))).thenReturn(userPage);
 
         mockMvc.perform(get(USERS_PATH))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.userResponseList[0].username").value(user.getUsername()))
-                .andExpect(jsonPath("$._embedded.userResponseList[0].email").value(user.getEmail()))
                 .andExpect(jsonPath("$.page").hasJsonPath())
                 .andExpect(jsonPath("$._links.self").hasJsonPath())
                 .andDo(document("get-users/all/ok",
@@ -129,14 +125,13 @@ public class UserControllerTest {
 
     @Test
     public void getUsers_whenModifyPage_shouldReturnOk() throws Exception {
-        List<User> userList = new ArrayList<>();
+        List<UserProfile> userList = new ArrayList<>();
         Pageable pageable = new PageRequest(0, 1);
-        User user = new User();
+        UserProfile user = new UserProfile();
         user.setId(1L);
         user.setUsername("testUsername");
-        user.setEmail("testEmail@mail.com");
         userList.add(user);
-        Page<User> userPage = new PageImpl<>(userList, pageable, 2L);
+        Page<UserProfile> userPage = new PageImpl<>(userList, pageable, 2L);
 
         Mockito.when(userService.getFilteredPage(any(UserDto.class), any(Pageable.class))).thenReturn(userPage);
 
@@ -151,22 +146,20 @@ public class UserControllerTest {
     @Test
     public void getUsers_whenExistFilteringByEmail_shouldReturnOk() throws Exception {
         final int FILTERED_COUNT = 1;
-        List<User> userList = new ArrayList<>();
-        User user = new User();
+        List<UserProfile> userList = new ArrayList<>();
+        UserProfile user = new UserProfile();
         user.setId(1L);
         user.setUsername("testUsername");
-        user.setEmail("testEmail@mail.com");
         userList.add(user);
         UserDto dto = new UserDto();
         dto.setEmail("temail");
-        Page<User> userPage = new PageImpl<>(userList);
+        Page<UserProfile> userPage = new PageImpl<>(userList);
         Mockito.when(userService.getFilteredPage(refEq(dto), any(Pageable.class))).thenReturn(userPage);
 
         mockMvc.perform(get(USERS_PATH).param("email", dto.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.page").hasJsonPath())
                 .andExpect(jsonPath("$._embedded.userResponseList[0].username").value(user.getUsername()))
-                .andExpect(jsonPath("$._embedded.userResponseList[0].email").value(user.getEmail()))
                 .andExpect(jsonPath("$._embedded.userResponseList[1]").doesNotExist())
                 .andExpect(jsonPath("$.page.totalElements").value(FILTERED_COUNT))
                 .andDo(document("get-users/filtered/ok", requestParameters(

@@ -2,6 +2,7 @@ package dl.news.portal.domain.service;
 
 import dl.news.portal.domain.dto.UserDto;
 import dl.news.portal.domain.entity.User;
+import dl.news.portal.domain.entity.UserProfile;
 import dl.news.portal.exception.DeniedParameterException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,14 +28,17 @@ public class UserServiceTest {
 
     @Test
     public void findById() {
-        Optional<User> user = userService.findUserById(1L);
+        Optional<UserProfile> user = userService.findUserById(1L);
         assertTrue(user.isPresent());
     }
 
     @Test
     public void addUser_whenUserDtoIsValid_shouldChangeSize() {
         Long size = userService.count();
-        UserDto user = new UserDto("nAMe2Test", "mailcom@ccs.cc", "password");
+        User user = new User();
+        user.setUsername("nAMe2Test");
+        user.setEmail("mailcom@ccs.cc");
+        user.setPassword("password");
         userService.createUser(user);
         assertNotEquals(size, userService.count());
     }
@@ -45,7 +49,7 @@ public class UserServiceTest {
         String newEmail = "sven@qwert.ce";
         UserDto updatedUser = new UserDto(newUsername, newEmail, null);
         userService.updateUser(2L, updatedUser);
-        User userAfterUpdate = userService.findUserById(2L).get();
+        UserProfile userAfterUpdate = userService.findUserById(2L).get();
         assertEquals(newUsername, userAfterUpdate.getUsername());
     }
 
@@ -58,7 +62,10 @@ public class UserServiceTest {
 
     @Test(expected = ConstraintViolationException.class)
     public void addUser_whenPasswordIsInvalid_shouldReturnException() {
-        UserDto user = new UserDto("user", "mailcom@ccs.cc", "pws12");
+        User user = new User();
+        user.setUsername("user");
+        user.setEmail("mailcom@ccs.cc");
+        user.setPassword("pws12");
         userService.createUser(user);
     }
 
@@ -68,7 +75,7 @@ public class UserServiceTest {
         UserDto usernameDto = new UserDto("est", null, null);
         PageRequest pageRequest = new PageRequest(0, 5);
 
-        Page<User> userPageByUsername = userService.getFilteredPage(usernameDto, pageRequest);
+        Page<UserProfile> userPageByUsername = userService.getFilteredPage(usernameDto, pageRequest);
 
         assertNotEquals(COUNT_ALL, userPageByUsername.getTotalElements());
         assertNotEquals(0L, userPageByUsername.getTotalElements());
@@ -80,7 +87,7 @@ public class UserServiceTest {
         UserDto emailDto = new UserDto(null, "com", null);
         PageRequest pageRequest = new PageRequest(0, 5);
 
-        Page<User> userPageByEmail = userService.getFilteredPage(emailDto, pageRequest);
+        Page<UserProfile> userPageByEmail = userService.getFilteredPage(emailDto, pageRequest);
 
         assertNotEquals(COUNT_ALL, userPageByEmail.getTotalElements());
         assertNotEquals(0L, userPageByEmail.getTotalElements());
@@ -92,7 +99,7 @@ public class UserServiceTest {
         UserDto usernameAndEmailDto = new UserDto("est", "com", null);
         PageRequest pageRequest = new PageRequest(0, 5);
 
-        Page<User> userPageByUsernameAndEmail = userService.getFilteredPage(usernameAndEmailDto, pageRequest);
+        Page<UserProfile> userPageByUsernameAndEmail = userService.getFilteredPage(usernameAndEmailDto, pageRequest);
 
         assertNotEquals(COUNT_ALL, userPageByUsernameAndEmail.getTotalElements());
         assertNotEquals(0L, userPageByUsernameAndEmail.getTotalElements());
