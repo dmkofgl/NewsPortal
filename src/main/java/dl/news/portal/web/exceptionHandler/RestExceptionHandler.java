@@ -11,6 +11,7 @@ import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -79,5 +80,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(resources, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({BadCredentialsException.class})
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
+        ErrorResponse resources = new ErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        return new ResponseEntity<>(resources, HttpStatus.UNAUTHORIZED);
+    }
 
 }

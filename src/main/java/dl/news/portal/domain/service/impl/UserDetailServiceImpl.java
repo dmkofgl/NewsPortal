@@ -25,13 +25,15 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
-        return userService.findUserByUsername(s)
-                .map(this::createUserDetailsOfUser)
-                .orElseThrow(() -> new UsernameNotFoundException("No user with username " + s));
+        UserDetails userDetails = userService.findUserByUsername(s)
+                .map(this::mapUserToUserDetails)
+                .orElseThrow(() -> new UsernameNotFoundException("No user found with username " + s));
+        return userDetails;
     }
 
-    private UserDetails createUserDetailsOfUser(User user) {
-        return new org.springframework.security.core.userdetails.User(
+    private UserDetails mapUserToUserDetails(User user) {
+
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 passwordEncoder.encode(user.getPassword()),
                 Collections.singletonList(new SimpleGrantedAuthority(USER_AUTHORITY)));
