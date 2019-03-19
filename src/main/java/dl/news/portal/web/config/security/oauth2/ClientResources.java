@@ -1,4 +1,4 @@
-package dl.news.portal.web.config.oauth2;
+package dl.news.portal.web.config.security.oauth2;
 
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;

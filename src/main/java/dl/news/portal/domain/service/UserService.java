@@ -14,6 +14,8 @@ public interface UserService {
 
     Optional<UserProfile> findByUsername(String username);
 
+    Optional<User> findUserByUsername(String username);
+
     void createUser(User user);
 
     void createOauthUser(OauthUser user);

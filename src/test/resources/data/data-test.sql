@@ -1,7 +1,7 @@
-INSERT INTO user (`id`,email,password,username)  VALUES(1,'email@gmail.com','password','nameTest');
-INSERT INTO  user (email,password,username)VALUES('email@yandex.ua','password','name2');
-INSERT INTO  user (email,password,username)VALUES('email@yandex.by','password','name3');
-INSERT INTO  user (email,password,username)VALUES('email@yandex.com','password','name4');
+INSERT INTO user_profile (`id`,username)  VALUES(1,'nameTest');
+INSERT INTO  user_profile (username)VALUES('name2');
+INSERT INTO  user_profile (username)VALUES('name3');
+INSERT INTO  user_profile (username)VALUES('name4');
 
 INSERT INTO news(`id`,`content`,`title`,`author_id`) VALUES(1,'data title','data content',1);
 INSERT INTO news(`id`,`content`,`title`,`author_id`) VALUES(2,'test title','test content',1);

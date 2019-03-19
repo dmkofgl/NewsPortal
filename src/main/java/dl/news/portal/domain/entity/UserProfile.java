@@ -3,7 +3,7 @@ package dl.news.portal.domain.entity;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
-@Entity
+@Entity(name = "user_profile")
 public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
