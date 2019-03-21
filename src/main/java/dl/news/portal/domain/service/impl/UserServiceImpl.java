@@ -72,6 +72,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findUserByUsername(String username) {
+        return userRepository.findByUserProfileUsername(username);
+    }
+
+    @Override
     public Long count() {
         return userProfileRepository.count();
     }

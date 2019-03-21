@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dl.news.portal.domain.dto.NewsDto;
 import dl.news.portal.domain.entity.News;
 import dl.news.portal.domain.entity.User;
+import dl.news.portal.domain.entity.UserProfile;
 import dl.news.portal.domain.service.NewsService;
 import dl.news.portal.domain.service.UserService;
 import org.junit.Before;
-import dl.news.portal.domain.service.UserService;
 import dl.news.portal.web.config.security.jwt.JwtAuthenticationEntryPoint;
 import dl.news.portal.web.config.security.jwt.TokenProvider;
 import org.junit.Test;
@@ -53,7 +53,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class NewsControllerTest {
     private static final String NEWS_PATH = "/news";
     private static final String NEWS_ID_PATH_TEMPLATE = NEWS_PATH + "/{id}";
-    private User defaultUser;
+    private UserProfile defaultUserProfile;
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -71,20 +71,18 @@ public class NewsControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        defaultUser = new User();
-        defaultUser.setId(1L);
+        defaultUserProfile = new UserProfile();
+        defaultUserProfile.setId(1L);
     }
 
     @Test
     public void getNewsById_whenNewsExists_shouldReturnOk() throws Exception {
         final Long ID = 1L;
-        User user = new User();
-        user.setId(2L);
         News news = new News();
         news.setId(1L);
         news.setContent("test");
         news.setTitle("test");
-        news.setAuthor(user);
+        news.setAuthor(defaultUserProfile);
 
         Mockito.when(newsService.findNewsById(1L)).thenReturn(Optional.of(news));
 
@@ -115,7 +113,7 @@ public class NewsControllerTest {
         news.setId(1L);
         news.setTitle("Title");
         news.setContent("This is content.");
-        news.setAuthor(defaultUser);
+        news.setAuthor(defaultUserProfile);
         newsList.add(news);
         Page<News> userPage = new PageImpl<>(newsList);
 
@@ -155,7 +153,7 @@ public class NewsControllerTest {
         news.setId(1L);
         news.setTitle("Title");
         news.setContent("This is content.");
-        news.setAuthor(defaultUser);
+        news.setAuthor(defaultUserProfile);
         newsList.add(news);
         Page<News> newsPage = new PageImpl<>(newsList);
 

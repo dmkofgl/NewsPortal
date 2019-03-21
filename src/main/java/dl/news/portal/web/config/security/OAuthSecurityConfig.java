@@ -1,5 +1,7 @@
-package dl.news.portal.web.config.oauth2;
+package dl.news.portal.web.config.security;
 
+import dl.news.portal.web.config.security.oauth2.ClientResources;
+import dl.news.portal.web.config.security.oauth2.OauthAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;

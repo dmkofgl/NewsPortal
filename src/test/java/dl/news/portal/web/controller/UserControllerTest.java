@@ -83,7 +83,6 @@ public class UserControllerTest {
                                 linkWithRel("update").description("link to update user"),
                                 linkWithRel("delete").description("link to delete user")),
                         responseFields(
-                                fieldWithPath("email").description("user's email"),
                                 fieldWithPath("username").description("user's username"),
                                 subsectionWithPath("_links").description("links to relative operations"))));
 
@@ -112,7 +111,6 @@ public class UserControllerTest {
                                 linkWithRel("next").optional().description("link to next page if exists"),
                                 linkWithRel("previous").optional().description("link to previous page if exists")),
                         responseFields(beneathPath("_embedded.userResponseList"),
-                                fieldWithPath("email").description("user's email"),
                                 fieldWithPath("username").description("user's username"),
                                 subsectionWithPath("_links").description("links to relative operations")
                         ),

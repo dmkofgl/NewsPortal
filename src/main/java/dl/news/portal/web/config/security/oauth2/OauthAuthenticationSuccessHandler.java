@@ -1,4 +1,4 @@
-package dl.news.portal.web.config.oauth2;
+package dl.news.portal.web.config.security.oauth2;
 
 import dl.news.portal.domain.entity.OauthUser;
 import dl.news.portal.domain.service.UserService;
