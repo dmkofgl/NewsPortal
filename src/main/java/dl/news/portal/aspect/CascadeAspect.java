@@ -29,7 +29,7 @@ public class CascadeAspect {
     public void deleteClient() {
     }
 
-    @Pointcut("execution(* dl.news.portal.domain.service.CommunityService.create(..))")
+    @Pointcut("execution(* dl.news.portal.domain.service.CommunityService.save(..))")
     public void createCommunity() {
     }
 
@@ -59,7 +59,7 @@ public class CascadeAspect {
         community.getClients().forEach(
                 client -> {
                     client.getCommunities().remove(community);
-                    clientService.create(client);
+                    clientService.save(client);
                 }
         );
     }
@@ -67,7 +67,7 @@ public class CascadeAspect {
     private void releaseCompanyOwner(Community community) {
         Client client = community.getOwner();
         client.setCompany(null);
-        clientService.create(client);
+        clientService.save(client);
     }
 
     @AfterReturning(pointcut = "createCommunity()")
@@ -82,7 +82,7 @@ public class CascadeAspect {
     private void setCommunityOwner(Community community) {
         Client client = community.getOwner();
         client.setCompany(community);
-        clientService.create(client);
+        clientService.save(client);
 
     }
 
@@ -100,7 +100,7 @@ public class CascadeAspect {
         List<Post> posts = community.getPosts();
         posts.add(post);
         community.setPosts(posts);
-        communityService.create(community);
+        communityService.save(community);
     }
     @AfterReturning(pointcut = "deletePost()")
     public void afterDeletePost(JoinPoint joinPoint) throws Throwable {
@@ -115,7 +115,7 @@ public class CascadeAspect {
         List<Post> posts = community.getPosts();
         posts.remove(post);
         community.setPosts(posts);
-        communityService.create(community);
+        communityService.save(community);
     }
 
     @AfterReturning(pointcut = "deleteClient()")
@@ -132,7 +132,7 @@ public class CascadeAspect {
         List<Community> communities = client.getCommunities();
         communities.forEach(c -> {
             c.getClients().remove(client);
-            communityService.create(c);
+            communityService.save(c);
         });
     }
 

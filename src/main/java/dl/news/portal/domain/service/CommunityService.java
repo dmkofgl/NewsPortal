@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface CommunityService {
 
-    void create(Community community);
+    void save(Community community);
 
     void delete(Community community);
 

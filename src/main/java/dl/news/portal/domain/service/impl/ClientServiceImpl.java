@@ -1,6 +1,5 @@
 package dl.news.portal.domain.service.impl;
 
-import dl.news.portal.aspect.annotation.CascadeDelete;
 import dl.news.portal.domain.entity.mongo.Client;
 import dl.news.portal.domain.repository.mongo.ClientRepository;
 import dl.news.portal.domain.service.ClientService;
@@ -16,7 +15,7 @@ public class ClientServiceImpl implements ClientService {
     private ClientRepository clientRepository;
 
     @Override
-    public void create(Client client) {
+    public void save(Client client) {
         clientRepository.save(client);
     }
 

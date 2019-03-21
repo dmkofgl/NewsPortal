@@ -28,7 +28,7 @@ public class CommunityServiceTest {
         final Long count = communityService.count();
         Community community = new Community();
         community.setName("comm");
-        communityService.create(community);
+        communityService.save(community);
 
         assertNotEquals(count, communityService.count());
     }

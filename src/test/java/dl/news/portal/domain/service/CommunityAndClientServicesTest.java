@@ -37,8 +37,8 @@ public class CommunityAndClientServicesTest {
         Community community = createCommunity();
         Client client = createClient();
 
-        communityService.create(community);
-        clientService.create(client);
+        communityService.save(community);
+        clientService.save(client);
 
         subscribeClientService.subscribeClientToCommunity(client, community);
 
@@ -51,8 +51,8 @@ public class CommunityAndClientServicesTest {
         Community community = createCommunity();
         Client client = createClient();
 
-        communityService.create(community);
-        clientService.create(client);
+        communityService.save(community);
+        clientService.save(client);
 
         subscribeClientService.subscribeClientToCommunity(client, community);
 
@@ -68,8 +68,8 @@ public class CommunityAndClientServicesTest {
         Community community = createCommunity();
         community.setOwner(client);
 
-        clientService.create(client);
-        communityService.create(community);
+        clientService.save(client);
+        communityService.save(community);
 
         Community newCommunity = communityService.findById(community.getId()).get();
         assertEquals(client.getId(), newCommunity.getOwner().getId());
@@ -83,9 +83,9 @@ public class CommunityAndClientServicesTest {
         community.setOwner(client);
         communitySecond.setOwner(client);
 
-        clientService.create(client);
-        communityService.create(community);
-        communityService.create(communitySecond);
+        clientService.save(client);
+        communityService.save(community);
+        communityService.save(communitySecond);
     }
 
     @Test
@@ -94,8 +94,8 @@ public class CommunityAndClientServicesTest {
         Community community = createCommunity();
         community.setOwner(client);
 
-        clientService.create(client);
-        communityService.create(community);
+        clientService.save(client);
+        communityService.save(community);
         clientService.delete(client);
 
         assertFalse(communityService.findById(community.getId()).isPresent());

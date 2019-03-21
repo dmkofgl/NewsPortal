@@ -32,7 +32,7 @@ public class ClientServiceTest {
         final Long count = clientService.count();
         Client client = createClient();
 
-        clientService.create(client);
+        clientService.save(client);
         assertNotEquals(count, clientService.count());
     }
 

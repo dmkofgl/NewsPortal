@@ -37,7 +37,7 @@ public class CommunityAndPostServicesTest {
         Post post = createPost();
         post.setPublisher(community);
 
-        communityService.create(community);
+        communityService.save(community);
         postService.publishPost(post);
 
         List<Post> newPosts = communityService.findById(post.getPublisher().getId()).get().getPosts();
@@ -50,7 +50,7 @@ public class CommunityAndPostServicesTest {
         Post post = createPost();
         post.setPublisher(community);
 
-        communityService.create(community);
+        communityService.save(community);
         postService.publishPost(post);
 
         Post newPost = postService.findById(post.getId()).get();
@@ -63,7 +63,7 @@ public class CommunityAndPostServicesTest {
         Post post = createPost();
         post.setPublisher(community);
 
-        communityService.create(community);
+        communityService.save(community);
         postService.publishPost(post);
 
         postService.delete(post);
@@ -77,7 +77,7 @@ public class CommunityAndPostServicesTest {
         Post post = createPost();
         post.setPublisher(community);
 
-        communityService.create(community);
+        communityService.save(community);
         postService.publishPost(post);
 
         postService.delete(post);

@@ -15,7 +15,7 @@ public class CommunityServiceImpl implements CommunityService {
     private CommunityRepository communityRepository;
 
     @Override
-    public void create(Community community) {
+    public void save(Community community) {
         communityRepository.save(community);
     }
 
