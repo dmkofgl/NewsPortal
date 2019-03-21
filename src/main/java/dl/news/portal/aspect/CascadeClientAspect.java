@@ -8,15 +8,17 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Aspect
+@Component
 public class CascadeClientAspect {
     @Autowired
     private CommunityService communityService;
 
-    @Pointcut("execution(* dl.news.portal.domain.service.ClientService.delete(..))")
+    @Pointcut("execution(* dl.news.portal.domain.repository.mongo.ClientRepository.delete(..))")
     public void deleteClient() {
     }
 

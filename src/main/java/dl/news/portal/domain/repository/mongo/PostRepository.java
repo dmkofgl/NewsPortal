@@ -1,6 +1,5 @@
 package dl.news.portal.domain.repository.mongo;
 
-import com.mongodb.Mongo;
 import dl.news.portal.domain.entity.mongo.Post;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;

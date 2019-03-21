@@ -9,19 +9,21 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Aspect
+@Component
 public class CascadeCommunityAspect {
     @Autowired
     private ClientService clientService;
     @Autowired
     private PostService postService;
 
-    @Pointcut("execution(* dl.news.portal.domain.service.CommunityService.save(..))")
+    @Pointcut("execution(* dl.news.portal.domain.repository.mongo.CommunityRepository.save(..))")
     public void createCommunity() {
     }
 
-    @Pointcut("execution(* dl.news.portal.domain.service.CommunityService.delete(..))")
+    @Pointcut("execution(* dl.news.portal.domain.repository.mongo.CommunityRepository.delete(..))")
     public void deleteCommunity() {
     }
 

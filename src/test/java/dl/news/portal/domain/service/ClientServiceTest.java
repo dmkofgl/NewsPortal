@@ -9,10 +9,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -20,11 +20,11 @@ public class ClientServiceTest {
     @Autowired
     private ClientService clientService;
     @Autowired
-    private MongoOperations ops;
+    private MongoTemplate ops;
 
     @After
     public void dropCollection() {
-        this.ops.getCollection("client").drop();
+        this.ops.getDb().drop();
     }
 
     @Test
@@ -37,7 +37,7 @@ public class ClientServiceTest {
     }
 
     @Test
-    public void deleteClient_whenDataCorrect_shouldNotFound() {
+    public void deleteClient_whenDataCorrect_shouldFound() {
         Client client = createClient();
         ops.getCollection("client").insertOne(createClientBson(client));
         clientService.delete(client);
