@@ -4,6 +4,7 @@ import com.mongodb.client.model.IndexOptions;
 import dl.news.portal.domain.entity.mongo.Client;
 import dl.news.portal.domain.entity.mongo.Community;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,6 +82,7 @@ public class CommunityAndClientServicesTest {
     @Test
     public void createCommunity_whenOwnerExist_shouldOwnerEqualClient() {
         Client client = createClient();
+        client.setId(ObjectId.get());
         Community community = createCommunity();
         community.setOwner(client);
 
@@ -94,6 +96,7 @@ public class CommunityAndClientServicesTest {
     @Test(expected = DuplicateKeyException.class)
     public void createCommunity_whenOwnerHasSomeCommunity_shouldThrowException() {
         Client client = createClient();
+        client.setId(ObjectId.get());
         Community community = createCommunity();
         Community communitySecond = createCommunity();
         community.setOwner(client);
@@ -107,14 +110,33 @@ public class CommunityAndClientServicesTest {
     @Test
     public void deleteClient_whenIsCommunityOwner_shouldDeleteCommunity() {
         Client client = createClient();
+        client.setId(ObjectId.get());
         Community community = createCommunity();
+        community.setId(ObjectId.get());
         community.setOwner(client);
 
         clientService.save(client);
+        clientService.save(createClient());
         communityService.save(community);
         clientService.delete(client);
 
         assertFalse(communityService.findById(community.getId()).isPresent());
+    }
+
+    @Test
+    public void deleteClient_whenIsCommunitySubscriber_shouldUnsubscribeClient() {
+        Client client = createClient();
+        client.setId(ObjectId.get());
+        Community community = createCommunity();
+        community.setId(ObjectId.get());
+        community.getClients().add(client);
+        client.getCommunities().add(community);
+        clientService.save(client);
+        communityService.save(community);
+        clientService.delete(client);
+
+        Community communityAfterDelete = communityService.findById(community.getId()).get();
+        assertFalse(communityAfterDelete.getClients().stream().anyMatch(cl -> cl.getId().equals(client.getId())));
     }
 
 

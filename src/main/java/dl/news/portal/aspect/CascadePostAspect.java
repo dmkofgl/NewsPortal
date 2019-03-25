@@ -8,12 +8,11 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class CascadePostAspect {
     @Autowired
     private CommunityService communityService;

@@ -8,11 +8,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -54,7 +54,7 @@ public class ClientServiceTest {
 
     private Document createClientBson(Client client) {
         Document document = new Document();
-        document.append("id", client.getId());
+        document.append("_id", client.getId());
         document.append("name", client.getClientName());
         document.append("communities", client.getCommunities());
         return document;
