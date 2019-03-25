@@ -52,4 +52,10 @@ public class Client {
     public void setCompany(Community company) {
         this.company = company;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Client client = (Client) obj;
+        return this.getId().equals(client.getId());
+    }
 }

@@ -1,13 +1,16 @@
 package dl.news.portal.web.config.security;
 
+import dl.news.portal.web.config.security.jwt.JwtAuthenticationFilter;
 import dl.news.portal.web.config.security.oauth2.ClientResources;
 import dl.news.portal.web.config.security.oauth2.OauthAuthenticationSuccessHandler;
+import dl.news.portal.web.controller.JwtAuthenticationController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,6 +20,7 @@ import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticat
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.CompositeFilter;
 
@@ -42,7 +46,7 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().logout().logoutSuccessUrl("/").permitAll()
                 .and().csrf().disable()
-                .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+                .addFilterAfter(ssoFilter(),  UsernamePasswordAuthenticationFilter.class);
 
     }
 

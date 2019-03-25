@@ -5,6 +5,7 @@ import dl.news.portal.web.config.security.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @Order(99)
+@Profile("jwt")
 public class JwtAuthenticationConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
@@ -42,11 +44,13 @@ public class JwtAuthenticationConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().
-                authorizeRequests()
+        http.cors().and().csrf().disable()
+               . authorizeRequests()
                 .mvcMatchers(HttpMethod.POST, "/token/**").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/users").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/**").permitAll()
+                .antMatchers("/", "/login**", "/webjars/**", "/error**", "/logout**")
+                .permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()

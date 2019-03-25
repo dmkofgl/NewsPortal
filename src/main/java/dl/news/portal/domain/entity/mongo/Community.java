@@ -65,5 +65,6 @@ public class Community {
 
     public void setOwner(Client owner) {
         this.owner = owner;
+        owner.setCompany(this);
     }
 }

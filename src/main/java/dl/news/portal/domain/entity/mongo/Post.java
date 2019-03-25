@@ -37,4 +37,10 @@ public class Post {
     public void setPublisher(Community publisher) {
         this.publisher = publisher;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Post post = (Post) obj;
+        return post.getId().equals(this.getId());
+    }
 }

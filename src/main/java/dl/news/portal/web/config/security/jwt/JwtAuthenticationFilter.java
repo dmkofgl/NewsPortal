@@ -6,6 +6,7 @@ import dl.news.portal.domain.response.exception.ErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Profile("jwt")
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String HEADER_STRING = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer ";

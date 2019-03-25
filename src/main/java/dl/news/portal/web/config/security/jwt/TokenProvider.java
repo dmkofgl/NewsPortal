@@ -5,6 +5,7 @@ import dl.news.portal.domain.entity.RefreshToken;
 import dl.news.portal.domain.service.RefreshTokenService;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
+@Profile("jwt")
 public class TokenProvider {
     private static final String AUTHORITIES_KEY = "scopes";
     private static final String SIGNING_KEY = "newsPortal";
