@@ -70,6 +70,5 @@ public class CascadeCommunityAspect {
         Client client = community.getOwner();
         client.setCompany(community);
         clientService.save(client);
-
     }
 }
